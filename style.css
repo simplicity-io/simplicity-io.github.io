@@ -39,7 +39,6 @@ body { background: radial-gradient(48rem 22rem at 0% 0%, rgba(47, 93, 138, .20),
 .site-head { margin-bottom: 1.25rem; }
 .site-head h1 { margin: 0; }
 .site-head .prompt { margin-top: .15rem; }
-.logo { display: block; width: clamp(120px, 28vw, 180px); height: auto; aspect-ratio: 16 / 9; border-radius: 10px; flex: none; box-shadow: 0 4px 14px rgba(0, 0, 0, .18); }
 h1, h2, h3 { line-height: 1.25; }
 h2, h3, .prompt, .spec, code, .card .badge { display: block; width: 150px; height: auto; margin: .25rem 0 0 -.45rem; }
 .facts { margin: .6rem 0 0; padding: 0; list-style: none; font-size: .9rem; }
@@ -87,13 +86,12 @@ footer {
   color: var(--muted);
   font-size: .8rem;
   display: flex;
-  flex-wrap: wrap;
+  flex-wrap: nowrap;
   align-items: flex-end;
-  justify-content: space-between;
-  gap: 1.25rem;
+  gap: 1rem;
 }
-.foot-links { display: flex; flex-wrap: wrap; gap: .4rem 1.25rem; max-width: 34rem; }
-footer .logo { margin-left: auto; }
+.foot-links { display: flex; flex-wrap: wrap; align-content: flex-start; gap: .4rem 1.25rem; flex: 1 1 auto; min-width: 0; }
+.foot-logo { flex: none; align-self: flex-end; height: 4.1rem; width: auto; margin-left: auto; border-radius: 8px; box-shadow: 0 3px 10px rgba(0, 0, 0, .18); }
 .doc { background: var(--surface); border: 1px solid var(--border); border-radius: var(--radius); padding: clamp(1rem, 4vw, 2rem); margin-top: 1.5rem; }
 .doc h1 { margin-top: 0; }
 .doc code { font-size: .9em; }
