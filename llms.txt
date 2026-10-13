@@ -1,0 +1,7 @@
+# Simplicity.IO
+
+> Small, focused Android tools: powerful and simple. Contact: simplicity.io.dev@outlook.com
+
+## Apps
+
+- [Mainline Module Info](https://play.google.com/store/apps/details?id=io.simplicity.trainspotting): shows which Google Play system (Mainline) modules a device runs and tracks their updates. Android 10+ (API 29). Module history is stored on-device.
