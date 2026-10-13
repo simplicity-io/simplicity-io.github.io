@@ -15,6 +15,20 @@
   <meta property="og:url" content="https://simplicity-io.github.io/">
   <meta name="twitter:card" content="summary_large_image">
   <link rel="stylesheet" href="style.css">
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@type": "SoftwareApplication",
+    "name": "Mainline Module Info",
+    "applicationCategory": "UtilitiesApplication",
+    "operatingSystem": "Android 10+",
+    "description": "Shows which Google Play system (Mainline) modules an Android device runs and tracks their updates.",
+    "url": "https://play.google.com/store/apps/details?id=io.simplicity.trainspotting",
+    "image": "https://simplicity-io.github.io/icon-192.png",
+    "offers": { "@type": "Offer", "price": "0", "priceCurrency": "USD" },
+    "publisher": { "@type": "Organization", "name": "Simplicity.IO", "url": "https://simplicity-io.github.io/", "email": "simplicity.io.dev@outlook.com" }
+  }
+  </script>
 </head>
 <body>
   <main class="wrap">
@@ -35,11 +49,15 @@
         <div>
           <h3>Mainline Module Info</h3>
           <p>See which Google Play system (Mainline) modules your device runs, and track their updates.</p>
+          <ul class="facts">
+            <li>No account, no root</li>
+            <li>Update history is stored locally on your device</li>
+            <li>Ads (AdMob) and anonymous analytics (Firebase), consent asked where required</li>
+          </ul>
           <ul class="spec">
             <li>Android 10+ (API 29)</li>
-            <li>history stored on-device</li>
           </ul>
-          <span class="go">Get it on Google Play &rarr;</span>
+          <img class="badge" src="play-badge.png" width="646" height="250" alt="Get it on Google Play">
         </div>
       </a>
 
@@ -58,14 +76,25 @@
             <li>needs virtualization support</li>
             <li>guided setup</li>
           </ul>
-          <span class="go">Get it on Google Play &rarr;</span>
+          <img class="badge" src="play-badge.png" width="646" height="250" alt="Get it on Google Play">
         </div>
       </a>
     </div>
 
+    <!-- DRAFT gallery: add 2-3 phone screenshots from the Play build to shots/ (about 540x1170,
+         PNG or JPG), then uncomment. CSS (.shots) is already in style.css.
+    <h2>Screenshots</h2>
+    <div class="shots">
+      <img src="shots/mmi-1.png" width="540" height="1170" loading="lazy" alt="Mainline Module Info: module list">
+      <img src="shots/mmi-2.png" width="540" height="1170" loading="lazy" alt="Mainline Module Info: module details">
+      <img src="shots/mmi-3.png" width="540" height="1170" loading="lazy" alt="Mainline Module Info: update history">
+    </div>
+    -->
+
     <footer>
       <a href="mailto:simplicity.io.dev@outlook.com">Contact</a>
       <span>&copy; Simplicity.IO</span>
+      <span>Google Play and the Google Play logo are trademarks of Google LLC.</span>
     </footer>
   </main>
 </body>

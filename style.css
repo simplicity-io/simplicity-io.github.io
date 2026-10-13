@@ -44,16 +44,22 @@ a:focus-visible { outline: 3px solid var(--accent); outline-offset: 2px; border-
   box-shadow: 0 8px 28px rgba(0, 0, 0, .18);
 }
 h1, h2, h3 { line-height: 1.25; }
-h2, h3, .prompt, .spec, code, footer { font-family: var(--mono); }
+h2, h3, .prompt, .spec, code, .card .badge { display: block; width: 150px; height: auto; margin: .25rem 0 0 -.45rem; }
+.facts { margin: .6rem 0 0; padding: 0; list-style: none; font-size: .9rem; }
+.facts li { padding-left: 1.4rem; position: relative; }
+.facts li::before { content: "✓"; position: absolute; left: 0; color: var(--accent); font-family: var(--mono); }
+.shots { display: grid; grid-template-columns: repeat(auto-fit, minmax(min(100%, 12rem), 1fr)); gap: 1rem; }
+.shots img { width: 100%; height: auto; border-radius: var(--radius); border: 1px solid var(--border); }
+footer { font-family: var(--mono); }
 h1 { font-size: clamp(1.6rem, 4vw + .5rem, 2.5rem); margin: 1.5rem 0 .25rem; }
 h2 { font-size: clamp(1.2rem, 2vw + .6rem, 1.6rem); margin: 2rem 0 1rem; }
-.prompt { margin: 0; color: var(--muted); font-size: .9rem; }
+.prompt { white-space: nowrap; margin: 0; color: var(--muted); font-size: .9rem; }
 .prompt::before { content: "$ "; color: var(--accent); }
 .cursor::after { content: "_"; animation: blink 1.1s steps(1) infinite; }
 @keyframes blink { 50% { opacity: 0; } }
 h2::before { content: "## "; color: var(--accent); }
 .spec { margin: .6rem 0 0; padding: 0; list-style: none; display: flex; flex-wrap: wrap; gap: .35rem; }
-.spec li { font-size: .78rem; padding: .1rem .5rem; border: 1px solid var(--border); border-radius: 6px; color: var(--muted); }
+.spec li { white-space: nowrap; font-size: .78rem; padding: .1rem .5rem; border: 1px solid var(--border); border-radius: 6px; color: var(--muted); }
 .lead { color: var(--muted); margin: 0; max-width: 40rem; }
 .apps {
   display: grid;
