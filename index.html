@@ -1,10 +1,73 @@
 <!DOCTYPE html>
-<html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Simplicity.IO – Powerful tools for Android</title>
+  <meta name="description" content="Simplicity.IO builds small, powerful Android tools. Featured: Mainline Module Info.">
+  <meta name="theme-color" content="#3a5f87">
+  <link rel="icon" type="image/png" sizes="192x192" href="icon-192.png">
+  <link rel="apple-touch-icon" href="icon-192.png">
+  <meta property="og:type" content="website">
+  <meta property="og:title" content="Simplicity.IO – Powerful tools for Android">
+  <meta property="og:description" content="Small, powerful Android tools. Featured: Mainline Module Info.">
+  <meta property="og:image" content="https://simplicity-io.github.io/banner-1600.jpg">
+  <meta property="og:url" content="https://simplicity-io.github.io/">
+  <meta name="twitter:card" content="summary_large_image">
+  <link rel="stylesheet" href="style.css">
+</head>
 <body>
-<img src="sio-banner.png" width="800" height="480"></img>
-<h2>Featured Apps:</h2>
-<a href="https://play.google.com/store/apps/details?id=io.simplicity.trainspotting">Mainline Modules Info</a>
-<p>For inquiries, contact:</p>
-<a href="mailto:simplicity.io.dev@outlook.com">E-Mail</a>
+  <main class="wrap">
+    <img class="hero" src="banner-1600.jpg"
+         srcset="banner-800.jpg 800w, banner-1600.jpg 1600w"
+         sizes="(min-width: 1024px) 1024px, 100vw"
+         width="1600" height="900" alt="Simplicity.IO – Powerful tools">
+
+    <h1>Simplicity.IO</h1>
+    <p class="prompt cursor">tools --powerful --simple</p>
+    <p class="lead">Small, focused Android tools for people who like to know what their device is actually running.</p>
+
+    <h2>Apps</h2>
+    <div class="apps">
+      <a class="card" rel="noopener"
+         href="https://play.google.com/store/apps/details?id=io.simplicity.trainspotting">
+        <img src="icon-192.png" width="72" height="72" alt="">
+        <div>
+          <h3>Mainline Module Info</h3>
+          <p>See which Google Play system (Mainline) modules your device runs, and track their updates.</p>
+          <ul class="spec">
+            <li>Android 10+ (API 29)</li>
+            <li>history stored on-device</li>
+          </ul>
+          <span class="go">Get it on Google Play &rarr;</span>
+        </div>
+      </a>
+
+      <!-- DRAFT, not published yet: Linux Terminal Helper (LTH).
+           To go live: remove the "hidden" attribute below once LTH is on Google Play,
+           and the link resolves (it 404s until then). Keep in sync with the in-app
+           Remote Config flag lth_promotion_card_enabled. -->
+      <a class="card" id="lth" hidden rel="noopener"
+         href="https://play.google.com/store/apps/details?id=io.simplicity.toybox">
+        <img src="icon-lth.png" width="72" height="72" alt="">
+        <div>
+          <h3>Linux Terminal Helper</h3>
+          <p>Set up and launch Android's built-in Linux Terminal, hidden in the Virtualization module. One tap to open it, plus a home-screen shortcut.</p>
+          <ul class="spec">
+            <li>Android 15+ (API 35)</li>
+            <li>needs virtualization support</li>
+            <li>guided setup</li>
+          </ul>
+          <span class="go">Get it on Google Play &rarr;</span>
+        </div>
+      </a>
+    </div>
+
+    <footer>
+      <a href="mailto:simplicity.io.dev@outlook.com">Contact</a>
+      <a href="privacy.html">Privacy policy</a>
+      <span>&copy; Simplicity.IO</span>
+    </footer>
+  </main>
 </body>
 </html>
