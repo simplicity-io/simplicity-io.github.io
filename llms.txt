@@ -5,3 +5,4 @@
 ## Apps
 
 - [Mainline Module Info](https://play.google.com/store/apps/details?id=io.simplicity.trainspotting): shows which Google Play system (Mainline) modules a device runs and tracks their updates. Android 10+ (API 29). Module history is stored on-device.
+- Linux Terminal Helper (coming soon to Google Play): sets up and launches Android's built-in Linux Terminal. Android 15+ (API 35), needs virtualization support.

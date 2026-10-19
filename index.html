@@ -57,12 +57,11 @@
         </div>
       </a>
 
-      <!-- DRAFT, not published yet: Linux Terminal Helper (LTH).
-           To go live: remove the "hidden" attribute below once LTH is on Google Play,
-           and the link resolves (it 404s until then). Keep in sync with the in-app
-           Remote Config flag lth_promotion_card_enabled. -->
-      <a class="card" id="lth" hidden rel="noopener"
-         href="https://play.google.com/store/apps/details?id=io.simplicity.toybox">
+      <!-- Linux Terminal Helper: "coming soon" until it is on Google Play.
+           When live: turn this <div> back into <a class="card" rel="noopener" href="https://play.google.com/store/apps/details?id=io.simplicity.toybox">,
+           replace the "soon" span with the Play badge img (as on the MMI card), drop class "soon",
+           and add LTH to llms.txt. Keep in sync with the in-app Remote Config flag lth_promotion_card_enabled. -->
+      <div class="card soon" id="lth">
         <img src="icon-lth.png" width="72" height="72" alt="">
         <div>
           <h3>Linux Terminal Helper</h3>
@@ -72,9 +71,9 @@
             <li>needs virtualization support</li>
             <li>guided setup</li>
           </ul>
-          <img class="badge" src="play-badge.png" width="646" height="250" alt="Get it on Google Play">
+          <span class="go">Coming soon to Google Play</span>
         </div>
-      </a>
+      </div>
     </div>
 
     <!-- DRAFT gallery: add 2-3 phone screenshots from the Play build to shots/ (about 540x1170,

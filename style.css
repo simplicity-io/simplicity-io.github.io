@@ -99,3 +99,5 @@ footer {
 .doc ul { padding-left: 1.25rem; }
 .back { display: inline-block; margin-top: .5rem; }
 @media (prefers-reduced-motion: reduce) { .cursor::after { animation: none; } .card { transition: none; } .card:hover { transform: none; } }
+.card.soon:hover { transform: none; box-shadow: none; }
+.card.soon .go { color: var(--muted); font-weight: 400; }
