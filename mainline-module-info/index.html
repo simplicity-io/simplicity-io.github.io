@@ -1,0 +1,144 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Mainline Module Info – check your Google Play system update and Mainline modules</title>
+  <meta name="description" content="See which Google Play system update (Project Mainline) modules your Android phone runs, their versions and when they last changed. Free, no root, no account. Android 10+.">
+  <meta name="theme-color" content="#3a5f87">
+  <link rel="canonical" href="https://simplicity-io.github.io/mainline-module-info/">
+  <link rel="icon" type="image/png" sizes="192x192" href="../icon-192.png">
+  <link rel="apple-touch-icon" href="../icon-192.png">
+  <meta property="og:type" content="website">
+  <meta property="og:title" content="Mainline Module Info – your Google Play system update, module by module">
+  <meta property="og:description" content="Which Mainline modules your phone runs, their versions and update history. Free, no root.">
+  <meta property="og:image" content="https://simplicity-io.github.io/banner-1600.jpg">
+  <meta property="og:url" content="https://simplicity-io.github.io/mainline-module-info/">
+  <meta name="twitter:card" content="summary_large_image">
+  <link rel="stylesheet" href="../style.css">
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@graph": [
+      {
+        "@type": "SoftwareApplication",
+        "name": "Mainline Module Info",
+        "applicationCategory": "UtilitiesApplication",
+        "operatingSystem": "Android 10+",
+        "description": "Shows which Google Play system update (Project Mainline) modules an Android device runs, their versions and when they changed.",
+        "url": "https://simplicity-io.github.io/mainline-module-info/",
+        "downloadUrl": "https://play.google.com/store/apps/details?id=io.simplicity.trainspotting",
+        "image": "https://simplicity-io.github.io/icon-192.png",
+        "screenshot": "https://simplicity-io.github.io/shots/mmi-modules.webp",
+        "offers": { "@type": "Offer", "price": "0", "priceCurrency": "USD" },
+        "publisher": { "@type": "Organization", "name": "Simplicity.IO", "url": "https://simplicity-io.github.io/", "email": "simplicity.io.dev@outlook.com" }
+      },
+      {
+        "@type": "FAQPage",
+        "mainEntity": [
+          {
+            "@type": "Question",
+            "name": "What is a Google Play system update?",
+            "acceptedAnswer": { "@type": "Answer", "text": "Since Android 10, parts of Android itself (media codecs, networking, permissions, time zones, the Android Runtime and more) are packaged as Mainline modules that Google can update through Google Play, separately from your phone maker's system updates. Android's Settings shows the date of the installed Google Play system update." }
+          },
+          {
+            "@type": "Question",
+            "name": "Why is my Google Play system update date different from someone else's?",
+            "acceptedAnswer": { "@type": "Answer", "text": "There is no single version that every phone gets. Which modules a phone has depends on its Android version and on the phone maker, updates roll out in stages, an update can be held back or rolled back, and some modules only change with a full system update from the phone maker. Two phones can therefore show different dates and module versions, and both can be current for their model." }
+          },
+          {
+            "@type": "Question",
+            "name": "How is the Android security update different?",
+            "acceptedAnswer": { "@type": "Answer", "text": "The Android security update (security patch level) comes with the phone maker's system update. The Google Play system update is delivered by Google Play. They are updated separately, so their dates usually differ." }
+          },
+          {
+            "@type": "Question",
+            "name": "Does Mainline Module Info need root or an account?",
+            "acceptedAnswer": { "@type": "Answer", "text": "No. It reads what Android reports to any app about installed packages. The module update history is stored only on your device." }
+          }
+        ]
+      }
+    ]
+  }
+  </script>
+</head>
+<body>
+  <main class="wrap">
+    <a class="back" href="../">&larr; Simplicity.IO</a>
+
+    <header class="app-head">
+      <img src="../icon-192.png" width="96" height="96" alt="">
+      <div>
+        <h1>Mainline Module Info</h1>
+        <p class="prompt cursor">pm list packages --apex-only</p>
+      </div>
+    </header>
+    <p class="lead">Android updates part of itself through Google Play: the <strong>Google Play system update</strong>, built from <strong>Project Mainline</strong> modules. Mainline Module Info shows which of these modules your phone runs, their versions, and when they last changed.</p>
+    <p class="cta">
+      <a href="https://play.google.com/store/apps/details?id=io.simplicity.trainspotting" rel="noopener"><img class="play" src="../play-badge.png" width="646" height="250" alt="Get it on Google Play"></a>
+    </p>
+    <ul class="spec">
+      <li>Android 10+ (API 29)</li>
+      <li>no root</li>
+      <li>no account</li>
+      <li>10 languages</li>
+      <li>light and dark</li>
+    </ul>
+
+    <h2>What it shows</h2>
+    <ul class="features">
+      <li><strong>Every Mainline module on your phone</strong> - APEX and APK modules, and the apps packaged inside them, with package name, version and when each was last updated. Searchable.</li>
+      <li><strong>Update history</strong> - each time a module's version changes, rolls back or is replaced, it is recorded on your device, optionally with a notification after a reboot.</li>
+      <li><strong>Module details</strong> - source directory, signing certificate, install location and more, plus links to each module's documentation and source code.</li>
+      <li><strong>Dashboard</strong> - your module metadata version, Google Play services and Play Store versions, and a shortcut to Android's own "Google Play system update" check where the phone has one.</li>
+      <li><strong>Home-screen widget</strong> <span class="new">new in 2.2.4</span> - the dates of your Google Play system update and Android security update, and how old they are.</li>
+      <li><strong>AI components</strong> - the on-device AI services your phone ships, such as AICore and Private Compute Services.</li>
+    </ul>
+
+    <h2>Screenshots</h2>
+    <div class="shots">
+      <img src="../shots/mmi-modules.webp" width="540" height="1104" loading="lazy" alt="Module list: ADBd, Ad Services and other modules with their type, version, package name and update time">
+      <img src="../shots/mmi-details.webp" width="540" height="1104" loading="lazy" alt="Module details for Ad Services: package name, source directory, signing certificate and mount time">
+      <img src="../shots/mmi-dashboard.webp" width="540" height="1104" loading="lazy" alt="Dashboard: Mainline modules detected, the module metadata version, and Google Play services and Play Store versions">
+    </div>
+    <figure class="widget-shot">
+      <img src="../shots/mmi-widget.webp" width="720" height="260" loading="lazy" alt="Home-screen widget: Google Play system update May 1, 2025, 17 months ago; Android security update Jul 5, 2025, 15 months ago">
+      <figcaption>The widget on an emulator image, which is never updated - hence the old dates in red.</figcaption>
+    </figure>
+
+    <h2>Questions</h2>
+    <section class="faq">
+      <details>
+        <summary>What is a Google Play system update?</summary>
+        <p>Since Android 10, parts of Android itself - media codecs, networking, permissions, time zones, the Android Runtime and more - are packaged as <em>Mainline modules</em> that Google can update through Google Play, separately from your phone maker's system updates. Android's Settings shows the date of the installed Google Play system update (usually under Security or About phone &rarr; Android version).</p>
+      </details>
+      <details>
+        <summary>Why is my date different from someone else's?</summary>
+        <p>There is no single version that every phone gets. Which modules a phone has depends on its Android version and on the phone maker; updates roll out in stages; an update can be held back or rolled back; and some modules only change with a full system update from the phone maker. Two phones can show different dates and module versions, and both can be current for their model. Mainline Module Info shows what <em>your</em> phone actually runs.</p>
+      </details>
+      <details>
+        <summary>How is the Android security update different?</summary>
+        <p>The Android security update (the security patch level) comes with your phone maker's system update. The Google Play system update comes through Google Play. They are updated separately, so their dates usually differ.</p>
+      </details>
+      <details>
+        <summary>What do APEX, APK and APK-in-APEX mean?</summary>
+        <p>An <strong>APEX</strong> module is a container for low-level system components; Android mounts it at boot, so updates to it take effect after a restart. An <strong>APK</strong> module is an app-like package that updates like an app. An <strong>APK-in-APEX</strong> is an app shipped inside an APEX module.</p>
+      </details>
+      <details>
+        <summary>Does it need root or an account? What happens to my data?</summary>
+        <p>No root and no account: the app reads what Android reports to any app about installed packages. The update history stays on your device. See the <a href="../privacy.html">privacy policy</a> for the ads and anonymous analytics the app uses.</p>
+      </details>
+    </section>
+
+    <footer>
+      <div class="foot-links">
+        <a href="../privacy.html">Privacy</a>
+        <a href="mailto:simplicity.io.dev@outlook.com">Contact</a>
+        <span>&copy; Simplicity.IO</span>
+        <span>Not affiliated with Google. Google Play and the Google Play logo are trademarks of Google LLC.</span>
+      </div>
+      <img class="foot-logo" src="../logo-360.jpg" width="360" height="203" alt="Simplicity.IO – Powerful tools">
+    </footer>
+  </main>
+</body>
+</html>
