@@ -12,7 +12,9 @@
   <meta property="og:type" content="website">
   <meta property="og:title" content="Mainline Module Info – your Google Play system update, module by module">
   <meta property="og:description" content="Which Mainline modules your phone runs, their versions and update history. Free, no root.">
-  <meta property="og:image" content="https://simplicity-io.github.io/banner-1600.jpg">
+  <meta property="og:image" content="https://simplicity-io.github.io/og-mmi.jpg">
+  <meta property="og:image:width" content="1024">
+  <meta property="og:image:height" content="500">
   <meta property="og:url" content="https://simplicity-io.github.io/mainline-module-info/">
   <meta name="twitter:card" content="summary_large_image">
   <link rel="stylesheet" href="../style.css?v=20261022">
@@ -43,7 +45,7 @@
           },
           {
             "@type": "Question",
-            "name": "Why is my Google Play system update date different from someone else's?",
+            "name": "Why is my date different from someone else's?",
             "acceptedAnswer": { "@type": "Answer", "text": "There is no single version that every phone gets. Which modules a phone has depends on its Android version and on the phone maker, updates roll out in stages, an update can be held back or rolled back, and some modules only change with a full system update from the phone maker. Two phones can therefore show different dates and module versions, and both can be current for their model." }
           },
           {
@@ -53,8 +55,13 @@
           },
           {
             "@type": "Question",
-            "name": "Does Mainline Module Info need root or an account?",
-            "acceptedAnswer": { "@type": "Answer", "text": "No. It reads what Android reports to any app about installed packages. The module update history is stored only on your device." }
+            "name": "What do APEX, APK and APK-in-APEX mean?",
+            "acceptedAnswer": { "@type": "Answer", "text": "An APEX module is a container for low-level system components; Android mounts it at boot, so updates to it take effect after a restart. An APK module is an app-like package that updates like an app. An APK-in-APEX is an app shipped inside an APEX module." }
+          },
+          {
+            "@type": "Question",
+            "name": "Does it need root or an account? What happens to my data?",
+            "acceptedAnswer": { "@type": "Answer", "text": "No root and no account: the app reads what Android reports to any app about installed packages. The update history stays on your device. The privacy policy describes the ads and anonymous analytics the app uses." }
           }
         ]
       }
