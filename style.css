@@ -20,6 +20,7 @@
   }
 }
 * { box-sizing: border-box; }
+img { max-width: 100%; height: auto; }
 [hidden] { display: none !important; }
 html { -webkit-text-size-adjust: 100%; }
 body {
