@@ -65,7 +65,7 @@ h2::before { content: "## "; color: var(--accent); }
 .card {
   display: flex;
   gap: 1rem;
-  align-items: center;
+  align-items: flex-start;
   padding: 1rem;
   background: var(--surface);
   border: 1px solid var(--border);
