@@ -1,6 +1,6 @@
 # Simplicity.IO
 
-> Small, focused Android tools: powerful and simple. Contact: simplicity.io.dev@outlook.com
+> Small Android apps by one developer. Contact: simplicity.io.dev@outlook.com
 
 ## Apps
 
