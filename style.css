@@ -56,7 +56,7 @@ h2 { font-size: clamp(1.2rem, 2vw + .6rem, 1.6rem); margin: 2rem 0 1rem; }
 @keyframes blink { 50% { opacity: 0; } }
 h2::before { content: "## "; color: var(--accent); }
 .spec { margin: .6rem 0 0; padding: 0; list-style: none; display: flex; flex-wrap: wrap; gap: .35rem; }
-.spec li { white-space: nowrap; font-size: .78rem; padding: .1rem .5rem; border: 1px solid var(--border); border-radius: 6px; color: var(--muted); }
+.spec li { white-space: normal; font-size: .78rem; padding: .1rem .5rem; border: 1px solid var(--border); border-radius: 6px; color: var(--muted); }
 .lead { color: var(--muted); margin: 0; max-width: 40rem; }
 .apps {
   display: grid;
