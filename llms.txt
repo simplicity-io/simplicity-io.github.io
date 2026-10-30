@@ -5,4 +5,4 @@
 ## Apps
 
 - [Mainline Module Info](https://simplicity-io.github.io/mainline-module-info/) ([Google Play](https://play.google.com/store/apps/details?id=io.simplicity.trainspotting)): shows which Google Play system (Mainline) modules a device runs and tracks their updates. Android 10+ (API 29). Module history is stored on-device.
-- Linux Terminal Helper ([Google Play](https://play.google.com/store/apps/details?id=io.simplicity.toybox)): sets up and launches Android's built-in Linux Terminal. Android 15+ (API 35), needs Android's built-in Linux Terminal.
+- [Linux Terminal Helper](https://simplicity-io.github.io/linux-terminal-helper/) ([Google Play](https://play.google.com/store/apps/details?id=io.simplicity.toybox)): guides you through turning on Android's built-in Linux Terminal (Debian in a virtual machine, on Google Pixel and other supported devices with Android 15 QPR2 or later) and opens it with one tap. Android 15+ (API 35).

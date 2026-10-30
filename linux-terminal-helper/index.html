@@ -1,0 +1,158 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Linux Terminal Helper: turn on Android's built-in Linux Terminal</title>
+  <meta name="description" content="Turn on and open the Linux Terminal built into Pixel and other supported Android phones. Guided setup, home-screen shortcut and Quick Settings tile. Free.">
+  <meta name="theme-color" content="#3a5f87">
+  <link rel="canonical" href="https://simplicity-io.github.io/linux-terminal-helper/">
+  <link rel="icon" type="image/png" sizes="192x192" href="../icon-lth.png?v=20261030">
+  <link rel="apple-touch-icon" href="../icon-lth.png?v=20261030">
+  <meta property="og:type" content="website">
+  <meta property="og:site_name" content="Simplicity.IO">
+  <meta property="og:locale" content="en_US">
+  <meta property="og:title" content="Linux Terminal Helper: turn on Android's built-in Linux Terminal">
+  <meta property="og:description" content="Guided setup, one-tap launch, home-screen shortcut and Quick Settings tile for Android's Linux Terminal. Free.">
+  <meta property="og:image" content="https://simplicity-io.github.io/og-lth.jpg">
+  <meta property="og:image:width" content="1024">
+  <meta property="og:image:height" content="500">
+  <meta property="og:url" content="https://simplicity-io.github.io/linux-terminal-helper/">
+  <meta name="twitter:card" content="summary_large_image">
+  <link rel="stylesheet" href="../style.css?v=20261030">
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@graph": [
+      {
+        "@type": "SoftwareApplication",
+        "name": "Linux Terminal Helper",
+        "applicationCategory": "UtilitiesApplication",
+        "operatingSystem": "Android 15+",
+        "description": "Sets up and opens Android's built-in Linux Terminal, with guided setup, a home-screen shortcut and a Quick Settings tile.",
+        "url": "https://simplicity-io.github.io/linux-terminal-helper/",
+        "downloadUrl": "https://play.google.com/store/apps/details?id=io.simplicity.toybox",
+        "image": "https://simplicity-io.github.io/icon-lth.png",
+        "screenshot": "https://simplicity-io.github.io/shots/lth-ready.jpg",
+        "offers": { "@type": "Offer", "price": "0", "priceCurrency": "USD" },
+        "publisher": { "@type": "Organization", "name": "Simplicity.IO", "url": "https://simplicity-io.github.io/", "email": "simplicity.io.dev@outlook.com" }
+      },
+      {
+        "@type": "BreadcrumbList",
+        "itemListElement": [
+          { "@type": "ListItem", "position": 1, "name": "Simplicity.IO", "item": "https://simplicity-io.github.io/" },
+          { "@type": "ListItem", "position": 2, "name": "Linux Terminal Helper", "item": "https://simplicity-io.github.io/linux-terminal-helper/" }
+        ]
+      },
+      {
+        "@type": "FAQPage",
+        "mainEntity": [
+          {
+            "@type": "Question",
+            "name": "What is Android's Linux Terminal?",
+            "acceptedAnswer": { "@type": "Answer", "text": "It is Android's built-in Linux environment. It runs Debian in a virtual machine, powered by the Android Virtualization Framework (AVF), separated from your Android apps and data. The Terminal app ships inside the Virtualization Mainline module, so Google can update it through Google Play system updates." }
+          },
+          {
+            "@type": "Question",
+            "name": "Which phones have it?",
+            "acceptedAnswer": { "@type": "Answer", "text": "Google Pixel and other supported devices with Android 15 QPR2 or later. If your phone does not include it, Linux Terminal Helper tells you so instead of sending you through setup." }
+          },
+          {
+            "@type": "Question",
+            "name": "How do I turn it on?",
+            "acceptedAnswer": { "@type": "Answer", "text": "Switch on Developer options (if they are missing, tap Build number 7 times in About phone and enter your PIN), then turn on “Linux development environment (Experimental)”. Linux Terminal Helper shows both steps and opens the right Settings screens." }
+          },
+          {
+            "@type": "Question",
+            "name": "What happens on first launch?",
+            "acceptedAnswer": { "@type": "Answer", "text": "The first launch downloads a Debian image of about 600 MB, so use Wi-Fi. Afterwards you can install software with apt, for example sudo apt install git." }
+          },
+          {
+            "@type": "Question",
+            "name": "Is this an official Google app?",
+            "acceptedAnswer": { "@type": "Answer", "text": "No. Linux Terminal Helper is an unofficial app, not affiliated with Google or Debian. The Linux Terminal itself is part of Android." }
+          }
+        ]
+      }
+    ]
+  }
+  </script>
+</head>
+<body>
+  <main class="wrap">
+    <a class="back" href="../">&larr; Simplicity.IO</a>
+
+    <header class="app-head">
+      <img src="../icon-lth.png" width="96" height="96" alt="">
+      <div>
+        <h1>Linux Terminal Helper</h1>
+        <p class="prompt cursor">ls /apex | grep virt</p>
+      </div>
+    </header>
+    <p class="lead">Some Android phones ship a Debian Linux environment, the <strong>Linux Terminal</strong>, switched off by default. Linux Terminal Helper checks whether your phone has it, walks you through turning it on, and opens it with one tap.</p>
+    <p class="cta">
+      <a href="https://play.google.com/store/apps/details?id=io.simplicity.toybox&amp;referrer=utm_source%3Dsimplicity_io_site%26utm_medium%3Dwebsite%26utm_campaign%3Dlth_top" rel="noopener"><img class="play" src="../play-badge.png" width="646" height="250" alt="Get Linux Terminal Helper on Google Play"></a>
+    </p>
+    <ul class="spec">
+      <li>Android 15+ (API 35)</li>
+      <li>Needs Android's built-in Linux Terminal</li>
+      <li>Free on Google Play</li>
+    </ul>
+
+    <h2>What it does</h2>
+    <ul class="features">
+      <li>Checks whether your phone includes Android's Linux Terminal and tells you what is missing.</li>
+      <li>Guides you through the two setup steps: turn on Developer options, then switch on &ldquo;Linux development environment (Experimental)&rdquo;.</li>
+      <li>Opens the Terminal with one tap, and adds a home-screen shortcut and a Quick Settings tile.</li>
+      <li>A short &ldquo;About Linux Terminal&rdquo; page with links to the official Android docs and source code.</li>
+    </ul>
+
+    <h2>Screenshots</h2>
+    <div class="shots">
+      <img src="../shots/lth-ready.jpg" width="540" height="960" loading="lazy" alt="Linux Terminal is ready: an Open Linux Terminal button, plus Add to home screen and Add to Quick Settings.">
+      <img src="../shots/lth-setup.jpg" width="540" height="960" loading="lazy" alt="Guided setup: turn on Developer options, then the Linux development environment switch.">
+      <img src="../shots/lth-learn.jpg" width="540" height="960" loading="lazy" alt="About Linux Terminal: what it is, good to know, and links to official docs and source.">
+    </div>
+
+    <h2>Questions</h2>
+    <section class="faq">
+      <details>
+        <summary>What is Android's Linux Terminal?</summary>
+        <p>It is Android's built-in Linux environment. It runs Debian in a virtual machine, powered by the Android Virtualization Framework (AVF), separated from your Android apps and data. The Terminal app ships inside the Virtualization Mainline module, so Google can update it through Google Play system updates.</p>
+      </details>
+      <details>
+        <summary>Which phones have it?</summary>
+        <p>Google Pixel and other supported devices with Android 15 QPR2 or later. If your phone does not include it, Linux Terminal Helper tells you so instead of sending you through setup.</p>
+      </details>
+      <details>
+        <summary>How do I turn it on?</summary>
+        <p>Switch on Developer options (if they are missing, tap Build number 7 times in About phone and enter your PIN), then turn on “Linux development environment (Experimental)”. Linux Terminal Helper shows both steps and opens the right Settings screens.</p>
+      </details>
+      <details>
+        <summary>What happens on first launch?</summary>
+        <p>The first launch downloads a Debian image of about 600 MB, so use Wi-Fi. Afterwards you can install software with apt, for example sudo apt install git.</p>
+      </details>
+      <details>
+        <summary>Is this an official Google app?</summary>
+        <p>No. Linux Terminal Helper is an unofficial app, not affiliated with Google or Debian. The Linux Terminal itself is part of Android.</p>
+      </details>
+    </section>
+
+    <h2>Get it</h2>
+    <p class="lead">Free on Google Play. Android 15 or later, on a phone that includes the Linux Terminal.</p>
+    <p class="cta">
+      <a href="https://play.google.com/store/apps/details?id=io.simplicity.toybox&amp;referrer=utm_source%3Dsimplicity_io_site%26utm_medium%3Dwebsite%26utm_campaign%3Dlth_bottom" rel="noopener"><img class="play" src="../play-badge.png" width="646" height="250" alt="Get Linux Terminal Helper on Google Play"></a>
+    </p>
+    <p class="lead">Also from Simplicity.IO: <a href="../mainline-module-info/">Mainline Module Info</a>, which lists every Mainline module on your phone, including the one that runs this Terminal.</p>
+
+    <footer>
+      <div class="foot-links">
+        <a href="mailto:simplicity.io.dev@outlook.com">Contact</a>
+        <span>&copy; Simplicity.IO</span>
+        <span>Not affiliated with Google or Debian. Google Play and the Google Play logo are trademarks of Google LLC.</span>
+      </div>
+      <img class="foot-logo" src="../logo-360.jpg" width="360" height="203" alt="Simplicity.IO logo">
+    </footer>
+  </main>
+</body>
+</html>
