@@ -1,0 +1,186 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>AI Capability Check : questions et réponses</title>
+  <meta name="description" content="Réponses sur AI Capability Check : téléphones compatibles, confidentialité, durée d’un test, signification du score et de chaque libellé.">
+  <meta name="theme-color" content="#00696E">
+  <link rel="canonical" href="https://simplicity-io.github.io/ai-capability-check/faq/fr/">
+  <link rel="alternate" hreflang="en" href="https://simplicity-io.github.io/ai-capability-check/faq/">
+  <link rel="alternate" hreflang="es" href="https://simplicity-io.github.io/ai-capability-check/faq/es/">
+  <link rel="alternate" hreflang="fr" href="https://simplicity-io.github.io/ai-capability-check/faq/fr/">
+  <link rel="alternate" hreflang="pt-BR" href="https://simplicity-io.github.io/ai-capability-check/faq/pt-BR/">
+  <link rel="alternate" hreflang="zh-CN" href="https://simplicity-io.github.io/ai-capability-check/faq/zh-CN/">
+  <link rel="alternate" hreflang="zh-TW" href="https://simplicity-io.github.io/ai-capability-check/faq/zh-TW/">
+  <link rel="alternate" hreflang="x-default" href="https://simplicity-io.github.io/ai-capability-check/faq/">
+  <link rel="icon" type="image/png" sizes="192x192" href="../../../icon-192.png?v=20261030">
+  <link rel="stylesheet" href="../../../style.css?v=20261030">
+  <meta property="og:type" content="article">
+  <meta property="og:site_name" content="Simplicity.IO">
+  <meta property="og:locale" content="fr">
+  <meta property="og:title" content="AI Capability Check : questions et réponses">
+  <meta property="og:description" content="Réponses sur AI Capability Check : téléphones compatibles, confidentialité, durée d’un test, signification du score et de chaque libellé.">
+  <meta property="og:url" content="https://simplicity-io.github.io/ai-capability-check/faq/fr/">
+  <style>
+    .doc h2 { margin-top: 2.2rem; }
+    .doc h3 { margin-top: 1.6rem; }
+    .doc .table { overflow-x: auto; }
+    .doc table { border-collapse: collapse; width: 100%; font-size: .95em; }
+    .doc th, .doc td { border: 1px solid rgba(127,127,127,.35); padding: .45em .6em; text-align: left; vertical-align: top; }
+    .doc .formula { font-size: 1.15em; text-align: center; }
+    .doc a[id] { scroll-margin-top: 1rem; }
+    .lang { display: flex; flex-wrap: wrap; gap: .35rem .75rem; font-size: .85em; margin: .25rem 0 0; }
+    .lang > * { display: inline-block; white-space: nowrap; }
+    .lang [aria-current="page"] { font-weight: 700; color: inherit; text-decoration: none; }
+  </style>
+</head>
+<body>
+  <main class="wrap doc">
+    <a class="back" href="../../../">&larr; Simplicity.IO</a>
+    <nav class="lang" aria-label="Langue"><a href="../" lang="en" hreflang="en">English</a><a href="../es/" lang="es" hreflang="es">Español</a><span aria-current="page" lang="fr">Français</span><a href="../pt-BR/" lang="pt-BR" hreflang="pt-BR">Português (Brasil)</a><a href="../zh-CN/" lang="zh-CN" hreflang="zh-CN">中文（简体）</a><a href="../zh-TW/" lang="zh-TW" hreflang="zh-TW">中文（繁體）</a></nav>
+<h1>AI Capability Check : Questions et réponses</h1>
+<p>Réponses aux questions que vous pouvez vous poser avant d’installer l’application, pendant un test et à la lecture de vos résultats. Les libellés de l’application renvoient à la section correspondante de cette page.</p>
+<p>Dernière mise à jour : 2026-11-04 (application 0.1.x, en développement). Les fonctions marquées <em>(bientôt)</em> ne sont pas encore dans l’application. La méthodologie complète n’est disponible qu’en anglais.</p>
+<ul><li><a href="#before-you-install">Avant l’installation</a></li><li><a href="#while-the-test-runs">Pendant le test</a></li><li><a href="#your-score">Votre score</a></li><li><a href="#what-the-labels-mean">Signification des libellés</a></li><li><a href="#ai-processor-npu-status">État du processeur d’IA (NPU)</a></li><li><a href="#problems-and-reports">Problèmes et signalements</a></li></ul>
+<hr>
+<a id="before-you-install"></a>
+<h2>Avant l’installation</h2>
+<a id="what-it-does"></a>
+<h3>À quoi sert l’application ?</h3>
+<p>Elle mesure la capacité de votre téléphone à exécuter l’IA directement sur l’appareil, sans Internet. Elle chronomètre les mêmes modèles d’IA sur chacun des processeurs de votre téléphone (CPU, GPU et le processeur d’IA, appelé NPU), vérifie que chacun donne des réponses correctes et résume le tout en un score. Les détails figurent dans la <a href="../../methodology/">méthodologie du test</a>.</p>
+<a id="supported-phones"></a>
+<h3>Quels téléphones sont pris en charge ?</h3>
+<p>Les téléphones sous Android 11 ou plus récent. Peu après le lancement, le Play Store ne propose l’application que sur les modèles de téléphones dont nous avons confirmé le bon fonctionnement. D’autres modèles sont ajoutés au fur et à mesure que les résultats arrivent ; si votre téléphone ne peut pas encore l’installer, revenez plus tard.</p>
+<a id="why-android-11"></a>
+<h3>Pourquoi Android 11 ou plus récent ?</h3>
+<p>Les tests utilisent des fonctions système apparues avec Android 11, comme la lecture de la proximité du seuil de ralentissement dû à la chaleur. Nous gardons le minimum aussi bas que ces fonctions le permettent.</p>
+<a id="storage"></a>
+<h3>Quel espace faut-il ?</h3>
+<p>L’application contient ses photos de test ainsi que les modèles de classification de photos et de détection d’objets (environ 60 Mo de modèles). Le modèle de conversation est un téléchargement optionnel séparé d’environ 1 Go <em>(bientôt : téléchargement depuis l’application)</em>. Sans lui, le score ne couvre que les tests photo.</p>
+<a id="internet"></a>
+<h3>Faut-il une connexion Internet ?</h3>
+<p>Non, les tests se déroulent entièrement sur votre téléphone. Internet ne sert qu’à télécharger le modèle de conversation optionnel.</p>
+<a id="privacy"></a>
+<h3>Quelles données quittent mon téléphone ?</h3>
+<p>Aucune donnée personnelle. Les photos et les questions de test sont intégrées à l’application ; rien de votre appareil photo, de votre galerie ou de vos fichiers n’est utilisé. Les versions publiées envoient des statistiques d’utilisation anonymes (par exemple, le nombre de tests terminés par modèle de téléphone) afin de savoir quels téléphones fonctionnent bien. Elles ne contiennent jamais de nom, de compte, d’identifiant, de photo ni de message. Un signalement de problème n’est envoyé que lorsque vous appuyez sur Envoyer <em>(bientôt)</em>.</p>
+<a id="battery-heat"></a>
+<h3>Est-ce mauvais pour la batterie ou le téléphone ?</h3>
+<p>Un test complet occupe les processeurs pendant environ 10 à 25 minutes ; le téléphone chauffe et consomme un peu de batterie, comme un jeu exigeant. La dernière partie, le test de chaleur, fait volontairement travailler le téléphone pendant 2 minutes. C’est sans danger : les téléphones se protègent en ralentissant lorsqu’ils chauffent. L’application vérifie la batterie et la température avant de démarrer et vous avertira si la batterie est faible ou si le téléphone est déjà chaud <em>(bientôt : l’avertissement à l’écran)</em>.</p>
+<hr>
+<a id="while-the-test-runs"></a>
+<h2>Pendant le test</h2>
+<a id="how-long"></a>
+<h3>Combien de temps dure un test ?</h3>
+<p>Environ 10 à 25 minutes selon le téléphone. La plus grande partie du temps est consacrée au modèle de conversation, qui charge un modèle de 1 Go et répond à des questions sur chaque processeur. Les téléphones plus rapides terminent plus tôt.</p>
+<a id="keep-screen-on"></a>
+<h3>Puis-je utiliser le téléphone pendant le test ?</h3>
+<p>Merci de ne pas le faire. Laissez l’application ouverte et le téléphone posé sur une table. Les autres applications, les notifications, les appels vidéo ou les jeux consomment du temps de processeur et rendent les résultats plus lents et moins stables. L’application garde l’écran allumé d’elle-même.</p>
+<a id="charging"></a>
+<h3>En charge ou sur batterie ?</h3>
+<p>Les deux fonctionnent, et l’application note lequel vous utilisez. Les résultats ne sont comparés qu’avec d’autres résultats dans le même état, car certains téléphones vont plus vite ou plus lentement en charge. « Sur batterie » sert de référence pour les classements.</p>
+<a id="animations-pause"></a>
+<h3>Pourquoi l’écran s’arrête-t-il de bouger parfois ?</h3>
+<p>Pendant une mesure, l’application suspend ses animations pour que l’affichage de l’écran ne prenne pas de temps au test. Les résultats et les images apparaissent entre les mesures.</p>
+<a id="heat-test"></a>
+<h3>Qu’est-ce que le test de chaleur ?</h3>
+<p>Après les tests principaux, le téléphone reconnaît des photos sans interruption pendant 2 minutes sur son processeur le plus rapide qui donne des réponses correctes. Les téléphones chauffent sous une charge constante et se ralentissent pour protéger la batterie et la puce. Nous comparons la vitesse à la fin avec la vitesse au début : « Reste rapide à chaud : 94 % » signifie que le téléphone a conservé 94 % de sa vitesse de départ. Ce chiffre est affiché à côté du score, et non dedans, car il mesure le refroidissement et non la capacité d’IA.</p>
+<a id="chat-test"></a>
+<h3>Qu’est-ce que le test de conversation ?</h3>
+<p>Un petit modèle de conversation d’IA (Qwen3 1.7B) fonctionne sur votre téléphone sans Internet. Nous mesurons sa vitesse de lecture d’une question et d’écriture d’une réponse, en tokens par seconde (un token correspond à peu près à un mot court ou à une partie de mot). Il répond aussi à trois questions simples, pour vérifier que chaque processeur l’exécute correctement.</p>
+<hr>
+<a id="your-score"></a>
+<h2>Votre score</h2>
+<a id="score"></a>
+<h3>Que signifie le score ?</h3>
+<p>Il résume la vitesse à laquelle votre téléphone exécute les trois tests d’IA, avec des réponses correctes. Un Google Pixel 9 Pro XL sur batterie obtient 1000 ; un téléphone à 500 est environ deux fois moins rapide sur ces tâches. Pendant le développement, la référence est provisoire et les scores peuvent encore évoluer.</p>
+<a id="level"></a>
+<h3>Qu’est-ce que le niveau ? <em>(bientôt)</em></h3>
+<p>Cinq niveaux regroupent les scores : Basique, Capable, Avancé, Haut de gamme et Ultra-avancé. Si un test n’a pas pu s’exécuter sur votre téléphone, le niveau est plafonné, car le téléphone ne peut pas tout faire de ce que le niveau suppose.</p>
+<a id="different-results"></a>
+<h3>Pourquoi mon score diffère-t-il de la dernière fois, ou de celui du même téléphone ailleurs ?</h3>
+<p>De petites différences (quelques pour cent) sont normales : la température, la charge, les applications en arrière-plan et les mises à jour système jouent un rôle. Pour le résultat le plus stable, testez sur batterie, avec le téléphone froid, rien d’autre en cours et l’écran allumé.</p>
+<a id="test-not-run"></a>
+<h3>Un test affiche « — » ou « échec de l’exécution ». Mon téléphone est-il cassé ?</h3>
+<p>Non. Certains téléphones ne peuvent pas exécuter tous les tests : par exemple, le modèle de conversation nécessite environ 1,2 Go de mémoire libre. Un test manquant compte comme le plus bas résultat du score et plafonne le niveau ; l’écran de détails indique pourquoi.</p>
+<hr>
+<a id="what-the-labels-mean"></a>
+<h2>Signification des libellés</h2>
+<a id="correct-answers"></a>
+<h3>Réponses correctes</h3>
+<p>Ce processeur a donné les mêmes réponses que le CPU (la référence). Seuls les processeurs aux réponses correctes comptent dans le score.</p>
+<a id="wrong-answers"></a>
+<h3>Réponses fausses</h3>
+<p>Ce processeur a donné des réponses différentes de celles du CPU sur la plupart des photos de test. Cela vient soit du pilote du téléphone (le logiciel fourni par le fabricant pour ce processeur), soit de la façon dont le moteur d’IA de l’application, LiteRT de Google, gère ce processeur ; notre test seul ne permet pas de le savoir. Quand des téléphones le signalent, nous vérifions avec les outils de Google avant de décider. Nous n’ajoutons pas de contournements pour des téléphones particuliers, car cela rendrait les résultats injustes. Le temps de ce processeur est affiché mais non compté, et votre score utilise les processeurs qui ont répondu correctement.</p>
+<a id="used-in-score"></a>
+<h3>Utilisé dans le score</h3>
+<p>Le processeur le plus rapide aux réponses correctes pour ce test. C’est le temps sur lequel repose votre score.</p>
+<a id="steady"></a>
+<h3>Stable</h3>
+<p>Le temps est resté presque identique sur les 5 séries de mesures (à 10 % près).</p>
+<a id="unsteady"></a>
+<h3>Instable sur ce téléphone</h3>
+<p>Le temps a beaucoup varié d’une série à l’autre (plus de 10 %). Ce n’est pas une erreur : le score utilise la valeur médiane, qui tient même lorsque certaines séries sautent. La cause la plus fréquente est que le processeur graphique réduit sa vitesse dans les minuscules pauses entre les photos, puis la remonte ; la chaleur, la charge et les applications en arrière-plan peuvent aggraver le phénomène. Réessayez avec le téléphone froid, sur batterie et sans autre application en cours.</p>
+<a id="no-speedup"></a>
+<h3>Pas plus rapide que le CPU</h3>
+<p>Ce processeur a donné des réponses correctes, mais n’était pas au moins 3 % plus rapide que le CPU. Souvent, le téléphone a discrètement exécuté le travail sur le CPU, ou ce processeur n’est pas conçu pour ce type de modèle. Il est affiché pour que le résultat ne soit pas pris pour un accélérateur qui fonctionne.</p>
+<a id="skipped"></a>
+<h3>Ignoré</h3>
+<p>Nous n’exécutons pas ce modèle sur ce processeur, volontairement. Par exemple, les modèles compressés (INT8) donnent des réponses fausses sur les processeurs graphiques de nombreux téléphones ; ils ne sont donc exécutés que sur le CPU et le processeur d’IA.</p>
+<a id="not-on-this-phone"></a>
+<h3>Absent de ce téléphone</h3>
+<p>Votre téléphone ne propose pas ce processeur aux applications.</p>
+<a id="couldnt-run"></a>
+<h3>Échec de l’exécution</h3>
+<p>Le processeur est bien là, mais il a refusé le modèle ou n’a pas terminé à temps (par exemple, la préparation du modèle a dépassé la limite de 60 secondes d’Android). Votre score utilise les processeurs qui ont pu s’exécuter.</p>
+<a id="completion"></a>
+<h3>Tests terminés</h3>
+<p>Le nombre d’éléments de test sur 8 qui se sont terminés avec des réponses correctes : 6 modèles de photos et de détection d’objets, le modèle de conversation et le test de chaleur. Un téléphone qui termine plus de 60 % est considéré comme pris en charge.</p>
+<hr>
+<a id="ai-processor-npu-status"></a>
+<h2>Processeur d’IA (NPU) : état</h2>
+<a id="npu-working"></a>
+<h3>Fonctionne bien</h3>
+<p>Le processeur d’IA de votre téléphone a exécuté le test avec des réponses correctes et était plus rapide que le CPU.</p>
+<a id="npu-results-dont-match"></a>
+<h3>Les résultats ne correspondent pas</h3>
+<p>Le processeur d’IA a fonctionné, mais ses réponses diffèrent de celles du CPU ; ses résultats ne sont donc pas comptés. Cela vient du pilote du téléphone ou de la façon dont le moteur d’IA de l’application gère ce processeur ; une mise à jour du système ou de l’application peut le corriger.</p>
+<a id="npu-no-driver"></a>
+<h3>Aucun pilote Android</h3>
+<p>La puce dispose d’un processeur d’IA, mais le téléphone ne donne pas aux applications de moyen standard Android pour l’utiliser. De nombreux Snapdragon récents fonctionnent ainsi ; sur ceux-là, l’application utilise les bibliothèques du fabricant de la puce lorsque c’est possible.</p>
+<a id="npu-locked"></a>
+<h3>Verrouillé par le fabricant</h3>
+<p>Le processeur d’IA existe, mais le fabricant du téléphone n’autorise que certaines applications à l’utiliser.</p>
+<a id="npu-not-supported-yet"></a>
+<h3>Pas encore pris en charge</h3>
+<p>L’application ne prend pas encore en charge le processeur d’IA de cette puce. Nous ajoutons des puces au fur et à mesure que nous pouvons les tester.</p>
+<a id="npu-none"></a>
+<h3>Pas de NPU</h3>
+<p>La puce ne dispose pas de processeur d’IA séparé. L’IA s’exécute sur le CPU et le GPU, ce qui est courant sur les téléphones d’entrée de gamme.</p>
+<a id="via-nnapi"></a>
+<h3>« via NNAPI »</h3>
+<p>NNAPI est le moyen standard d’Android pour que les applications accèdent aux processeurs d’IA. Sur les Google Pixel, c’est ainsi que les applications atteignent la TPU de la puce Tensor, le processeur d’IA de Google. Android décide quelle unité exécute le travail ; l’application l’indique donc comme « via NNAPI ».</p>
+<hr>
+<a id="problems-and-reports"></a>
+<h2>Problèmes et signalements</h2>
+<a id="report-problem"></a>
+<h3>Que se passe-t-il lorsque j’appuie sur « Signaler un problème » ? <em>(bientôt)</em></h3>
+<p>L’application envoie un court rapport technique : modèle de téléphone, puce, pilote graphique, versions d’Android et de l’application, et tests en échec. Rien de personnel n’est inclus, et il n’est envoyé que lorsque vous appuyez sur Envoyer, au plus une fois par téléphone et par version de l’application. Ces rapports nous aident à décider quels modèles de téléphones prendre en charge et quels problèmes corriger.</p>
+<a id="app-closed"></a>
+<h3>Le test s’est arrêté ou l’application s’est fermée. Et maintenant ?</h3>
+<p>Certains téléphones ferment les applications qui exécutent des tâches longues. Gardez l’écran allumé et l’application au premier plan, puis recommencez. Si cela se reproduit, merci de le signaler.</p>
+<a id="phone-not-listed"></a>
+<h3>Mon téléphone ne peut pas installer l’application. Pourquoi ?</h3>
+<p>Peu après le lancement, nous ne proposons l’application que sur les modèles de téléphones dont nous avons confirmé le bon fonctionnement, afin que tout le monde obtienne des résultats fiables. D’autres modèles sont ajoutés au fil du temps.</p>
+    <footer>
+      <div class="foot-links">
+        <a href="../../../privacy.html">Confidentialité</a>
+        <a href="mailto:simplicity.io.dev@outlook.com">Contact</a>
+        <span>&copy; Simplicity.IO</span>
+        <span>Non affilié à Google. Android est une marque de Google LLC.</span>
+      </div>
+      <img class="foot-logo" src="../../../logo-360.jpg" width="360" height="203" alt="Simplicity.IO logo">
+    </footer>
+  </main>
+</body>
+</html>

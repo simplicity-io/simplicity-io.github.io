@@ -1,0 +1,96 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>AI Capability Check: test methodology</title>
+  <meta name="description" content="How AI Capability Check measures a phone&#x27;s on-device AI: tests, models, processors, timing, answer checks and scoring.">
+  <meta name="theme-color" content="#00696E">
+  <link rel="canonical" href="https://simplicity-io.github.io/ai-capability-check/methodology/">
+  <link rel="icon" type="image/png" sizes="192x192" href="../../icon-192.png?v=20261030">
+  <link rel="stylesheet" href="../../style.css?v=20261030">
+  <meta property="og:type" content="article">
+  <meta property="og:site_name" content="Simplicity.IO">
+  <meta property="og:locale" content="en">
+  <meta property="og:title" content="AI Capability Check: test methodology">
+  <meta property="og:description" content="How AI Capability Check measures a phone&#x27;s on-device AI: tests, models, processors, timing, answer checks and scoring.">
+  <meta property="og:url" content="https://simplicity-io.github.io/ai-capability-check/methodology/">
+  <style>
+    .doc h2 { margin-top: 2.2rem; }
+    .doc h3 { margin-top: 1.6rem; }
+    .doc .table { overflow-x: auto; }
+    .doc table { border-collapse: collapse; width: 100%; font-size: .95em; }
+    .doc th, .doc td { border: 1px solid rgba(127,127,127,.35); padding: .45em .6em; text-align: left; vertical-align: top; }
+    .doc .formula { font-size: 1.15em; text-align: center; }
+    .doc a[id] { scroll-margin-top: 1rem; }
+    .lang { display: flex; flex-wrap: wrap; gap: .35rem .75rem; font-size: .85em; margin: .25rem 0 0; }
+    .lang > * { display: inline-block; white-space: nowrap; }
+    .lang [aria-current="page"] { font-weight: 700; color: inherit; text-decoration: none; }
+  </style>
+</head>
+<body>
+  <main class="wrap doc">
+    <a class="back" href="../../">&larr; Simplicity.IO</a>
+<h1>AI Capability Check: Test methodology</h1>
+<p>Version 1 of the public methodology (suite version 1, app 0.1.x, in development).</p>
+<p>AI Capability Check measures a phone's on-device AI performance so that results can be checked and repeated. This document describes what is measured, how, and what the results do and do not show.</p>
+<h2>Overview</h2>
+<p>One run times fixed AI models on every processor the phone offers, checks that each processor's answers are correct, and turns the best correct times into one AI Capability Score and a level.</p>
+<ul><li><strong>Tests:</strong> image classification, object detection, and a chat model (LLM). Audio tests are planned for a later stage.</li><li><strong>Processors:</strong> CPU, GPU and NPU, each measured separately. A processor counts only if its answers match the CPU's.</li><li><strong>Also measured, not scored:</strong> a 2-minute sustained run (how much the phone slows when hot) and the phone's state (battery, temperature, charging).</li><li><strong>Not scored:</strong> Google-managed AI features such as Gemini Nano. Google controls their versions, so they are shown beside the score, not in it.</li><li><strong>Everything runs on the phone.</strong> Nothing is uploaded unless the user opts in.</li></ul>
+<h2>Tests and models</h2>
+<p>Each test runs one to three models chosen in advance, using open licences and LiteRT-compatible files. Every phone runs the same set, so scores stay comparable.</p>
+<div class="table"><table><thead><tr><th>Test</th><th>Models (float / INT8 unless noted)</th><th>Licence</th><th>Source</th></tr></thead><tbody><tr><td>Image classification</td><td>MobileNet V2 1.0 224</td><td>Apache 2.0</td><td>TensorFlow hosted models</td></tr><tr><td>Image classification</td><td>EfficientNet-Lite0</td><td>Apache 2.0</td><td>TensorFlow on Kaggle Models</td></tr><tr><td>Object detection</td><td>EfficientDet-Lite0</td><td>Apache 2.0</td><td>Google MediaPipe models</td></tr><tr><td>Chat model (LLM)</td><td>Qwen3 1.7B, INT4 (optional download)</td><td>Apache 2.0</td><td>litert-community on Hugging Face</td></tr></tbody></table></div>
+<p>Exact files are pinned by SHA-256 in the app's source repository. The chat model is never bundled with the app.</p>
+<h2>Model choice: reliability first</h2>
+<p>Models are chosen for how reliably they finish and give correct answers on every reference phone, not for how impressive they are.</p>
+<ul><li>A new candidate model first runs as a <strong>trial</strong>: it is measured and reported, but not scored, until it finishes with matching answers on every reference device.</li><li>A model that keeps failing on some phones or processors is replaced rather than kept with exceptions. A failure on one processor alone (for example a compile time-out) falls back to the CPU and is fixed or dropped before the suite version is frozen.</li><li>Over time the suite narrows to the models with the best completion record.</li></ul>
+<h2>Which phones are covered</h2>
+<p>The app aims to cover as many phones as possible. A phone is supported when its chipset and Android version are supported by the app and it completes <strong>more than 60%</strong> of the tests. A test counts as finished when it gives a time and correct answers, on the CPU at least. Each run reports its own completion rate: items finished out of 8 (six photo models, the chat model and the sustained run), and whether that exceeds 60%. A missing chat model, a skip for low memory or a time-out counts as not finished.</p>
+<ul><li><strong>Minimum Android version:</strong> set by the system features the tests need, kept as low as possible to reach more phones.</li><li><strong>Phone problems are shown, not hidden.</strong> When one phone of an otherwise working model fails because of the phone itself (a faulty driver, firmware or an overheating unit), the app adds no special workaround for it. It states what failed, why, and what still counts.</li><li><strong>Phones that complete 60% or less</strong> are identified through the app's run reports and users' in-app problem reports. Before such a phone model is removed from the store's list of supported devices, a problem in the app is ruled out first.</li></ul>
+<h2>Test inputs</h2>
+<p>All inputs ship with the app and are identical on every phone.</p>
+<ul><li><strong>Classification photos:</strong> 14 public-domain or CC0 photos from Wikimedia Commons, centre-cropped to 224×224 lossless PNG. They were chosen from 41 candidates because both MobileNet versions recognise them with a clear margin.</li><li><strong>Detection photos:</strong> 9 of those photos at 320×320, each showing a clear everyday object.</li><li><strong>Chat model:</strong> a 256-token prompt for speed runs, plus three quiz questions with one correct answer each: the planets in order from the Sun, the capital of France, and 17 + 25.</li><li><strong>Why not random noise:</strong> on random pixels every class scores almost the same, so tiny rounding differences change the answer and correct processors look wrong. Real photos have a clear answer.</li></ul>
+<p>Photo sources and licences are listed in the app's source repository.</p>
+<h2>Processors</h2>
+<p>Each model runs separately on every processor the phone offers, through Google's LiteRT runtime (LiteRT-LM for the chat model), with fixed settings so every phone runs the same way.</p>
+<div class="table"><table><thead><tr><th>Processor</th><th>Route</th><th>Fixed settings</th><th>Skipped when</th></tr></thead><tbody><tr><td>CPU</td><td>LiteRT (XNNPACK)</td><td>4 threads</td><td>never; it is the reference for answers</td></tr><tr><td>GPU</td><td>LiteRT GPU (OpenCL / OpenGL ES)</td><td>FP16 precision, default priority</td><td>the phone offers no GPU; INT8 models (INT8 on GPUs gave wrong answers); the chat model when the GPU failed a vision answer check</td></tr><tr><td>NPU, Snapdragon</td><td>LiteRT with the vendor's Qualcomm libraries</td><td>"Burst" mode for the main tests, "sustained high" for the sustained run</td><td>the chip is not supported</td></tr><tr><td>NPU via NNAPI</td><td>Android's Neural Networks API through LiteRT's C API in a small native bridge</td><td>—</td><td>the phone has no vendor NNAPI driver (the framework's reference driver is CPU-only); the driver cannot compile the model</td></tr><tr><td>NPU, chat model</td><td>needs a model file compiled for each chip</td><td>—</td><td>not yet supported</td></tr></tbody></table></div>
+<p>A processor is measured only if the phone reports it. LiteRT and NNAPI can quietly run work on the CPU instead. So any GPU, NPU or NNAPI result that is not at least 3% faster than the CPU is flagged "no speed-up" and never shown as a working accelerator. On Google Tensor phones, LiteRT's NPU route is skipped because Google limits that route to approved apps; the TPU is measured through NNAPI instead.</p>
+<h2>Timing</h2>
+<p>The reported time is the median of many timed runs on one fixed photo, after a warm-up.</p>
+<ol><li><strong>Load:</strong> the model is loaded and compiled for the processor. Load time is recorded separately and not scored.</li><li><strong>Warm-up:</strong> at least 10 runs and at least 1 s (CPU), 2 s (GPU) or 0.5 s (NPU), because processor clocks ramp up in the first second.</li><li><strong>Timed rounds:</strong> 5 rounds, each at least 50 runs and at least 1 s long. Every run includes reading back one output, because GPUs and NPUs can return before their work is done. Only the smallest output is read, so copying large outputs is not timed.</li><li><strong>Result:</strong> the median of all timed runs, plus the 90th percentile.</li><li><strong>Spread:</strong> how much the round medians differ, as a share of their median, leaving out the single fastest and slowest round. The full range is kept too. The target is 5% or less.</li><li><strong>Steadiness:</strong> a result whose spread is over 10% is labelled <strong>unsteady on this phone</strong>. Unsteady is not a failure: the score uses the median, which holds up when single rounds jump, and the completion rate ignores steadiness. Only wrong answers or a test that does not finish count as failures. For the chat model, the spread of answer speed across its three runs is used.</li></ol>
+<p><strong>Why results vary.</strong> CPUs are usually steady. GPUs vary most on short tests, because phones lower GPU clocks in the short gaps between photos and must raise them again. Some GPU drivers are unreliable and can swing widely or give wrong answers. Heat matters in long runs, which the sustained run measures. The app does not tune itself per phone, so every phone is measured the same way.</p>
+<p><strong>Why runs are not simply made longer.</strong> Each round already lasts at least 1 s and 50 runs. Longer rounds average more photos but do not remove the gaps between photos, which is where GPU clocks drop. They also heat the phone, which brings throttling in, and make users wait longer. Running photos back to back without reading each answer would hide the gap, but it would measure throughput rather than the time to answer one photo.</p>
+<p><strong>Chat model:</strong> LiteRT-LM's own benchmark reads a 256-token prompt and writes 64 tokens, three times per processor. The medians of prompt speed and answer speed (tokens per second), time to first token and load time are reported.</p>
+<p>Every line of a run is also written to a log file on the phone, and the full report is saved as JSON.</p>
+<h2>Answer checks</h2>
+<p>A fast processor with wrong answers counts for nothing. After timing, each processor answers every test input once (untimed), and its answers are compared with the CPU running the same model.</p>
+<div class="table"><table><thead><tr><th>Test</th><th>A processor's results match the CPU when…</th></tr></thead><tbody><tr><td>Image classification</td><td>its top answer equals the CPU's on at least 90% of the 14 photos, and is always among the CPU's top 5</td></tr><tr><td>Object detection</td><td>its best class equals the CPU's on at least 90% of the 9 photos, with the score within 0.15</td></tr><tr><td>Chat model</td><td>it answers at least as many of the 3 quiz questions correctly as the CPU (greedy decoding, model "thinking" off)</td></tr></tbody></table></div>
+<p><strong>Wrong quiz answers.</strong> The quiz checks that a processor runs the model correctly, not how capable the model is. A small, 4-bit compressed model can get a question wrong on every processor. That is a limit of the model, so the CPU's own result is the yardstick and quiz answers are never scored on their own. A processor fails the check only when it gets fewer right than the CPU, which points to number-precision differences (GPUs often compute at half precision) or a driver problem.</p>
+<p>The CPU itself is checked against reference answers computed on a PC with the same model files. This shows that photos are decoded identically on the phone.</p>
+<p>A processor that fails shows <strong>"Results don't match"</strong> and is left out of the score.</p>
+<h2>Sustained run and pre-run checks</h2>
+<p><strong>Sustained run.</strong> Last in every run, because it heats the phone on purpose. MobileNet V2 runs non-stop for 2 minutes on the fastest processor whose answers were correct. Every 10 seconds the app records photos per second, latency, battery temperature, the phone's thermal state and, where the phone reports it, live thermal headroom (1.0 means the phone starts slowing itself down). Android refreshes battery temperature only about once a minute, so the summary also keeps the battery temperature at the start and end. <strong>Sustained %</strong> is the speed in the last 30 seconds divided by the speed in the first 30 seconds. It is shown beside the score, never inside it.</p>
+<p><strong>Pre-run checks.</strong> Before a run the app records battery level, battery temperature, thermal state and power source, and warns about:</p>
+<ul><li>battery under 20% while not charging (some phones slow down)</li><li>battery over 40 °C (let the phone cool first)</li><li>the phone already limiting its own speed because of heat</li><li>charging (recorded, not a failure; results are compared only within the same power state)</li></ul>
+<p>The chat model also needs free memory of at least 1.2× its file size, or it is skipped, and each processor gets at most 15 minutes for it.</p>
+<h2>Scoring and levels</h2>
+<p>Every result shows the numeric <strong>AI Capability Score</strong>, for comparing, and one of five <strong>levels</strong>, for a quick read.</p>
+<ol><li><strong>Reference phone:</strong> a reference phone scores exactly 1000 on suite version 1. Until it is measured, scores use provisional reference values and are marked "provisional".</li><li><strong>Test score:</strong> for vision tests, reference time ÷ your time × 1000 (twice as fast = 2000). For the chat model, your speed ÷ reference speed × 1000, averaging prompt and answer speed. Each test uses its best processor whose answers matched.</li><li><strong>AI Capability Score:</strong> the geometric mean of the three test scores, so one very fast test cannot hide a very slow one.</li></ol>
+<p class="formula">Score = (S<sub>classification</sub> × S<sub>detection</sub> × S<sub>chat</sub>)<sup>1/3</sup></p>
+<p><strong>Edge cases:</strong></p>
+<ul><li>If the chat model cannot run (not enough memory, time-out), that test gets the floor score of 1 and the level is capped at the lowest two. A score of exactly 0 would make the whole geometric mean 0.</li><li>If the chat model is not downloaded, the result is marked "Vision only" and is not ranked against full results.</li><li>A processor marked "Results don't match" never counts. If no processor matches, that test gets the floor score of 1.</li><li>Sustained % and Google-managed AI features are shown beside the score, not in it.</li></ul>
+<p><strong>Levels:</strong> Basic, Capable, Advanced, Flagship and Cutting-edge, by score range. Boundaries are set once enough reference measurements exist.</p>
+<h2>Fairness rules and versioning</h2>
+<ul><li><strong>Same inputs everywhere:</strong> models, photos and prompts are fixed and pinned by SHA-256. Scores are compared only within the same suite version.</li><li><strong>Nothing else runs during a test:</strong> no ads load or refresh and no network work happens until the run ends.</li><li><strong>Same power state:</strong> results are compared only with runs in the same power state (on battery or charging).</li><li><strong>Honest fallbacks:</strong> a processor the phone does not offer is skipped, never scored. Suspected CPU fallbacks are flagged.</li><li><strong>Model downloads:</strong> the chat model is downloaded once, ahead of the run, and checked against its pinned SHA-256 before use.</li><li><strong>New suite version:</strong> any change to models, inputs, settings or the formula raises the suite version, and the reference phone is measured again so that it scores 1000.</li></ul>
+    <footer>
+      <div class="foot-links">
+        <a href="../../privacy.html">Privacy</a>
+        <a href="mailto:simplicity.io.dev@outlook.com">Contact</a>
+        <span>&copy; Simplicity.IO</span>
+        <span>Not affiliated with Google. Android is a trademark of Google LLC.</span>
+      </div>
+      <img class="foot-logo" src="../../logo-360.jpg" width="360" height="203" alt="Simplicity.IO logo">
+    </footer>
+  </main>
+</body>
+</html>

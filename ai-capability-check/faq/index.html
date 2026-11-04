@@ -1,0 +1,186 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>AI Capability Check: questions and answers</title>
+  <meta name="description" content="Answers about AI Capability Check: supported phones, privacy, how long a test takes, what the score and each result label mean.">
+  <meta name="theme-color" content="#00696E">
+  <link rel="canonical" href="https://simplicity-io.github.io/ai-capability-check/faq/">
+  <link rel="alternate" hreflang="en" href="https://simplicity-io.github.io/ai-capability-check/faq/">
+  <link rel="alternate" hreflang="es" href="https://simplicity-io.github.io/ai-capability-check/faq/es/">
+  <link rel="alternate" hreflang="fr" href="https://simplicity-io.github.io/ai-capability-check/faq/fr/">
+  <link rel="alternate" hreflang="pt-BR" href="https://simplicity-io.github.io/ai-capability-check/faq/pt-BR/">
+  <link rel="alternate" hreflang="zh-CN" href="https://simplicity-io.github.io/ai-capability-check/faq/zh-CN/">
+  <link rel="alternate" hreflang="zh-TW" href="https://simplicity-io.github.io/ai-capability-check/faq/zh-TW/">
+  <link rel="alternate" hreflang="x-default" href="https://simplicity-io.github.io/ai-capability-check/faq/">
+  <link rel="icon" type="image/png" sizes="192x192" href="../../icon-192.png?v=20261030">
+  <link rel="stylesheet" href="../../style.css?v=20261030">
+  <meta property="og:type" content="article">
+  <meta property="og:site_name" content="Simplicity.IO">
+  <meta property="og:locale" content="en">
+  <meta property="og:title" content="AI Capability Check: questions and answers">
+  <meta property="og:description" content="Answers about AI Capability Check: supported phones, privacy, how long a test takes, what the score and each result label mean.">
+  <meta property="og:url" content="https://simplicity-io.github.io/ai-capability-check/faq/">
+  <style>
+    .doc h2 { margin-top: 2.2rem; }
+    .doc h3 { margin-top: 1.6rem; }
+    .doc .table { overflow-x: auto; }
+    .doc table { border-collapse: collapse; width: 100%; font-size: .95em; }
+    .doc th, .doc td { border: 1px solid rgba(127,127,127,.35); padding: .45em .6em; text-align: left; vertical-align: top; }
+    .doc .formula { font-size: 1.15em; text-align: center; }
+    .doc a[id] { scroll-margin-top: 1rem; }
+    .lang { display: flex; flex-wrap: wrap; gap: .35rem .75rem; font-size: .85em; margin: .25rem 0 0; }
+    .lang > * { display: inline-block; white-space: nowrap; }
+    .lang [aria-current="page"] { font-weight: 700; color: inherit; text-decoration: none; }
+  </style>
+</head>
+<body>
+  <main class="wrap doc">
+    <a class="back" href="../../">&larr; Simplicity.IO</a>
+    <nav class="lang" aria-label="Language"><span aria-current="page" lang="en">English</span><a href="es/" lang="es" hreflang="es">Español</a><a href="fr/" lang="fr" hreflang="fr">Français</a><a href="pt-BR/" lang="pt-BR" hreflang="pt-BR">Português (Brasil)</a><a href="zh-CN/" lang="zh-CN" hreflang="zh-CN">中文（简体）</a><a href="zh-TW/" lang="zh-TW" hreflang="zh-TW">中文（繁體）</a></nav>
+<h1>AI Capability Check: Questions and answers</h1>
+<p>Answers to questions you may have before installing, while a test runs, and when reading your results. Labels in the app link to the matching section here.</p>
+<p>Last updated: 2026-11-04 (app 0.1.x, in development). Features marked <em>(coming)</em> are not in the app yet.</p>
+<ul><li><a href="#before-you-install">Before you install</a></li><li><a href="#while-the-test-runs">While the test runs</a></li><li><a href="#your-score">Your score</a></li><li><a href="#what-the-labels-mean">What the labels mean</a></li><li><a href="#ai-processor-npu-status">AI processor (NPU) status</a></li><li><a href="#problems-and-reports">Problems and reports</a></li></ul>
+<hr>
+<a id="before-you-install"></a>
+<h2>Before you install</h2>
+<a id="what-it-does"></a>
+<h3>What does the app do?</h3>
+<p>It measures how well your phone runs AI on the phone itself, without the internet. It times the same AI models on each of your phone's processors (CPU, GPU and the AI processor, called NPU), checks that each one gives correct answers, and sums it up in one score. The details are in the <a href="../methodology/">test methodology</a>.</p>
+<a id="supported-phones"></a>
+<h3>Which phones are supported?</h3>
+<p>Phones with Android 11 or newer. Shortly after launch, the Play Store offers the app only on phone models we have confirmed to work well. More models are added as results come in, so if your phone can't install it yet, please check again later.</p>
+<a id="why-android-11"></a>
+<h3>Why Android 11 or newer?</h3>
+<p>The tests need system features that arrived in Android 11, such as reading how close the phone is to slowing itself down because of heat. We keep the minimum as low as these features allow.</p>
+<a id="storage"></a>
+<h3>How much space does it need?</h3>
+<p>The app includes its test photos and the photo and object-detection models (about 60 MB of models). The chat model is a separate, optional download of about 1 GB <em>(coming: download from inside the app)</em>. Without it, the score covers the photo tests only.</p>
+<a id="internet"></a>
+<h3>Does it need the internet?</h3>
+<p>No, the tests run entirely on your phone. The internet is only used to download the optional chat model.</p>
+<a id="privacy"></a>
+<h3>What data leaves my phone?</h3>
+<p>None of your personal data. Test photos and questions are built into the app; nothing from your phone's camera, gallery or files is used. Released versions send anonymous usage statistics (for example, how many tests finished on which phone model) so we can see which phones work well. They never include names, accounts, IDs, photos or messages. A problem report is sent only when you tap Send <em>(coming)</em>.</p>
+<a id="battery-heat"></a>
+<h3>Is it hard on my battery or phone?</h3>
+<p>A full test keeps the processors busy for about 10 to 25 minutes, so the phone gets warm and uses some battery, much like a demanding game. The last part, the heat test, deliberately works the phone for 2 minutes. It's safe: phones protect themselves by slowing down when they get hot. The app checks the battery and temperature before starting and will warn you if the battery is low or the phone is already hot <em>(coming: the warning on screen)</em>.</p>
+<hr>
+<a id="while-the-test-runs"></a>
+<h2>While the test runs</h2>
+<a id="how-long"></a>
+<h3>How long does a test take?</h3>
+<p>About 10 to 25 minutes, depending on the phone. Most of the time goes to the chat model, which loads a 1 GB model and answers questions on each processor. Faster phones finish sooner.</p>
+<a id="keep-screen-on"></a>
+<h3>Should I use the phone during the test?</h3>
+<p>Please don't. Leave the app open and the phone on a table. Other apps, notifications, video calls or games take processor time and make the results slower and less steady. The app keeps the screen on by itself.</p>
+<a id="charging"></a>
+<h3>Charging or on battery?</h3>
+<p>Both work, and the app records which one you used. Results are compared only with other results in the same state, because some phones run faster or slower while charging. "On battery" is the reference for rankings.</p>
+<a id="animations-pause"></a>
+<h3>Why does the screen stop moving now and then?</h3>
+<p>While a measurement runs, the app pauses its animations so that drawing the screen doesn't steal time from the test. Results and pictures appear between measurements.</p>
+<a id="heat-test"></a>
+<h3>What is the heat test?</h3>
+<p>After the main tests, the phone recognises photos non-stop for 2 minutes on its fastest processor that answers correctly. Phones get warm under steady load and slow themselves down to protect the battery and chip. We compare the speed at the end with the speed at the start: "Stays fast when warm: 94%" means the phone kept 94% of its starting speed. It is shown beside the score, not in it, because it measures cooling, not AI ability.</p>
+<a id="chat-test"></a>
+<h3>What is the chat test?</h3>
+<p>A small AI chat model (Qwen3 1.7B) runs on your phone without the internet. We measure how fast it reads a question and writes an answer, in tokens per second (a token is roughly a short word or part of a word). It also answers three simple questions, so we can check that each processor runs it correctly.</p>
+<hr>
+<a id="your-score"></a>
+<h2>Your score</h2>
+<a id="score"></a>
+<h3>What does the score mean?</h3>
+<p>It sums up how fast your phone runs the three AI tests, with correct answers. A Google Pixel 9 Pro XL on battery scores 1000; a phone that scores 500 is about half as fast at these tasks. During development the reference is provisional and scores may still shift.</p>
+<a id="level"></a>
+<h3>What is the level? <em>(coming)</em></h3>
+<p>Five levels group scores into Basic, Capable, Advanced, Flagship and Cutting-edge. If a test couldn't run on your phone, the level is capped, because the phone can't do everything the level stands for.</p>
+<a id="different-results"></a>
+<h3>Why is my score different from last time, or from the same phone elsewhere?</h3>
+<p>Small differences (a few percent) are normal: temperature, charging, background apps and system updates all play a part. For the steadiest result, test on battery, with the phone cool, nothing else running, and the screen on.</p>
+<a id="test-not-run"></a>
+<h3>A test shows "—" or "couldn't run". Is my phone broken?</h3>
+<p>No. Some phones can't run every test: for example, the chat model needs about 1.2 GB of free memory. A missing test counts as the lowest result in the score and caps the level, and the details screen tells you why.</p>
+<hr>
+<a id="what-the-labels-mean"></a>
+<h2>What the labels mean</h2>
+<a id="correct-answers"></a>
+<h3>Correct answers</h3>
+<p>This processor gave the same answers as the CPU (the reference). Only processors with correct answers count in the score.</p>
+<a id="wrong-answers"></a>
+<h3>Wrong answers</h3>
+<p>This processor gave different answers from the CPU on most test photos. It comes either from the phone's driver (the software the phone maker ships for that processor) or from how the AI engine inside the app, Google's LiteRT, handles that processor; our test alone can't tell which. When phones report it, we check with Google's own tools before deciding. We don't add workarounds for individual phones, because that would make results unfair. The processor's time is shown but not counted, and your score uses the processors that answered correctly.</p>
+<a id="used-in-score"></a>
+<h3>Used in score</h3>
+<p>The fastest processor with correct answers for this test. That is the time your score is based on.</p>
+<a id="steady"></a>
+<h3>Steady</h3>
+<p>The time stayed nearly the same across the 5 rounds of measurement (within 10%).</p>
+<a id="unsteady"></a>
+<h3>Unsteady on this phone</h3>
+<p>The time changed a lot between rounds (more than 10%). It is not a failure: the score uses the middle value, which holds even when single rounds jump. The most common cause is the graphics processor lowering its speed in the tiny gaps between photos and raising it again; heat, charging and background apps can add to it. Try again with the phone cool, on battery and with nothing else running.</p>
+<a id="no-speedup"></a>
+<h3>No faster than the CPU</h3>
+<p>This processor gave correct answers but wasn't at least 3% faster than the CPU. Often the phone quietly ran the work on the CPU anyway, or this processor isn't built for this kind of model. It is shown so the result isn't mistaken for a working accelerator.</p>
+<a id="skipped"></a>
+<h3>Skipped</h3>
+<p>We don't run this model on this processor, on purpose. For example, compressed (INT8) models give wrong answers on many phones' graphics processors, so they are run only on the CPU and the AI processor.</p>
+<a id="not-on-this-phone"></a>
+<h3>Not on this phone</h3>
+<p>Your phone doesn't offer this processor to apps.</p>
+<a id="couldnt-run"></a>
+<h3>Couldn't run</h3>
+<p>The processor is there but refused the model or didn't finish in time (for example, preparing the model took longer than Android's 60-second limit). Your score uses the processors that did run.</p>
+<a id="completion"></a>
+<h3>Tests finished</h3>
+<p>How many of the 8 test items finished with correct answers: 6 photo and object-detection models, the chat model and the heat test. A phone that finishes more than 60% counts as supported.</p>
+<hr>
+<a id="ai-processor-npu-status"></a>
+<h2>AI processor (NPU) status</h2>
+<a id="npu-working"></a>
+<h3>Working well</h3>
+<p>Your phone's AI processor ran the test with correct answers and was faster than the CPU.</p>
+<a id="npu-results-dont-match"></a>
+<h3>Results don't match</h3>
+<p>The AI processor ran, but its answers differed from the CPU's, so its results aren't counted. It comes from the phone's driver or from how the AI engine in the app handles this processor; a system or app update may fix it.</p>
+<a id="npu-no-driver"></a>
+<h3>No Android driver</h3>
+<p>The chip has an AI processor, but the phone doesn't give apps a standard Android way to use it. Many recent Snapdragon phones work this way; on those, the app uses the chip maker's own libraries where it can.</p>
+<a id="npu-locked"></a>
+<h3>Locked by phone maker</h3>
+<p>The AI processor exists, but the phone maker allows only selected apps to use it.</p>
+<a id="npu-not-supported-yet"></a>
+<h3>Not supported yet</h3>
+<p>The app doesn't support this chip's AI processor yet. We add chips as we can test them.</p>
+<a id="npu-none"></a>
+<h3>No NPU</h3>
+<p>The chip has no separate AI processor. AI runs on the CPU and GPU, which is common on entry-level phones.</p>
+<a id="via-nnapi"></a>
+<h3>"via NNAPI"</h3>
+<p>NNAPI is Android's standard way for apps to reach AI processors. On Google Pixel phones it is how apps reach the Tensor chip's TPU, Google's AI processor. Android decides which unit runs the work, so the app reports it as "via NNAPI".</p>
+<hr>
+<a id="problems-and-reports"></a>
+<h2>Problems and reports</h2>
+<a id="report-problem"></a>
+<h3>What happens when I tap "Report a problem"? <em>(coming)</em></h3>
+<p>The app sends a short technical report: phone model, chip, graphics driver, Android and app version, and which tests failed. Nothing personal is included, and it is sent only when you tap Send, at most once per phone and app version. Reports help us decide which phone models to support and which problems to fix.</p>
+<a id="app-closed"></a>
+<h3>The test stopped or the app closed. What now?</h3>
+<p>Some phones close apps that run long tasks. Keep the screen on and the app in front, then start again. If it keeps happening, please report it.</p>
+<a id="phone-not-listed"></a>
+<h3>My phone can't install the app. Why?</h3>
+<p>Shortly after launch we offer the app only on phone models we have confirmed to work well, so everyone gets reliable results. More models are added over time.</p>
+    <footer>
+      <div class="foot-links">
+        <a href="../../privacy.html">Privacy</a>
+        <a href="mailto:simplicity.io.dev@outlook.com">Contact</a>
+        <span>&copy; Simplicity.IO</span>
+        <span>Not affiliated with Google. Android is a trademark of Google LLC.</span>
+      </div>
+      <img class="foot-logo" src="../../logo-360.jpg" width="360" height="203" alt="Simplicity.IO logo">
+    </footer>
+  </main>
+</body>
+</html>
