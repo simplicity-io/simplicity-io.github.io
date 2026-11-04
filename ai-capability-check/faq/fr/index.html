@@ -111,10 +111,13 @@
 <p>Ce processeur a donné les mêmes réponses que le CPU (la référence). Seuls les processeurs aux réponses correctes comptent dans le score.</p>
 <a id="wrong-answers"></a>
 <h3>Réponses fausses</h3>
-<p>Ce processeur a donné des réponses différentes de celles du CPU sur la plupart des photos de test. Cela vient soit du pilote du téléphone (le logiciel fourni par le fabricant pour ce processeur), soit de la façon dont le moteur d’IA de l’application, LiteRT de Google, gère ce processeur ; notre test seul ne permet pas de le savoir. Quand des téléphones le signalent, nous vérifions avec les outils de Google avant de décider. Nous n’ajoutons pas de contournements pour des téléphones particuliers, car cela rendrait les résultats injustes. Le temps de ce processeur est affiché mais non compté, et votre score utilise les processeurs qui ont répondu correctement.</p>
+<p>Ce processeur a donné des réponses différentes de celles du CPU sur plus d’une photo de test sur dix. Cela vient soit du pilote du téléphone (le logiciel fourni par le fabricant pour ce processeur), soit de la façon dont le moteur d’IA de l’application, LiteRT de Google, gère ce processeur ; notre test seul ne permet pas de le savoir. Quand des téléphones le signalent, nous vérifions avec les outils de Google avant de décider. Nous n’ajoutons pas de contournements pour des téléphones particuliers, car cela rendrait les résultats injustes. Le temps de ce processeur est affiché mais non compté, et votre score utilise les processeurs qui ont répondu correctement.</p>
 <a id="used-in-score"></a>
 <h3>Utilisé dans le score</h3>
 <p>Le processeur le plus rapide aux réponses correctes pour ce test. C’est le temps sur lequel repose votre score.</p>
+<a id="full-precision"></a>
+<h3>Pleine précision (FP32)</h3>
+<p>Le processeur graphique exécute d’abord le modèle en demi-précision (FP16), plus rapide. Si ses réponses ne correspondent pas à celles du CPU, il exécute le même modèle une fois de plus en pleine précision (FP32), qui compte si ces réponses correspondent. Tous les téléphones suivent la même règle. La pleine précision est en général plus lente, mais les réponses sont justes.</p>
 <a id="steady"></a>
 <h3>Stable</h3>
 <p>Le temps est resté presque identique sur les 5 séries de mesures (à 10 % près).</p>

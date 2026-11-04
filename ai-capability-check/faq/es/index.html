@@ -111,10 +111,13 @@
 <p>Este procesador dio las mismas respuestas que la CPU (la referencia). Solo los procesadores con respuestas correctas cuentan en la puntuación.</p>
 <a id="wrong-answers"></a>
 <h3>Respuestas incorrectas</h3>
-<p>Este procesador dio respuestas distintas de las de la CPU en la mayoría de las fotos de prueba. Se debe al controlador del teléfono (el software que el fabricante incluye para ese procesador) o a cómo lo maneja el motor de IA de la app, LiteRT de Google; nuestra prueba por sí sola no puede saber cuál. Cuando los teléfonos lo reportan, lo comprobamos con las herramientas de Google antes de decidir. No añadimos soluciones para teléfonos concretos, porque haría injustos los resultados. Se muestra el tiempo de ese procesador, pero no se cuenta, y tu puntuación usa los procesadores que respondieron correctamente.</p>
+<p>Este procesador dio respuestas distintas de las de la CPU en más de una de cada diez fotos de prueba. Se debe al controlador del teléfono (el software que el fabricante incluye para ese procesador) o a cómo lo maneja el motor de IA de la app, LiteRT de Google; nuestra prueba por sí sola no puede saber cuál. Cuando los teléfonos lo reportan, lo comprobamos con las herramientas de Google antes de decidir. No añadimos soluciones para teléfonos concretos, porque haría injustos los resultados. Se muestra el tiempo de ese procesador, pero no se cuenta, y tu puntuación usa los procesadores que respondieron correctamente.</p>
 <a id="used-in-score"></a>
 <h3>Usado en la puntuación</h3>
 <p>El procesador más rápido con respuestas correctas para esta prueba. Es el tiempo en el que se basa tu puntuación.</p>
+<a id="full-precision"></a>
+<h3>Precisión completa (FP32)</h3>
+<p>El procesador gráfico ejecuta primero el modelo en media precisión (FP16), que es más rápida. Si sus respuestas no coinciden con las de la CPU, ejecuta el mismo modelo una vez más en precisión completa (FP32) y cuenta si esas respuestas coinciden. Todos los teléfonos siguen la misma regla. La precisión completa suele ser más lenta, pero las respuestas son correctas.</p>
 <a id="steady"></a>
 <h3>Estable</h3>
 <p>El tiempo se mantuvo casi igual en las 5 rondas de medición (dentro del 10%).</p>

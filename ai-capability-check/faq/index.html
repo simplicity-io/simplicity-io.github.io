@@ -111,10 +111,13 @@
 <p>This processor gave the same answers as the CPU (the reference). Only processors with correct answers count in the score.</p>
 <a id="wrong-answers"></a>
 <h3>Wrong answers</h3>
-<p>This processor gave different answers from the CPU on most test photos. It comes either from the phone's driver (the software the phone maker ships for that processor) or from how the AI engine inside the app, Google's LiteRT, handles that processor; our test alone can't tell which. When phones report it, we check with Google's own tools before deciding. We don't add workarounds for individual phones, because that would make results unfair. The processor's time is shown but not counted, and your score uses the processors that answered correctly.</p>
+<p>This processor gave different answers from the CPU on more than one in ten test photos. It comes either from the phone's driver (the software the phone maker ships for that processor) or from how the AI engine inside the app, Google's LiteRT, handles that processor; our test alone can't tell which. When phones report it, we check with Google's own tools before deciding. We don't add workarounds for individual phones, because that would make results unfair. The processor's time is shown but not counted, and your score uses the processors that answered correctly.</p>
 <a id="used-in-score"></a>
 <h3>Used in score</h3>
 <p>The fastest processor with correct answers for this test. That is the time your score is based on.</p>
+<a id="full-precision"></a>
+<h3>Full precision (FP32)</h3>
+<p>The graphics processor first runs the model at half precision (FP16), which is faster. If its answers don't match the CPU's, it runs the same model once more at full precision (FP32) and counts if those answers match. Every phone gets the same rule. Full precision is usually slower, but the answers are correct.</p>
 <a id="steady"></a>
 <h3>Steady</h3>
 <p>The time stayed nearly the same across the 5 rounds of measurement (within 10%).</p>

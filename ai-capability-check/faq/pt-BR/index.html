@@ -111,10 +111,13 @@
 <p>Este processador deu as mesmas respostas que a CPU (a referência). Só processadores com respostas corretas contam na pontuação.</p>
 <a id="wrong-answers"></a>
 <h3>Respostas erradas</h3>
-<p>Este processador deu respostas diferentes das da CPU na maioria das fotos de teste. Isso vem do driver do celular (o software que o fabricante inclui para aquele processador) ou de como o mecanismo de IA do app, o LiteRT do Google, lida com esse processador; nosso teste sozinho não consegue dizer qual. Quando celulares relatam isso, verificamos com as ferramentas do Google antes de decidir. Não adicionamos correções para aparelhos específicos, porque isso tornaria os resultados injustos. O tempo desse processador é mostrado, mas não contado, e sua pontuação usa os processadores que responderam corretamente.</p>
+<p>Este processador deu respostas diferentes das da CPU em mais de uma a cada dez fotos de teste. Isso vem do driver do celular (o software que o fabricante inclui para aquele processador) ou de como o mecanismo de IA do app, o LiteRT do Google, lida com esse processador; nosso teste sozinho não consegue dizer qual. Quando celulares relatam isso, verificamos com as ferramentas do Google antes de decidir. Não adicionamos correções para aparelhos específicos, porque isso tornaria os resultados injustos. O tempo desse processador é mostrado, mas não contado, e sua pontuação usa os processadores que responderam corretamente.</p>
 <a id="used-in-score"></a>
 <h3>Usado na pontuação</h3>
 <p>O processador mais rápido com respostas corretas para este teste. É o tempo em que a sua pontuação se baseia.</p>
+<a id="full-precision"></a>
+<h3>Precisão total (FP32)</h3>
+<p>O processador gráfico roda o modelo primeiro em meia precisão (FP16), que é mais rápida. Se as respostas não baterem com as da CPU, ele roda o mesmo modelo mais uma vez em precisão total (FP32), que conta se essas respostas baterem. Todos os celulares seguem a mesma regra. A precisão total costuma ser mais lenta, mas as respostas ficam corretas.</p>
 <a id="steady"></a>
 <h3>Estável</h3>
 <p>O tempo ficou quase igual nas 5 rodadas de medição (dentro de 10%).</p>
