@@ -84,7 +84,7 @@
 <p>Pendant une mesure, l’application suspend ses animations pour que l’affichage de l’écran ne prenne pas de temps au test. Les résultats et les images apparaissent entre les mesures.</p>
 <a id="heat-test"></a>
 <h3>Qu’est-ce que le test de chaleur ?</h3>
-<p>Après les tests principaux, le téléphone reconnaît des photos sans interruption pendant 2 minutes sur son processeur le plus rapide qui donne des réponses correctes. Les téléphones chauffent sous une charge constante et se ralentissent pour protéger la batterie et la puce. Nous comparons la vitesse à la fin avec la vitesse au début : « Reste rapide à chaud : 94 % » signifie que le téléphone a conservé 94 % de sa vitesse de départ. Ce chiffre est affiché à côté du score, et non dedans, car il mesure le refroidissement et non la capacité d’IA.</p>
+<p>Après les tests principaux, le téléphone reconnaît des photos sans interruption pendant 2 minutes sur son processeur le plus rapide qui donne des réponses correctes. Les téléphones chauffent sous une charge constante et se ralentissent pour protéger la batterie et la puce. Nous comparons la vitesse à la fin avec la meilleure vitesse du téléphone pendant ces 2 minutes : « Reste rapide à chaud : 94 % » signifie que le téléphone a conservé 94 % de sa meilleure vitesse. Ce chiffre est affiché à côté du score, et non dedans, car il mesure le refroidissement et non la capacité d’IA.</p>
 <a id="chat-test"></a>
 <h3>Qu’est-ce que le test de conversation ?</h3>
 <p>Un petit modèle de conversation d’IA (Qwen3 1.7B) fonctionne sur votre téléphone sans Internet. Nous mesurons sa vitesse de lecture d’une question et d’écriture d’une réponse, en tokens par seconde (un token correspond à peu près à un mot court ou à une partie de mot). Il répond aussi à trois questions simples, pour vérifier que chaque processeur l’exécute correctement.</p>
@@ -93,10 +93,10 @@
 <h2>Votre score</h2>
 <a id="score"></a>
 <h3>Que signifie le score ?</h3>
-<p>Il résume la vitesse à laquelle votre téléphone exécute les trois tests d’IA, avec des réponses correctes. Un Google Pixel 9 Pro XL sur batterie obtient 1000 ; un téléphone à 500 est environ deux fois moins rapide sur ces tâches. Pendant le développement, la référence est provisoire et les scores peuvent encore évoluer.</p>
+<p>Il résume la vitesse à laquelle votre téléphone exécute les trois tests d’IA, avec des réponses correctes. Un Google Pixel 9 Pro XL sur batterie obtient 1000 ; un téléphone à 500 est environ deux fois moins rapide sur ces tâches.</p>
 <a id="level"></a>
-<h3>Qu’est-ce que le niveau ? <em>(bientôt)</em></h3>
-<p>Cinq niveaux regroupent les scores : Basique, Capable, Avancé, Haut de gamme et Ultra-avancé. Si un test n’a pas pu s’exécuter sur votre téléphone, le niveau est plafonné, car le téléphone ne peut pas tout faire de ce que le niveau suppose.</p>
+<h3>Qu’est-ce que le niveau ?</h3>
+<p>Cinq niveaux regroupent les scores : Basique, Capable, Avancé, Haut de gamme et Ultra-avancé. Si un test n’a pas pu s’exécuter sur votre téléphone, le niveau est plafonné, car le téléphone ne peut pas tout faire de ce que le niveau suppose. Chaque niveau commence au double du score du précédent : Basique en dessous de 200, Capable de 200 à 399, Avancé de 400 à 799, Haut de gamme de 800 à 1599 et Ultra-avancé à partir de 1600. Un résultat sans le modèle de chat n’a pas de niveau.</p>
 <a id="different-results"></a>
 <h3>Pourquoi mon score diffère-t-il de la dernière fois, ou de celui du même téléphone ailleurs ?</h3>
 <p>De petites différences (quelques pour cent) sont normales : la température, la charge, les applications en arrière-plan et les mises à jour système jouent un rôle. Pour le résultat le plus stable, testez sur batterie, avec le téléphone froid, rien d’autre en cours et l’écran allumé.</p>

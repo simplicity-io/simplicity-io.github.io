@@ -84,7 +84,7 @@
 <p>While a measurement runs, the app pauses its animations so that drawing the screen doesn't steal time from the test. Results and pictures appear between measurements.</p>
 <a id="heat-test"></a>
 <h3>What is the heat test?</h3>
-<p>After the main tests, the phone recognises photos non-stop for 2 minutes on its fastest processor that answers correctly. Phones get warm under steady load and slow themselves down to protect the battery and chip. We compare the speed at the end with the speed at the start: "Stays fast when warm: 94%" means the phone kept 94% of its starting speed. It is shown beside the score, not in it, because it measures cooling, not AI ability.</p>
+<p>After the main tests, the phone recognises photos non-stop for 2 minutes on its fastest processor that answers correctly. Phones get warm under steady load and slow themselves down to protect the battery and chip. We compare the speed at the end with the phone's best speed during those 2 minutes: "Stays fast when warm: 94%" means the phone kept 94% of its best speed. It is shown beside the score, not in it, because it measures cooling, not AI ability.</p>
 <a id="chat-test"></a>
 <h3>What is the chat test?</h3>
 <p>A small AI chat model (Qwen3 1.7B) runs on your phone without the internet. We measure how fast it reads a question and writes an answer, in tokens per second (a token is roughly a short word or part of a word). It also answers three simple questions, so we can check that each processor runs it correctly.</p>
@@ -93,10 +93,10 @@
 <h2>Your score</h2>
 <a id="score"></a>
 <h3>What does the score mean?</h3>
-<p>It sums up how fast your phone runs the three AI tests, with correct answers. A Google Pixel 9 Pro XL on battery scores 1000; a phone that scores 500 is about half as fast at these tasks. During development the reference is provisional and scores may still shift.</p>
+<p>It sums up how fast your phone runs the three AI tests, with correct answers. A Google Pixel 9 Pro XL on battery scores 1000; a phone that scores 500 is about half as fast at these tasks.</p>
 <a id="level"></a>
-<h3>What is the level? <em>(coming)</em></h3>
-<p>Five levels group scores into Basic, Capable, Advanced, Flagship and Cutting-edge. If a test couldn't run on your phone, the level is capped, because the phone can't do everything the level stands for.</p>
+<h3>What is the level?</h3>
+<p>Five levels group scores into Basic, Capable, Advanced, Flagship and Cutting-edge. If a test couldn't run on your phone, the level is capped, because the phone can't do everything the level stands for. Each level starts at twice the score of the one below: Basic is under 200, Capable 200 to 399, Advanced 400 to 799, Flagship 800 to 1599 and Cutting-edge 1600 or more. A result without the chat model gets no level.</p>
 <a id="different-results"></a>
 <h3>Why is my score different from last time, or from the same phone elsewhere?</h3>
 <p>Small differences (a few percent) are normal: temperature, charging, background apps and system updates all play a part. For the steadiest result, test on battery, with the phone cool, nothing else running, and the screen on.</p>
