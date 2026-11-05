@@ -41,7 +41,7 @@
     <nav class="lang" aria-label="Langue"><a href="../" lang="en" hreflang="en">English</a><a href="../es/" lang="es" hreflang="es">Español</a><span aria-current="page" lang="fr">Français</span><a href="../pt-BR/" lang="pt-BR" hreflang="pt-BR">Português (Brasil)</a><a href="../zh-CN/" lang="zh-CN" hreflang="zh-CN">中文（简体）</a><a href="../zh-TW/" lang="zh-TW" hreflang="zh-TW">中文（繁體）</a></nav>
 <h1>AI Capability Check : Questions et réponses</h1>
 <p>Réponses aux questions que vous pouvez vous poser avant d’installer l’application, pendant un test et à la lecture de vos résultats. Les libellés de l’application renvoient à la section correspondante de cette page.</p>
-<p>Dernière mise à jour : 2026-11-04 (application 0.1.x, en développement). Les fonctions marquées <em>(bientôt)</em> ne sont pas encore dans l’application. La méthodologie complète n’est disponible qu’en anglais.</p>
+<p>Dernière mise à jour : 2026-11-05 (application 0.1.x, en développement). La méthodologie complète n’est disponible qu’en anglais.</p>
 <ul><li><a href="#before-you-install">Avant l’installation</a></li><li><a href="#while-the-test-runs">Pendant le test</a></li><li><a href="#your-score">Votre score</a></li><li><a href="#what-the-labels-mean">Signification des libellés</a></li><li><a href="#ai-processor-npu-status">État du processeur d’IA (NPU)</a></li><li><a href="#problems-and-reports">Problèmes et signalements</a></li></ul>
 <hr>
 <a id="before-you-install"></a>
@@ -57,22 +57,22 @@
 <p>Les tests utilisent des fonctions système apparues avec Android 11, comme la lecture de la proximité du seuil de ralentissement dû à la chaleur. Nous gardons le minimum aussi bas que ces fonctions le permettent.</p>
 <a id="storage"></a>
 <h3>Quel espace faut-il ?</h3>
-<p>L’application contient ses photos de test ainsi que les modèles de classification de photos et de détection d’objets (environ 60 Mo de modèles). Le modèle de conversation est un téléchargement optionnel séparé d’environ 1 Go. Sans lui, le score ne couvre que les tests photo.</p>
+<p>L’application contient ses photos et sons de test ainsi que les modèles des tests de photos, d’objets, de sons et de style d’image. Le modèle de conversation (environ 1 Go) et le modèle de reconnaissance vocale (environ 40 Mo) sont des téléchargements optionnels séparés, que vous choisissez sur l’écran d’accueil. Sans eux, le résultat est « partiel » : un score calculé avec les tests exécutés, mais sans niveau.</p>
 <a id="internet"></a>
 <h3>Faut-il une connexion Internet ?</h3>
-<p>Non, les tests se déroulent entièrement sur votre téléphone. Internet ne sert qu’à télécharger le modèle de conversation optionnel.</p>
+<p>Non, les tests se déroulent entièrement sur votre téléphone. Internet ne sert qu’à télécharger les modèles optionnels de conversation et de reconnaissance vocale.</p>
 <a id="privacy"></a>
 <h3>Quelles données quittent mon téléphone ?</h3>
 <p>Aucune donnée personnelle. Les photos et les questions de test sont intégrées à l’application ; rien de votre appareil photo, de votre galerie ou de vos fichiers n’est utilisé. Les versions publiées envoient des statistiques d’utilisation anonymes (par exemple, le nombre de tests terminés par modèle de téléphone) afin de savoir quels téléphones fonctionnent bien. Elles ne contiennent jamais de nom, de compte, d’identifiant, de photo ni de message. Un signalement de problème n’est envoyé que lorsque vous appuyez sur Envoyer.</p>
 <a id="battery-heat"></a>
 <h3>Est-ce mauvais pour la batterie ou le téléphone ?</h3>
-<p>Un test complet occupe les processeurs pendant environ 10 à 25 minutes ; le téléphone chauffe et consomme un peu de batterie, comme un jeu exigeant. La dernière partie, le test de chaleur, fait volontairement travailler le téléphone pendant 2 minutes. C’est sans danger : les téléphones se protègent en ralentissant lorsqu’ils chauffent. L’application vérifie la batterie et la température avant de démarrer et vous avertira si la batterie est faible ou si le téléphone est déjà chaud <em>(bientôt : l’avertissement à l’écran)</em>.</p>
+<p>Un test complet occupe les processeurs pendant environ 10 à 25 minutes ; le téléphone chauffe et consomme un peu de batterie, comme un jeu exigeant. La dernière partie, le test de chaleur, fait volontairement travailler le téléphone pendant 2 minutes ; elle est facultative (une case, cochée par défaut). C’est sans danger : les téléphones se protègent en ralentissant lorsqu’ils chauffent, et l’application arrête elle-même le test si le téléphone devient trop chaud (voir <a href="#test-stops-hot">Pourquoi le test s’arrête-t-il quand mon téléphone est chaud ?</a>). L’application vérifie la batterie et la température avant de démarrer et vous avertit si la batterie est faible ou si le téléphone est déjà chaud.</p>
 <hr>
 <a id="while-the-test-runs"></a>
 <h2>Pendant le test</h2>
 <a id="how-long"></a>
 <h3>Combien de temps dure un test ?</h3>
-<p>Environ 10 à 25 minutes selon le téléphone. La plus grande partie du temps est consacrée au modèle de conversation, qui charge un modèle de 1 Go et répond à des questions sur chaque processeur. Les téléphones plus rapides terminent plus tôt.</p>
+<p>Environ 10 à 25 minutes selon le téléphone. La plus grande partie du temps est consacrée au modèle de conversation, qui charge un modèle de 1 Go et répond à des questions sur chaque processeur. Omettre le modèle de conversation ou le test de chaleur raccourcit la durée. Les téléphones plus rapides terminent plus tôt.</p>
 <a id="keep-screen-on"></a>
 <h3>Puis-je utiliser le téléphone pendant le test ?</h3>
 <p>Merci de ne pas le faire. Laissez l’application ouverte et le téléphone posé sur une table. Les autres applications, les notifications, les appels vidéo ou les jeux consomment du temps de processeur et rendent les résultats plus lents et moins stables. L’application garde l’écran allumé d’elle-même.</p>
@@ -82,27 +82,40 @@
 <a id="animations-pause"></a>
 <h3>Pourquoi l’écran s’arrête-t-il de bouger parfois ?</h3>
 <p>Pendant une mesure, l’application suspend ses animations pour que l’affichage de l’écran ne prenne pas de temps au test. Les résultats et les images apparaissent entre les mesures.</p>
+<a id="test-stops-hot"></a>
+<h3>Pourquoi le test s’arrête-t-il quand mon téléphone est chaud ?</h3>
+<p>Pour protéger votre téléphone. Avant une exécution, l’application affiche un avertissement de chaleur (jusqu’à ce que vous cochiez « Ne plus afficher »). Entre deux mesures, elle surveille le téléphone et arrête l’exécution d’elle-même si Android signale un état de chaleur sévère ou si la batterie dépasse 45 °C. Les résultats obtenus jusque-là sont conservés, et une telle exécution ne compte ni pour ni contre la prise en charge de votre téléphone. Les téléphones se protègent déjà en ralentissant lorsqu’ils chauffent, ce qui rend aussi les résultats plus lents ; et la chaleur use plus vite les batteries. Si le test s’est arrêté, laissez le téléphone refroidir, retirez-le de sa coque et de la lumière du soleil, puis relancez-le.</p>
 <a id="heat-test"></a>
 <h3>Qu’est-ce que le test de chaleur ?</h3>
-<p>Après les tests principaux, le téléphone reconnaît des photos sans interruption pendant 2 minutes sur son processeur le plus rapide qui donne des réponses correctes. Les téléphones chauffent sous une charge constante et se ralentissent pour protéger la batterie et la puce. Nous comparons la vitesse à la fin avec la meilleure vitesse du téléphone pendant ces 2 minutes : « Reste rapide à chaud : 94 % » signifie que le téléphone a conservé 94 % de sa meilleure vitesse. Ce chiffre est affiché à côté du score, et non dedans, car il mesure le refroidissement et non la capacité d’IA.</p>
+<p>Il est facultatif (une case sur l’écran d’accueil, cochée par défaut). Après les tests principaux, le téléphone reconnaît des photos sans interruption pendant 2 minutes sur son processeur le plus rapide qui donne des réponses correctes. Les téléphones chauffent sous une charge constante et se ralentissent pour protéger la batterie et la puce. Nous comparons la vitesse à la fin avec la meilleure vitesse du téléphone pendant ces 2 minutes : « Reste rapide à chaud : 94 % » signifie que le téléphone a conservé 94 % de sa meilleure vitesse. Ce chiffre est affiché à côté du score, et non dedans, car il mesure le refroidissement et non la capacité d’IA. Le test peut s’arrêter plus tôt si le téléphone devient trop chaud.</p>
 <a id="chat-test"></a>
 <h3>Qu’est-ce que le test de conversation ?</h3>
-<p>Un petit modèle de conversation d’IA (Qwen3 1.7B) fonctionne sur votre téléphone sans Internet. Nous mesurons sa vitesse de lecture d’une question et d’écriture d’une réponse, en tokens par seconde (un token correspond à peu près à un mot court ou à une partie de mot). Il répond aussi à trois questions simples, pour vérifier que chaque processeur l’exécute correctement.</p>
+<p>Un petit modèle de conversation d’IA (Qwen3 1.7B) fonctionne sur votre téléphone sans Internet. Nous mesurons sa vitesse de lecture d’une question et d’écriture d’une réponse, en tokens par seconde (un token correspond à peu près à un mot court ou à une partie de mot). Il répond aussi à trois questions simples, pour vérifier que chaque processeur l’exécute correctement. Il ne s’exécute que si vous avez téléchargé le modèle.</p>
 <hr>
 <a id="your-score"></a>
 <h2>Votre score</h2>
 <a id="score"></a>
 <h3>Que signifie le score ?</h3>
-<p>Il résume la vitesse à laquelle votre téléphone exécute les trois tests d’IA, avec des réponses correctes. Un Google Pixel 9 Pro XL sur batterie obtient 1000 ; un téléphone à 500 est environ deux fois moins rapide sur ces tâches.</p>
+<p>Il résume la vitesse à laquelle votre téléphone exécute les tests d’IA, avec des réponses correctes. Un Google Pixel 9 Pro XL sur batterie obtient 1000 ; un téléphone à 500 est environ deux fois moins rapide sur ces tâches.</p>
+<a id="groups"></a>
+<h3>Que sont l’IA de reconnaissance et l’IA générative ?</h3>
+<p>Les tests sont répartis en deux groupes. L’<strong>IA de reconnaissance</strong> consiste à comprendre ce que contient l’entrée : reconnaissance de photos, détection d’objets et reconnaissance de sons. L’<strong>IA générative</strong> consiste à créer du contenu nouveau : reconnaissance vocale, conversation et style d’image (le test de style d’image est pour l’instant un essai). Le test de chaleur est un complément et n’est pas noté.</p>
+<p>Chaque groupe a son propre score (la moyenne de ses tests, calculée avec la moyenne géométrique, qui empêche un test très rapide de masquer un test très lent). Le score AI Capability Score est la moyenne géométrique des deux, de sorte que chaque groupe compte pour 50 %. Les anciennes versions de l’application pondéraient les tests différemment ; leurs scores ne sont donc pas comparables.</p>
+<a id="trial"></a>
+<h3>Pourquoi un test est-il marqué « essai » ?</h3>
+<p>Un nouveau test s’exécute d’abord en essai : il est mesuré et affiché, mais n’entre pas dans votre score ni dans votre niveau tant qu’il ne s’est pas terminé avec des réponses correctes sur tous nos téléphones de référence. Le style d’image est un essai pour le moment. La reconnaissance de sons et la reconnaissance vocale étaient des essais auparavant et sont désormais notées.</p>
 <a id="level"></a>
 <h3>Qu’est-ce que le niveau ?</h3>
-<p>Cinq niveaux regroupent les scores : Basique, Capable, Avancé, Haut de gamme et Ultra-avancé. Si un test n’a pas pu s’exécuter sur votre téléphone, le niveau est plafonné, car le téléphone ne peut pas tout faire de ce que le niveau suppose. Chaque niveau commence au double du score du précédent : Basique en dessous de 200, Capable de 200 à 399, Avancé de 400 à 799, Haut de gamme de 800 à 1599 et Ultra-avancé à partir de 1600. Un résultat sans le modèle de chat n’a pas de niveau.</p>
+<p>Cinq niveaux regroupent les scores : Basique, Capable, Avancé, Haut de gamme et Ultra-avancé. Si un test n’a pas pu s’exécuter sur votre téléphone, le niveau est plafonné, car le téléphone ne peut pas tout faire de ce que le niveau suppose. Chaque niveau commence au double du score du précédent : Basique en dessous de 200, Capable de 200 à 399, Avancé de 400 à 799, Haut de gamme de 800 à 1599 et Ultra-avancé à partir de 1600. Un niveau exige tous les tests notés ; un résultat partiel n’en a donc pas.</p>
+<a id="no-level"></a>
+<h3>Pourquoi mon résultat n’a-t-il pas de niveau ?</h3>
+<p>Vous avez omis le modèle de conversation ou la reconnaissance vocale (vous ne l’avez pas téléchargé), le résultat est donc « partiel ». Le score est alors calculé avec les tests qui ont été exécutés (lorsque chaque groupe en compte au moins un), mais un niveau exige tous les tests notés. Téléchargez les modèles manquants sur l’écran d’accueil et relancez le test pour obtenir un niveau.</p>
 <a id="different-results"></a>
 <h3>Pourquoi mon score diffère-t-il de la dernière fois, ou de celui du même téléphone ailleurs ?</h3>
 <p>De petites différences (quelques pour cent) sont normales : la température, la charge, les applications en arrière-plan et les mises à jour système jouent un rôle. Pour le résultat le plus stable, testez sur batterie, avec le téléphone froid, rien d’autre en cours et l’écran allumé.</p>
 <a id="test-not-run"></a>
 <h3>Un test affiche « — » ou « échec de l’exécution ». Mon téléphone est-il cassé ?</h3>
-<p>Non. Certains téléphones ne peuvent pas exécuter tous les tests : par exemple, le modèle de conversation nécessite environ 1,2 Go de mémoire libre. Un test manquant compte comme le plus bas résultat du score et plafonne le niveau ; l’écran de détails indique pourquoi.</p>
+<p>Non. Certains téléphones ne peuvent pas exécuter tous les tests : par exemple, le modèle de conversation nécessite environ 1,2 Go de mémoire libre. Un test qui a été tenté et a échoué compte comme le plus bas résultat du score et plafonne le niveau ; l’écran de détails indique pourquoi. Un test que vous avez omis (non téléchargé, test de chaleur décoché) n’est simplement pas exécuté : voir <a href="#no-level">Pourquoi mon résultat n’a-t-il pas de niveau ?</a>.</p>
 <hr>
 <a id="what-the-labels-mean"></a>
 <h2>Signification des libellés</h2>
@@ -138,7 +151,7 @@
 <p>Le processeur est bien là, mais il a refusé le modèle ou n’a pas terminé à temps (par exemple, la préparation du modèle a dépassé la limite de 60 secondes d’Android). Votre score utilise les processeurs qui ont pu s’exécuter.</p>
 <a id="completion"></a>
 <h3>Tests terminés</h3>
-<p>Le nombre d’éléments de test sur 8 qui se sont terminés avec des réponses correctes : 6 modèles de photos et de détection d’objets, le modèle de conversation et le test de chaleur. Un téléphone qui termine plus de 60 % est considéré comme pris en charge.</p>
+<p>Le nombre d’éléments de test exécutés qui se sont terminés avec des réponses correctes : les modèles de photos, d’objets, de sons et de style d’image, les modèles de reconnaissance vocale et de conversation et le test de chaleur. Les tests que vous avez omis (non téléchargés, test de chaleur décoché) ne sont pas comptés. Un téléphone qui termine plus de 60 % est considéré comme pris en charge. Une exécution arrêtée parce que le téléphone était trop chaud ne compte ni pour ni contre.</p>
 <hr>
 <a id="ai-processor-npu-status"></a>
 <h2>Processeur d’IA (NPU) : état</h2>
@@ -171,7 +184,7 @@
 <p>L’application envoie un court rapport technique : modèle de téléphone, puce, pilote graphique, versions d’Android et de l’application, et tests en échec. Rien de personnel n’est inclus, et il n’est envoyé que lorsque vous appuyez sur Envoyer, au plus une fois par téléphone et par version de l’application. Ces rapports nous aident à décider quels modèles de téléphones prendre en charge et quels problèmes corriger.</p>
 <a id="app-closed"></a>
 <h3>Le test s’est arrêté ou l’application s’est fermée. Et maintenant ?</h3>
-<p>Certains téléphones ferment les applications qui exécutent des tâches longues. Gardez l’écran allumé et l’application au premier plan, puis recommencez. Si cela se reproduit, merci de le signaler.</p>
+<p>Si c’est l’application elle-même qui a arrêté le test, le téléphone était trop chaud : voir <a href="#test-stops-hot">Pourquoi le test s’arrête-t-il quand mon téléphone est chaud ?</a>. Certains téléphones ferment les applications qui exécutent des tâches longues. Gardez l’écran allumé et l’application au premier plan, puis recommencez. Si cela se reproduit, merci de le signaler.</p>
 <a id="phone-not-listed"></a>
 <h3>Mon téléphone ne peut pas installer l’application. Pourquoi ?</h3>
 <p>Peu après le lancement, nous ne proposons l’application que sur les modèles de téléphones dont nous avons confirmé le bon fonctionnement, afin que tout le monde obtienne des résultats fiables. D’autres modèles sont ajoutés au fil du temps.</p>

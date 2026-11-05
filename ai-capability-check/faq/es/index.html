@@ -41,7 +41,7 @@
     <nav class="lang" aria-label="Idioma"><a href="../" lang="en" hreflang="en">English</a><span aria-current="page" lang="es">Español</span><a href="../fr/" lang="fr" hreflang="fr">Français</a><a href="../pt-BR/" lang="pt-BR" hreflang="pt-BR">Português (Brasil)</a><a href="../zh-CN/" lang="zh-CN" hreflang="zh-CN">中文（简体）</a><a href="../zh-TW/" lang="zh-TW" hreflang="zh-TW">中文（繁體）</a></nav>
 <h1>AI Capability Check: Preguntas y respuestas</h1>
 <p>Respuestas a preguntas que puede tener antes de instalar la app, mientras se ejecuta una prueba y al leer sus resultados. Las etiquetas de la app enlazan a la sección correspondiente de esta página.</p>
-<p>Última actualización: 2026-11-04 (app 0.1.x, en desarrollo). Las funciones marcadas <em>(próximamente)</em> todavía no están en la app. La metodología completa solo está disponible en inglés.</p>
+<p>Última actualización: 2026-11-05 (app 0.1.x, en desarrollo). La metodología completa solo está disponible en inglés.</p>
 <ul><li><a href="#before-you-install">Antes de instalar</a></li><li><a href="#while-the-test-runs">Mientras se ejecuta la prueba</a></li><li><a href="#your-score">Su puntuación</a></li><li><a href="#what-the-labels-mean">Qué significan las etiquetas</a></li><li><a href="#ai-processor-npu-status">Estado del procesador de IA (NPU)</a></li><li><a href="#problems-and-reports">Problemas e informes</a></li></ul>
 <hr>
 <a id="before-you-install"></a>
@@ -57,22 +57,22 @@
 <p>Las pruebas necesitan funciones del sistema que llegaron con Android 11, como leer lo cerca que está el teléfono de ralentizarse por calor. Mantenemos el mínimo lo más bajo que permiten esas funciones.</p>
 <a id="storage"></a>
 <h3>¿Cuánto espacio necesita?</h3>
-<p>La app incluye sus fotos de prueba y los modelos de clasificación de fotos y de detección de objetos (unos 60 MB de modelos). El modelo de chat es una descarga opcional aparte, de unos 1 GB. Sin él, la puntuación solo cubre las pruebas de fotos.</p>
+<p>La app incluye sus fotos y sonidos de prueba y los modelos de las pruebas de fotos, objetos, sonidos y estilo de imagen. El modelo de chat (unos 1 GB) y el modelo de voz a texto (unos 40 MB) son descargas opcionales aparte, que usted elige en la pantalla de inicio. Sin ellos el resultado es «parcial»: una puntuación con las pruebas que se ejecutaron, pero sin nivel.</p>
 <a id="internet"></a>
 <h3>¿Necesita internet?</h3>
-<p>No. Las pruebas se ejecutan por completo en su teléfono. Internet solo se usa para descargar el modelo de chat opcional.</p>
+<p>No. Las pruebas se ejecutan por completo en su teléfono. Internet solo se usa para descargar los modelos opcionales de chat y de voz.</p>
 <a id="privacy"></a>
 <h3>¿Qué datos salen de mi teléfono?</h3>
 <p>Ningún dato personal. Las fotos y preguntas de prueba vienen incluidas en la app; no se usa nada de la cámara, la galería ni los archivos de su teléfono. Las versiones publicadas envían estadísticas de uso anónimas (por ejemplo, cuántas pruebas terminaron en qué modelo de teléfono) para saber qué teléfonos funcionan bien. Nunca incluyen nombres, cuentas, identificadores, fotos ni mensajes. Un informe de problema se envía solo cuando toca Enviar.</p>
 <a id="battery-heat"></a>
 <h3>¿Es malo para la batería o el teléfono?</h3>
-<p>Una prueba completa mantiene los procesadores ocupados unos 10 a 25 minutos, así que el teléfono se calienta y gasta algo de batería, igual que un juego exigente. La última parte, la prueba de calor, hace trabajar deliberadamente al teléfono durante 2 minutos. Es seguro: los teléfonos se protegen ralentizándose cuando se calientan. La app comprueba la batería y la temperatura antes de empezar y le avisará si la batería está baja o el teléfono ya está caliente <em>(próximamente: el aviso en pantalla)</em>.</p>
+<p>Una prueba completa mantiene los procesadores ocupados unos 10 a 25 minutos, así que el teléfono se calienta y gasta algo de batería, igual que un juego exigente. La última parte, la prueba de calor, hace trabajar deliberadamente al teléfono durante 2 minutos; es opcional (una casilla, activada por defecto). Es seguro: los teléfonos se protegen ralentizándose cuando se calientan, y la app detiene la prueba por sí sola si el teléfono se calienta demasiado (véase <a href="#test-stops-hot">¿Por qué se detiene la prueba cuando mi teléfono está caliente?</a>). La app comprueba la batería y la temperatura antes de empezar y le avisa si la batería está baja o el teléfono ya está caliente.</p>
 <hr>
 <a id="while-the-test-runs"></a>
 <h2>Mientras se ejecuta la prueba</h2>
 <a id="how-long"></a>
 <h3>¿Cuánto tarda una prueba?</h3>
-<p>Entre 10 y 25 minutos, según el teléfono. La mayor parte del tiempo se dedica al modelo de chat, que carga un modelo de 1 GB y responde preguntas en cada procesador. Los teléfonos más rápidos terminan antes.</p>
+<p>Entre 10 y 25 minutos, según el teléfono. La mayor parte del tiempo se dedica al modelo de chat, que carga un modelo de 1 GB y responde preguntas en cada procesador. Omitir el modelo de chat o la prueba de calor la acorta. Los teléfonos más rápidos terminan antes.</p>
 <a id="keep-screen-on"></a>
 <h3>¿Puedo usar el teléfono durante la prueba?</h3>
 <p>Por favor, no. Deje la app abierta y el teléfono sobre una mesa. Otras apps, las notificaciones, las videollamadas o los juegos usan tiempo del procesador y hacen que los resultados sean más lentos y menos estables. La app mantiene la pantalla encendida por sí misma.</p>
@@ -82,27 +82,40 @@
 <a id="animations-pause"></a>
 <h3>¿Por qué la pantalla se detiene de vez en cuando?</h3>
 <p>Mientras se ejecuta una medición, la app pausa sus animaciones para que dibujar la pantalla no le quite tiempo a la prueba. Los resultados y las imágenes aparecen entre mediciones.</p>
+<a id="test-stops-hot"></a>
+<h3>¿Por qué se detiene la prueba cuando mi teléfono está caliente?</h3>
+<p>Para proteger su teléfono. Antes de una ejecución la app muestra un aviso de calor (hasta que marque «No volver a mostrar»). Entre mediciones comprueba el teléfono y detiene la ejecución por sí sola si Android informa de un estado de calor grave o si la batería supera los 45 °C. Los resultados obtenidos hasta ese momento se conservan, y una ejecución así no cuenta ni a favor ni en contra de la compatibilidad de su teléfono. Los teléfonos ya se protegen ralentizándose cuando se calientan, lo que también hace los resultados más lentos; además, el calor desgasta más rápido las baterías. Si la prueba se detuvo, deje enfriar el teléfono, quítele la funda y sáquelo del sol, y vuelva a ejecutarla.</p>
 <a id="heat-test"></a>
 <h3>¿Qué es la prueba de calor?</h3>
-<p>Después de las pruebas principales, el teléfono reconoce fotos sin parar durante 2 minutos en su procesador más rápido que responde correctamente. Los teléfonos se calientan con una carga constante y se ralentizan para protegerse la batería y el chip. Comparamos la velocidad al final con la mejor velocidad del teléfono durante esos 2 minutos: «Se mantiene rápido con calor: 94%» significa que el teléfono conservó el 94% de su mejor velocidad. Se muestra junto a la puntuación, no dentro de ella, porque mide el enfriamiento, no la capacidad de IA.</p>
+<p>Es opcional (una casilla en la pantalla de inicio, activada por defecto). Después de las pruebas principales, el teléfono reconoce fotos sin parar durante 2 minutos en su procesador más rápido que responde correctamente. Los teléfonos se calientan con una carga constante y se ralentizan para proteger la batería y el chip. Comparamos la velocidad al final con la mejor velocidad del teléfono durante esos 2 minutos: «Se mantiene rápido con calor: 94%» significa que el teléfono conservó el 94% de su mejor velocidad. Se muestra junto a la puntuación, no dentro de ella, porque mide el enfriamiento, no la capacidad de IA. La prueba puede detenerse antes si el teléfono se calienta demasiado.</p>
 <a id="chat-test"></a>
 <h3>¿Qué es la prueba de chat?</h3>
-<p>Un modelo pequeño de chat de IA (Qwen3 1.7B) se ejecuta en su teléfono sin internet. Medimos qué tan rápido lee una pregunta y escribe una respuesta, en tokens por segundo (un token es más o menos una palabra corta o parte de una palabra). También responde tres preguntas sencillas, para comprobar que cada procesador lo ejecuta correctamente.</p>
+<p>Un modelo pequeño de chat de IA (Qwen3 1.7B) se ejecuta en su teléfono sin internet. Medimos qué tan rápido lee una pregunta y escribe una respuesta, en tokens por segundo (un token es más o menos una palabra corta o parte de una palabra). También responde tres preguntas sencillas, para comprobar que cada procesador lo ejecuta correctamente. Solo se ejecuta si descargó el modelo.</p>
 <hr>
 <a id="your-score"></a>
 <h2>Su puntuación</h2>
 <a id="score"></a>
 <h3>¿Qué significa la puntuación?</h3>
-<p>Resume la velocidad con la que su teléfono ejecuta las tres pruebas de IA, con respuestas correctas. Un Google Pixel 9 Pro XL con batería puntúa 1000; un teléfono que puntúa 500 es aproximadamente la mitad de rápido en estas tareas.</p>
+<p>Resume la velocidad con la que su teléfono ejecuta las pruebas de IA, con respuestas correctas. Un Google Pixel 9 Pro XL con batería puntúa 1000; un teléfono que puntúa 500 es aproximadamente la mitad de rápido en estas tareas.</p>
+<a id="groups"></a>
+<h3>¿Qué son la IA de reconocimiento y la IA generativa?</h3>
+<p>Las pruebas se dividen en dos grupos. La <strong>IA de reconocimiento</strong> consiste en entender lo que hay en los datos de entrada: reconocimiento de fotos, detección de objetos y reconocimiento de sonidos. La <strong>IA generativa</strong> consiste en crear contenido nuevo: voz a texto, chat y estilo de imagen (la prueba de estilo de imagen es por ahora piloto). La prueba de calor es un extra y no se puntúa.</p>
+<p>Cada grupo tiene su propia puntuación (el promedio de sus pruebas mediante la media geométrica, que evita que una prueba muy rápida oculte una muy lenta). La puntuación AI Capability Score es la media geométrica de las dos, de modo que cada grupo cuenta un 50%. Las versiones anteriores de la app ponderaban las pruebas de otra forma, así que sus puntuaciones no son comparables.</p>
+<a id="trial"></a>
+<h3>¿Por qué una prueba está marcada como «piloto»?</h3>
+<p>Una prueba nueva se ejecuta primero como piloto: se mide y se muestra, pero no cuenta en su puntuación ni en su nivel hasta que haya terminado con respuestas correctas en todos nuestros teléfonos de referencia. Estilo de imagen es ahora una prueba piloto. Reconocimiento de sonidos y voz a texto fueron pilotos antes y ahora se puntúan.</p>
 <a id="level"></a>
 <h3>¿Qué es el nivel?</h3>
-<p>Cinco niveles agrupan las puntuaciones en Básico, Capaz, Avanzado, Insignia y De vanguardia. Si una prueba no pudo ejecutarse en su teléfono, el nivel queda limitado, porque el teléfono no puede hacer todo lo que el nivel implica. Cada nivel empieza en el doble de la puntuación del anterior: Básico es menos de 200, Capaz de 200 a 399, Avanzado de 400 a 799, Insignia de 800 a 1599 y De vanguardia 1600 o más. Un resultado sin el modelo de chat no recibe nivel.</p>
+<p>Cinco niveles agrupan las puntuaciones en Básico, Capaz, Avanzado, Insignia y De vanguardia. Si una prueba no pudo ejecutarse en su teléfono, el nivel queda limitado, porque el teléfono no puede hacer todo lo que el nivel implica. Cada nivel empieza en el doble de la puntuación del anterior: Básico es menos de 200, Capaz de 200 a 399, Avanzado de 400 a 799, Insignia de 800 a 1599 y De vanguardia 1600 o más. Un nivel necesita todas las pruebas puntuadas, así que un resultado parcial no recibe ninguno.</p>
+<a id="no-level"></a>
+<h3>¿Por qué mi resultado no tiene nivel?</h3>
+<p>Omitió el modelo de chat o la voz a texto (no lo descargó), así que el resultado es «parcial». La puntuación se calcula entonces con las pruebas que sí se ejecutaron (cuando cada grupo tiene al menos una), pero un nivel necesita todas las pruebas puntuadas. Descargue los modelos que faltan en la pantalla de inicio y vuelva a ejecutar para obtener un nivel.</p>
 <a id="different-results"></a>
 <h3>¿Por qué mi puntuación es distinta a la de la última vez, o a la del mismo teléfono en otro lugar?</h3>
 <p>Las diferencias pequeñas (de unos pocos por ciento) son normales: la temperatura, la carga, las apps en segundo plano y las actualizaciones del sistema influyen. Para el resultado más estable, haga la prueba con batería, con el teléfono frío, sin nada más en ejecución y con la pantalla encendida.</p>
 <a id="test-not-run"></a>
 <h3>Una prueba muestra «—» o «no se pudo ejecutar». ¿Mi teléfono está roto?</h3>
-<p>No. Algunos teléfonos no pueden ejecutar todas las pruebas: por ejemplo, el modelo de chat necesita unos 1,2 GB de memoria libre. Una prueba que falta cuenta como el resultado más bajo de la puntuación y limita el nivel, y la pantalla de detalles le dice por qué.</p>
+<p>No. Algunos teléfonos no pueden ejecutar todas las pruebas: por ejemplo, el modelo de chat necesita unos 1,2 GB de memoria libre. Una prueba que se intentó y falló cuenta como el resultado más bajo de la puntuación y limita el nivel, y la pantalla de detalles le dice por qué. Una prueba que usted omitió (sin descargar, prueba de calor desmarcada) simplemente no se ejecuta: véase <a href="#no-level">¿Por qué mi resultado no tiene nivel?</a>.</p>
 <hr>
 <a id="what-the-labels-mean"></a>
 <h2>Qué significan las etiquetas</h2>
@@ -138,7 +151,7 @@
 <p>El procesador existe, pero rechazó el modelo o no terminó a tiempo (por ejemplo, preparar el modelo tardó más que el límite de 60 segundos de Android). Su puntuación usa los procesadores que sí se ejecutaron.</p>
 <a id="completion"></a>
 <h3>Pruebas terminadas</h3>
-<p>Cuántos de los 8 elementos de prueba terminaron con respuestas correctas: 6 modelos de fotos y detección de objetos, el modelo de chat y la prueba de calor. Un teléfono que termina más del 60% cuenta como compatible.</p>
+<p>Cuántos de los elementos de prueba que se ejecutaron terminaron con respuestas correctas: los modelos de fotos, objetos, sonidos y estilo de imagen, los modelos de voz y de chat y la prueba de calor. Las pruebas que usted omitió (sin descargar, prueba de calor desmarcada) no se cuentan. Un teléfono que termina más del 60% cuenta como compatible. Una ejecución detenida porque el teléfono se calentó demasiado no cuenta ni a favor ni en contra.</p>
 <hr>
 <a id="ai-processor-npu-status"></a>
 <h2>Procesador de IA (NPU): estado</h2>
@@ -171,7 +184,7 @@
 <p>La app envía un informe técnico breve: modelo de teléfono, chip, controlador gráfico, versión de Android y de la app, y qué pruebas fallaron. No se incluye nada personal, y solo se envía cuando toca Enviar, como máximo una vez por teléfono y versión de la app. Los informes nos ayudan a decidir qué modelos de teléfono admitir y qué problemas arreglar.</p>
 <a id="app-closed"></a>
 <h3>La prueba se detuvo o la app se cerró. ¿Qué hago?</h3>
-<p>Algunos teléfonos cierran las apps que ejecutan tareas largas. Mantenga la pantalla encendida y la app en primer plano, y vuelva a empezar. Si sigue pasando, por favor, infórmelo.</p>
+<p>Si fue la propia app la que detuvo la prueba, el teléfono estaba demasiado caliente: véase <a href="#test-stops-hot">¿Por qué se detiene la prueba cuando mi teléfono está caliente?</a>. Algunos teléfonos cierran las apps que ejecutan tareas largas. Mantenga la pantalla encendida y la app en primer plano, y vuelva a empezar. Si sigue pasando, por favor, infórmelo.</p>
 <a id="phone-not-listed"></a>
 <h3>Mi teléfono no puede instalar la app. ¿Por qué?</h3>
 <p>Poco después del lanzamiento ofrecemos la app solo en modelos de teléfono que hemos confirmado que funcionan bien, para que todos obtengan resultados fiables. Con el tiempo se añaden más modelos.</p>
