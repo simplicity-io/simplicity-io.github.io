@@ -95,6 +95,10 @@
 <h3>¿Qué es la prueba de chat?</h3>
 <p>Un modelo pequeño de chat de IA (Qwen3 1.7B) se ejecuta en su teléfono sin internet. Medimos qué tan rápido lee una pregunta y escribe una respuesta, en tokens por segundo (un token es más o menos una palabra corta o parte de una palabra). También responde tres preguntas sencillas, para comprobar que cada procesador lo ejecuta correctamente. Solo se ejecuta si descargó el modelo.</p>
 <hr>
+<a id="quiz"></a>
+<h3>¿El cuestionario del chat de verdad distingue entre teléfonos? ¿Y si ningún teléfono acierta todas las preguntas?</h3>
+<p>El cuestionario no clasifica los teléfonos; lo hace la velocidad. La puntuación del chat sale de lo rápido que el teléfono lee una pregunta y escribe una respuesta (tokens por segundo), y eso varía mucho: un teléfono de gama alta reciente escribe varias veces más rápido que uno de gama media más antiguo.</p>
+<p>Todos los teléfonos ejecutan el mismo modelo con los mismos ajustes, así que lo que el modelo sabe es igual en todos, y puede fallar una pregunta en todos ellos. El cuestionario comprueba otra cosa: si un procesador más rápido, como el gráfico o el de IA, sigue calculando bien. Su velocidad solo cuenta si acierta al menos tantas preguntas como la CPU del mismo teléfono. Esta comprobación ha detectado procesadores gráficos que daban respuestas incorrectas; su velocidad quedó fuera de la puntuación.</p>
 <a id="your-score"></a>
 <h2>Su puntuación</h2>
 <a id="score"></a>

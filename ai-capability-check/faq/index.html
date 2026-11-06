@@ -95,6 +95,10 @@
 <h3>What is the chat test?</h3>
 <p>A small AI chat model (Qwen3 1.7B) runs on your phone without the internet. We measure how fast it reads a question and writes an answer, in tokens per second (a token is roughly a short word or part of a word). It also answers three simple questions, so we can check that each processor runs it correctly. It runs only if you downloaded the model.</p>
 <hr>
+<a id="quiz"></a>
+<h3>Does the chat quiz really tell phones apart? What if no phone gets every question right?</h3>
+<p>The quiz doesn't rank phones; speed does. The chat score comes from how fast the phone reads a prompt and writes an answer (tokens per second), and that differs a lot between phones: a recent flagship writes several times faster than an older mid-range phone.</p>
+<p>Every phone runs the same model with the same settings, so what the model knows is the same everywhere, and it may miss a question on every phone. The quiz checks something else: whether a faster processor, such as the graphics or AI processor, still calculates correctly. Its speed only counts if it answers at least as many questions right as the same phone's CPU. This check has caught graphics processors that gave wrong answers; their speed was left out of the score.</p>
 <a id="your-score"></a>
 <h2>Your score</h2>
 <a id="score"></a>
