@@ -41,7 +41,7 @@
     <nav class="lang" aria-label="Langue"><a href="../" lang="en" hreflang="en">English</a><a href="../es/" lang="es" hreflang="es">Español</a><span aria-current="page" lang="fr">Français</span><a href="../pt-BR/" lang="pt-BR" hreflang="pt-BR">Português (Brasil)</a><a href="../zh-CN/" lang="zh-CN" hreflang="zh-CN">中文（简体）</a><a href="../zh-TW/" lang="zh-TW" hreflang="zh-TW">中文（繁體）</a></nav>
 <h1>AI Capability Check : Questions et réponses</h1>
 <p>Réponses aux questions que vous pouvez vous poser avant d’installer l’application, pendant un test et à la lecture de vos résultats. Les libellés de l’application renvoient à la section correspondante de cette page.</p>
-<p>Dernière mise à jour : 2026-11-05 (application 0.1.x, en développement). La méthodologie complète n’est disponible qu’en anglais.</p>
+<p>Dernière mise à jour : 2026-11-06 (application 0.3). La méthodologie complète n’est disponible qu’en anglais.</p>
 <ul><li><a href="#before-you-install">Avant l’installation</a></li><li><a href="#while-the-test-runs">Pendant le test</a></li><li><a href="#your-score">Votre score</a></li><li><a href="#what-the-labels-mean">Signification des libellés</a></li><li><a href="#ai-processor-npu-status">État du processeur d’IA (NPU)</a></li><li><a href="#problems-and-reports">Problèmes et signalements</a></li></ul>
 <hr>
 <a id="before-you-install"></a>
@@ -60,10 +60,13 @@
 <p>L’application contient ses photos et sons de test ainsi que les modèles des tests de photos, d’objets, de sons et de style d’image. Le modèle de conversation (environ 1 Go) et le modèle de reconnaissance vocale (environ 40 Mo) sont des téléchargements optionnels séparés, que vous choisissez sur l’écran d’accueil. Sans eux, le résultat est « partiel » : un score calculé avec les tests exécutés, mais sans niveau.</p>
 <a id="internet"></a>
 <h3>Faut-il une connexion Internet ?</h3>
-<p>Non, les tests se déroulent entièrement sur votre téléphone. Internet ne sert qu’à télécharger les modèles optionnels de conversation et de reconnaissance vocale.</p>
+<p>Non, les tests se déroulent entièrement sur votre téléphone. Internet sert à télécharger les modèles optionnels de conversation et de reconnaissance vocale et, en dehors des tests, aux annonces (voir <a href="#ads">L’application affiche-t-elle des annonces ?</a>).</p>
 <a id="privacy"></a>
 <h3>Quelles données quittent mon téléphone ?</h3>
 <p>Aucune donnée personnelle. Les photos et les questions de test sont intégrées à l’application ; rien de votre appareil photo, de votre galerie ou de vos fichiers n’est utilisé. Les versions publiées envoient des statistiques d’utilisation anonymes (par exemple, le nombre de tests terminés par modèle de téléphone) afin de savoir quels téléphones fonctionnent bien. Elles ne contiennent jamais de nom, de compte, d’identifiant, de photo ni de message. Un signalement de problème n’est envoyé que lorsque vous appuyez sur Envoyer.</p>
+<a id="ads"></a>
+<h3>L’application affiche-t-elle des annonces ?</h3>
+<p>Oui, l’application est gratuite et affiche quelques annonces : une sous votre résultat une fois un test terminé, et une bannière sur les pages d’historique et de téléchargements. Les annonces ne se chargent et ne s’affichent jamais pendant un test : elles ne peuvent donc pas modifier un résultat. Là où la loi l’exige, le formulaire de consentement de Google vous demande d’abord vos choix ; vous pouvez les modifier à tout moment dans « Paramètres de confidentialité », dans le menu. Les détails figurent dans la <a href="../../privacy/">politique de confidentialité</a>.</p>
 <a id="battery-heat"></a>
 <h3>Est-ce mauvais pour la batterie ou le téléphone ?</h3>
 <p>Un test complet occupe les processeurs pendant environ 10 à 25 minutes ; le téléphone chauffe et consomme un peu de batterie, comme un jeu exigeant. La dernière partie, le test de chaleur, fait volontairement travailler le téléphone pendant 2 minutes ; elle est facultative (une case, décochée par défaut). C’est sans danger : les téléphones se protègent en ralentissant lorsqu’ils chauffent, et l’application arrête elle-même le test si le téléphone devient trop chaud (voir <a href="#test-stops-hot">Pourquoi le test s’arrête-t-il quand mon téléphone est chaud ?</a>). L’application vérifie la batterie et la température avant de démarrer et vous avertit si la batterie est faible ou si le téléphone est déjà chaud.</p>
