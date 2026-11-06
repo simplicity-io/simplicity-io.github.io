@@ -1,0 +1,162 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>AI Capability Check: how good is your phone at on-device AI?</title>
+  <meta name="description" content="Measures how fast and how correctly your phone's CPU, graphics processor and AI processor run real AI models, offline: photos, objects, sounds, speech to text and a chat model. Free.">
+  <meta name="theme-color" content="#3a5f87">
+  <link rel="canonical" href="https://simplicity-io.github.io/ai-capability-check/">
+  <link rel="icon" type="image/png" sizes="192x192" href="../icon-acc.png?v=20261106">
+  <link rel="apple-touch-icon" href="../icon-acc.png?v=20261106">
+  <meta property="og:type" content="website">
+  <meta property="og:site_name" content="Simplicity.IO">
+  <meta property="og:locale" content="en_US">
+  <meta property="og:title" content="AI Capability Check: how good is your phone at on-device AI?">
+  <meta property="og:description" content="Real AI models on your phone's CPU, graphics processor and AI processor, with answer checks and a score. Offline and free.">
+  <meta property="og:image" content="https://simplicity-io.github.io/og-acc.jpg">
+  <meta property="og:image:width" content="1024">
+  <meta property="og:image:height" content="500">
+  <meta property="og:url" content="https://simplicity-io.github.io/ai-capability-check/">
+  <meta name="twitter:card" content="summary_large_image">
+  <link rel="stylesheet" href="../style.css?v=20261030">
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@graph": [
+      {
+        "@type": "SoftwareApplication",
+        "name": "AI Capability Check",
+        "applicationCategory": "UtilitiesApplication",
+        "operatingSystem": "Android 11+",
+        "description": "Measures how fast and how correctly a phone's CPU, graphics processor and AI processor run real AI models, offline, and gives an AI Capability Score.",
+        "url": "https://simplicity-io.github.io/ai-capability-check/",
+        "downloadUrl": "https://play.google.com/store/apps/details?id=io.simplicity.benchpress",
+        "image": "https://simplicity-io.github.io/icon-acc.png",
+        "screenshot": "https://simplicity-io.github.io/shots/acc-result.jpg",
+        "offers": { "@type": "Offer", "price": "0", "priceCurrency": "USD" },
+        "publisher": { "@type": "Organization", "name": "Simplicity.IO", "url": "https://simplicity-io.github.io/", "email": "simplicity.io.dev@outlook.com" }
+      },
+      {
+        "@type": "BreadcrumbList",
+        "itemListElement": [
+          { "@type": "ListItem", "position": 1, "name": "Simplicity.IO", "item": "https://simplicity-io.github.io/" },
+          { "@type": "ListItem", "position": 2, "name": "AI Capability Check", "item": "https://simplicity-io.github.io/ai-capability-check/" }
+        ]
+      },
+      {
+        "@type": "FAQPage",
+        "mainEntity": [
+          {
+            "@type": "Question",
+            "name": "What does it test?",
+            "acceptedAnswer": { "@type": "Answer", "text": "Six tests in two groups. Recognition AI: photo recognition, object detection and sound recognition. Generative AI: speech to text and a chat model (Qwen3 1.7B), plus image style as a trial. Each runs on the CPU, the graphics processor and, where the phone allows it, the AI processor, and every processor must give the same answers as the CPU before its speed counts." }
+          },
+          {
+            "@type": "Question",
+            "name": "Is anything uploaded?",
+            "acceptedAnswer": { "@type": "Answer", "text": "No. The tests run offline on your phone and the results stay on it. The chat and speech models are downloaded once, only when you tap Download." }
+          },
+          {
+            "@type": "Question",
+            "name": "What does the score mean?",
+            "acceptedAnswer": { "@type": "Answer", "text": "A Google Pixel 9 Pro XL on battery scores 1000; twice as fast scores 2000. The score is the geometric mean of the Recognition and Generative halves, and one of five levels gives a quick read: Basic, Capable, Advanced, Flagship and Cutting-edge." }
+          },
+          {
+            "@type": "Question",
+            "name": "How long does it take?",
+            "acceptedAnswer": { "@type": "Answer", "text": "About 10 to 25 minutes for everything, depending on the phone and which tests you include. An optional heat test adds 2 minutes; the app stops by itself if the phone gets too hot." }
+          },
+          {
+            "@type": "Question",
+            "name": "Which phones are supported?",
+            "acceptedAnswer": { "@type": "Answer", "text": "Android 11 or later with 4 GB of RAM or more. At launch Google Play offers it on phones with chips we have tested; more follow as results come in." }
+          }
+        ]
+      }
+    ]
+  }
+  </script>
+</head>
+<body>
+  <main class="wrap">
+    <a class="back" href="../">&larr; Simplicity.IO</a>
+
+    <header class="app-head">
+      <img src="../icon-acc.png" width="96" height="96" alt="">
+      <div>
+        <h1>AI Capability Check</h1>
+        <p class="prompt cursor">run --cpu --gpu --npu</p>
+      </div>
+    </header>
+    <p class="lead">How good is your phone at AI, really? AI Capability Check runs real AI models on your phone's <strong>CPU, graphics processor and AI processor</strong>, checks that each one gives the right answers, and turns the speed into one score. Everything runs offline.</p>
+    <p class="cta">
+      <a href="https://play.google.com/store/apps/details?id=io.simplicity.benchpress&amp;referrer=utm_source%3Dsimplicity_io_site%26utm_medium%3Dwebsite%26utm_campaign%3Dacc_top" rel="noopener"><img class="play" src="../play-badge.png" width="646" height="250" alt="Get AI Capability Check on Google Play"></a>
+    </p>
+    <ul class="spec">
+      <li>Android 11+ (API 30)</li>
+      <li>4 GB of RAM or more</li>
+      <li>Free on Google Play</li>
+    </ul>
+
+    <h2>What it does</h2>
+    <ul class="features">
+      <li>Recognition AI: recognises photos, finds objects and identifies sounds.</li>
+      <li>Generative AI: writes down speech and chats with an offline language model (Qwen3 1.7B); image style is a trial.</li>
+      <li>A processor race on every test: CPU, graphics processor and AI processor side by side, and only answers that match the CPU count.</li>
+      <li>One AI Capability Score (a Pixel 9 Pro XL on battery = 1000), a level, and the result of every test and processor.</li>
+      <li>Optional heat test: how much speed your phone keeps as it warms up. The app stops by itself if it gets too hot.</li>
+      <li>Your test history stays on your phone. Ads never load or show while a test runs.</li>
+    </ul>
+
+    <h2>Screenshots</h2>
+    <div class="shots">
+      <img src="../shots/acc-start.jpg" width="540" height="1170" loading="lazy" alt="The start screen: the last score on a dial, and the tests in two groups, Recognition AI and Generative AI.">
+      <img src="../shots/acc-race.jpg" width="540" height="1170" loading="lazy" alt="A photo test: the processor race compares the CPU, graphics processor and AI processor on the same photos.">
+      <img src="../shots/acc-speech.jpg" width="540" height="1170" loading="lazy" alt="Speech to text: the words appear as the phone writes them, offline.">
+      <img src="../shots/acc-result.jpg" width="540" height="1170" loading="lazy" alt="The result: the AI Capability Score with its Recognition and Generative halves and each test.">
+    </div>
+
+    <h2>Questions</h2>
+    <section class="faq">
+      <details>
+        <summary>What does it test?</summary>
+        <p>Six tests in two groups. Recognition AI: photo recognition, object detection and sound recognition. Generative AI: speech to text and a chat model (Qwen3 1.7B), plus image style as a trial. Each runs on the CPU, the graphics processor and, where the phone allows it, the AI processor, and every processor must give the same answers as the CPU before its speed counts.</p>
+      </details>
+      <details>
+        <summary>Is anything uploaded?</summary>
+        <p>No. The tests run offline on your phone and the results stay on it. The chat and speech models are downloaded once, only when you tap Download.</p>
+      </details>
+      <details>
+        <summary>What does the score mean?</summary>
+        <p>A Google Pixel 9 Pro XL on battery scores 1000; twice as fast scores 2000. The score is the geometric mean of the Recognition and Generative halves, and one of five levels gives a quick read: Basic, Capable, Advanced, Flagship and Cutting-edge.</p>
+      </details>
+      <details>
+        <summary>How long does it take?</summary>
+        <p>About 10 to 25 minutes for everything, depending on the phone and which tests you include. An optional heat test adds 2 minutes; the app stops by itself if the phone gets too hot.</p>
+      </details>
+      <details>
+        <summary>Which phones are supported?</summary>
+        <p>Android 11 or later with 4 GB of RAM or more. At launch Google Play offers it on phones with chips we have tested; more follow as results come in.</p>
+      </details>
+    </section>
+    <p class="lead">More: <a href="faq/">all questions and answers</a> (also in Spanish, French, Portuguese and Chinese), <a href="methodology/">how we test</a> and the <a href="privacy/">privacy policy</a>.</p>
+
+    <h2>Get it</h2>
+    <p class="lead">Free on Google Play. Android 11 or later.</p>
+    <p class="cta">
+      <a href="https://play.google.com/store/apps/details?id=io.simplicity.benchpress&amp;referrer=utm_source%3Dsimplicity_io_site%26utm_medium%3Dwebsite%26utm_campaign%3Dacc_bottom" rel="noopener"><img class="play" src="../play-badge.png" width="646" height="250" alt="Get AI Capability Check on Google Play"></a>
+    </p>
+    <p class="lead">Also from Simplicity.IO: <a href="../mainline-module-info/">Mainline Module Info</a> and <a href="../linux-terminal-helper/">Linux Terminal Helper</a>.</p>
+
+    <footer>
+      <div class="foot-links">
+        <a href="mailto:simplicity.io.dev@outlook.com">Contact</a>
+        <span>&copy; Simplicity.IO</span>
+        <span>Not affiliated with Google, Qualcomm or the makers of the AI models. Google Play and the Google Play logo are trademarks of Google LLC.</span>
+      </div>
+      <img class="foot-logo" src="../logo-360.jpg" width="360" height="203" alt="Simplicity.IO logo">
+    </footer>
+  </main>
+</body>
+</html>
