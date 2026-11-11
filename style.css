@@ -123,3 +123,4 @@ footer {
 .faq summary { cursor: pointer; font-weight: 600; }
 .faq details p { margin: .6rem 0 0; color: var(--text); }
 .card .more { display: inline-block; margin-top: .4rem; font-size: .9rem; font-weight: 600; }
+.card .note { margin: .6rem 0 0; font-size: .85rem; color: var(--muted); border-left: 3px solid var(--accent); padding-left: .6rem; }
