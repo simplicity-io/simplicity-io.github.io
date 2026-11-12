@@ -3,8 +3,8 @@
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
-  <title>AI Capability Check: test methodology</title>
-  <meta name="description" content="How AI Capability Check measures a phone&#x27;s on-device AI: tests, models, processors, timing, answer checks and scoring.">
+  <title>OnDevice AI Meter: test methodology</title>
+  <meta name="description" content="How OnDevice AI Meter measures a phone&#x27;s on-device AI: tests, models, processors, timing, answer checks and scoring.">
   <meta name="theme-color" content="#00696E">
   <link rel="canonical" href="https://simplicity-io.github.io/ai-capability-check/methodology/">
   <link rel="icon" type="image/png" sizes="192x192" href="../../icon-192.png?v=20261030">
@@ -12,8 +12,8 @@
   <meta property="og:type" content="article">
   <meta property="og:site_name" content="Simplicity.IO">
   <meta property="og:locale" content="en">
-  <meta property="og:title" content="AI Capability Check: test methodology">
-  <meta property="og:description" content="How AI Capability Check measures a phone&#x27;s on-device AI: tests, models, processors, timing, answer checks and scoring.">
+  <meta property="og:title" content="OnDevice AI Meter: test methodology">
+  <meta property="og:description" content="How OnDevice AI Meter measures a phone&#x27;s on-device AI: tests, models, processors, timing, answer checks and scoring.">
   <meta property="og:url" content="https://simplicity-io.github.io/ai-capability-check/methodology/">
   <style>
     .doc h2 { margin-top: 2.2rem; }
@@ -31,9 +31,9 @@
 <body>
   <main class="wrap doc">
     <a class="back" href="../../">&larr; Simplicity.IO</a>
-<h1>AI Capability Check: Test methodology</h1>
+<h1>OnDevice AI Meter: Test methodology</h1>
 <p>Version 3 of the public methodology (suite version 3, app 0.3.9; updated 2026-11-12).</p>
-<p>AI Capability Check measures a phone's on-device AI performance so that results can be checked and repeated. This document describes what is measured, how, and what the results do and do not show.</p>
+<p>OnDevice AI Meter measures a phone's on-device AI performance so that results can be checked and repeated. This document describes what is measured, how, and what the results do and do not show.</p>
 <h2>Overview</h2>
 <p>One run times fixed AI models on every processor the phone offers, checks that each processor's answers are correct, and turns the best correct times into one AI Capability Score and a level.</p>
 <ul><li><strong>Tests, in groups:</strong> <strong>Recognition AI</strong> = photo recognition, object detection and sound recognition. <strong>Generative AI</strong> = image style, speech to text and a chat model (LLM). <strong>Extra</strong> = the heat test (not scored).</li><li><strong>Optional parts:</strong> the chat model and speech to text run only if you downloaded them; the heat test can be switched off.</li><li><strong>Processors:</strong> CPU, GPU and NPU, each measured separately. A processor counts only if its answers match the CPU's.</li><li><strong>Also measured, not scored:</strong> an optional 2-minute sustained run (how much the phone slows when hot) and the phone's state (battery, temperature, charging).</li><li><strong>Not scored:</strong> Google-managed AI features such as Gemini Nano. Google controls their versions, so they are shown beside the score, not in it.</li><li><strong>The tests run on the phone, offline.</strong> Test results stay on it. Released versions send anonymous usage events and crash reports (Firebase) and show ads (Google AdMob) outside the tests; see the privacy policy.</li></ul>
