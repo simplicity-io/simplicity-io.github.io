@@ -41,7 +41,7 @@
     <nav class="lang" aria-label="Idioma"><a href="../" lang="en" hreflang="en">English</a><a href="../es/" lang="es" hreflang="es">Español</a><a href="../fr/" lang="fr" hreflang="fr">Français</a><span aria-current="page" lang="pt-BR">Português (Brasil)</span><a href="../zh-CN/" lang="zh-CN" hreflang="zh-CN">中文（简体）</a><a href="../zh-TW/" lang="zh-TW" hreflang="zh-TW">中文（繁體）</a></nav>
 <h1>AI Capability Check: Perguntas e respostas</h1>
 <p>Respostas para perguntas que você pode ter antes de instalar, enquanto um teste roda e ao ler seus resultados. Os rótulos do app levam à seção correspondente desta página.</p>
-<p>Última atualização: 2026-11-12 (app 0.3.9). A metodologia completa está disponível só em inglês.</p>
+<p>Última atualização: 2026-11-12 (app 0.3.10). A metodologia completa está disponível só em inglês.</p>
 <ul><li><a href="#before-you-install">Antes de instalar</a></li><li><a href="#while-the-test-runs">Enquanto o teste roda</a></li><li><a href="#your-score">Sua pontuação</a></li><li><a href="#what-the-labels-mean">O que significam os rótulos</a></li><li><a href="#ai-processor-npu-status">Status do processador de IA (NPU)</a></li><li><a href="#problems-and-reports">Problemas e relatórios</a></li></ul>
 <hr>
 <a id="before-you-install"></a>
@@ -81,7 +81,7 @@
 <p>Por favor, não. Deixe o app aberto e o celular sobre a mesa. Outros apps, notificações, chamadas de vídeo ou jogos usam tempo do processador e deixam os resultados mais lentos e menos estáveis. O app mantém a tela ligada sozinho.</p>
 <a id="charging"></a>
 <h3>Carregando ou na bateria?</h3>
-<p>Os dois funcionam, e o app registra qual você usou. Os resultados só são comparados com outros da mesma condição, porque alguns celulares rodam mais rápido ou mais devagar durante a carga. “Na bateria” é a referência para os rankings.</p>
+<p>Os dois funcionam, e o app registra qual você usou. Os resultados só são comparados com outros da mesma condição, porque alguns celulares rodam mais rápido ou mais devagar durante a carga. “Na bateria” é a referência para os rankings. Desde o app 0.3.10, o resultado mostra "Medido durante o carregamento" ao lado da pontuação, porque o telefone de referência é medido na bateria.</p>
 <a id="animations-pause"></a>
 <h3>Por que a tela para de se mover às vezes?</h3>
 <p>Enquanto uma medição roda, o app pausa as animações para que desenhar a tela não roube tempo do teste. Resultados e imagens aparecem entre as medições.</p>
@@ -143,7 +143,7 @@
 <p>O tempo ficou quase igual nas 5 rodadas de medição (dentro de 10%).</p>
 <a id="unsteady"></a>
 <h3>Instável neste celular</h3>
-<p>O tempo mudou muito entre as rodadas (mais de 10%). Não é uma falha: a pontuação usa o valor do meio, que se sustenta mesmo quando uma rodada dá um salto. A causa mais comum é o processador gráfico reduzir a velocidade nas pequenas pausas entre as fotos e depois subir de novo; calor, carga e apps em segundo plano podem somar. Tente de novo com o celular frio, na bateria e sem mais nada rodando.</p>
+<p>O tempo mudou muito entre as rodadas (mais de 10%). Não é uma falha: a pontuação usa o valor do meio, que se sustenta mesmo quando uma rodada dá um salto. A causa mais comum é o processador gráfico reduzir a velocidade nas pequenas pausas entre as fotos e depois subir de novo; calor, carga e apps em segundo plano podem somar. Tente de novo com o celular frio, na bateria e sem mais nada rodando. Desde o app 0.3.10, um processador com tempos instáveis é medido uma segunda vez, e vale a medição mais estável. Se a medição que decide a pontuação de um teste continuar instável, essa pontuação aparece com "≈" (aproximada).</p>
 <a id="no-speedup"></a>
 <h3>Não é mais rápido que a CPU</h3>
 <p>Este processador deu respostas corretas, mas não foi pelo menos 3% mais rápido que a CPU. Muitas vezes o celular rodou o trabalho na CPU sem avisar, ou este processador não foi feito para esse tipo de modelo. Ele aparece para que o resultado não seja confundido com um acelerador funcionando.</p>

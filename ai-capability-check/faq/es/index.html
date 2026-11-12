@@ -41,7 +41,7 @@
     <nav class="lang" aria-label="Idioma"><a href="../" lang="en" hreflang="en">English</a><span aria-current="page" lang="es">Español</span><a href="../fr/" lang="fr" hreflang="fr">Français</a><a href="../pt-BR/" lang="pt-BR" hreflang="pt-BR">Português (Brasil)</a><a href="../zh-CN/" lang="zh-CN" hreflang="zh-CN">中文（简体）</a><a href="../zh-TW/" lang="zh-TW" hreflang="zh-TW">中文（繁體）</a></nav>
 <h1>AI Capability Check: Preguntas y respuestas</h1>
 <p>Respuestas a preguntas que puede tener antes de instalar la app, mientras se ejecuta una prueba y al leer sus resultados. Las etiquetas de la app enlazan a la sección correspondiente de esta página.</p>
-<p>Última actualización: 2026-11-12 (app 0.3.9). La metodología completa solo está disponible en inglés.</p>
+<p>Última actualización: 2026-11-12 (app 0.3.10). La metodología completa solo está disponible en inglés.</p>
 <ul><li><a href="#before-you-install">Antes de instalar</a></li><li><a href="#while-the-test-runs">Mientras se ejecuta la prueba</a></li><li><a href="#your-score">Su puntuación</a></li><li><a href="#what-the-labels-mean">Qué significan las etiquetas</a></li><li><a href="#ai-processor-npu-status">Estado del procesador de IA (NPU)</a></li><li><a href="#problems-and-reports">Problemas e informes</a></li></ul>
 <hr>
 <a id="before-you-install"></a>
@@ -81,7 +81,7 @@
 <p>Por favor, no. Deje la app abierta y el teléfono sobre una mesa. Otras apps, las notificaciones, las videollamadas o los juegos usan tiempo del procesador y hacen que los resultados sean más lentos y menos estables. La app mantiene la pantalla encendida por sí misma.</p>
 <a id="charging"></a>
 <h3>¿Con carga o con batería?</h3>
-<p>Ambas opciones funcionan, y la app registra cuál usó. Los resultados solo se comparan con otros resultados en el mismo estado, porque algunos teléfonos van más rápido o más lento mientras cargan. «Con batería» es la referencia para las clasificaciones.</p>
+<p>Ambas opciones funcionan, y la app registra cuál usó. Los resultados solo se comparan con otros resultados en el mismo estado, porque algunos teléfonos van más rápido o más lento mientras cargan. «Con batería» es la referencia para las clasificaciones. Desde la app 0.3.10, el resultado indica «Medido mientras se cargaba» junto a la puntuación, porque el teléfono de referencia se mide con batería.</p>
 <a id="animations-pause"></a>
 <h3>¿Por qué la pantalla se detiene de vez en cuando?</h3>
 <p>Mientras se ejecuta una medición, la app pausa sus animaciones para que dibujar la pantalla no le quite tiempo a la prueba. Los resultados y las imágenes aparecen entre mediciones.</p>
@@ -143,7 +143,7 @@
 <p>El tiempo se mantuvo casi igual en las 5 rondas de medición (dentro del 10%).</p>
 <a id="unsteady"></a>
 <h3>Inestable en este teléfono</h3>
-<p>El tiempo cambió mucho entre rondas (más del 10%). No es un fallo: la puntuación usa el valor central, que se mantiene aunque algunas rondas den saltos. La causa más común es que la GPU reduce su velocidad en los pequeños intervalos entre fotos y luego la vuelve a subir; el calor, la carga y las apps en segundo plano pueden sumar. Vuelva a intentarlo con el teléfono frío, con batería y sin nada más en ejecución.</p>
+<p>El tiempo cambió mucho entre rondas (más del 10%). No es un fallo: la puntuación usa el valor central, que se mantiene aunque algunas rondas den saltos. La causa más común es que la GPU reduce su velocidad en los pequeños intervalos entre fotos y luego la vuelve a subir; el calor, la carga y las apps en segundo plano pueden sumar. Vuelva a intentarlo con el teléfono frío, con batería y sin nada más en ejecución. Desde la app 0.3.10, un procesador que resulta inestable se mide una segunda vez y cuenta la medición más estable. Si la medición que decide la puntuación de una prueba sigue siendo inestable, esa puntuación se muestra con «≈» (aproximada).</p>
 <a id="no-speedup"></a>
 <h3>No más rápido que la CPU</h3>
 <p>Este procesador dio respuestas correctas, pero no fue al menos un 3% más rápido que la CPU. A menudo el teléfono ejecutó el trabajo en la CPU sin decirlo, o este procesador no está diseñado para este tipo de modelo. Se muestra para que el resultado no se confunda con un acelerador que funciona.</p>

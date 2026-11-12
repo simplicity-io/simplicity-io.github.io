@@ -41,7 +41,7 @@
     <nav class="lang" aria-label="Language"><span aria-current="page" lang="en">English</span><a href="es/" lang="es" hreflang="es">Español</a><a href="fr/" lang="fr" hreflang="fr">Français</a><a href="pt-BR/" lang="pt-BR" hreflang="pt-BR">Português (Brasil)</a><a href="zh-CN/" lang="zh-CN" hreflang="zh-CN">中文（简体）</a><a href="zh-TW/" lang="zh-TW" hreflang="zh-TW">中文（繁體）</a></nav>
 <h1>AI Capability Check: Questions and answers</h1>
 <p>Answers to questions you may have before installing, while a test runs, and when reading your results. Labels in the app link to the matching section here.</p>
-<p>Last updated: 2026-11-12 (app 0.3.9).</p>
+<p>Last updated: 2026-11-12 (app 0.3.10).</p>
 <ul><li><a href="#before-you-install">Before you install</a></li><li><a href="#while-the-test-runs">While the test runs</a></li><li><a href="#your-score">Your score</a></li><li><a href="#what-the-labels-mean">What the labels mean</a></li><li><a href="#ai-processor-npu-status">AI processor (NPU) status</a></li><li><a href="#problems-and-reports">Problems and reports</a></li></ul>
 <hr>
 <a id="before-you-install"></a>
@@ -81,7 +81,7 @@
 <p>Please don't. Leave the app open and the phone on a table. Other apps, notifications, video calls or games take processor time and make the results slower and less steady. The app keeps the screen on by itself.</p>
 <a id="charging"></a>
 <h3>Charging or on battery?</h3>
-<p>Both work, and the app records which one you used. Results are compared only with other results in the same state, because some phones run faster or slower while charging. "On battery" is the reference for rankings.</p>
+<p>Both work, and the app records which one you used. Results are compared only with other results in the same state, because some phones run faster or slower while charging. "On battery" is the reference for rankings. Since app 0.3.10 the result says "Measured while charging" next to the score, because the reference phone is measured on battery.</p>
 <a id="animations-pause"></a>
 <h3>Why does the screen stop moving now and then?</h3>
 <p>While a measurement runs, the app pauses its animations so that drawing the screen doesn't steal time from the test. Results and pictures appear between measurements.</p>
@@ -143,7 +143,7 @@
 <p>The time stayed nearly the same across the 5 rounds of measurement (within 10%).</p>
 <a id="unsteady"></a>
 <h3>Unsteady on this phone</h3>
-<p>The time changed a lot between rounds (more than 10%). It is not a failure: the score uses the middle value, which holds even when single rounds jump. The most common cause is the graphics processor lowering its speed in the tiny gaps between photos and raising it again; heat, charging and background apps can add to it. Try again with the phone cool, on battery and with nothing else running.</p>
+<p>The time changed a lot between rounds (more than 10%). It is not a failure: the score uses the middle value, which holds even when single rounds jump. The most common cause is the graphics processor lowering its speed in the tiny gaps between photos and raising it again; heat, charging and background apps can add to it. Try again with the phone cool, on battery and with nothing else running. Since app 0.3.10 a lane that comes out unsteady is timed a second time, and the steadier timing counts. If the timing that decides a test's score is still unsteady, that score is shown with "≈" (approximate).</p>
 <a id="no-speedup"></a>
 <h3>No faster than the CPU</h3>
 <p>This processor gave correct answers but wasn't at least 3% faster than the CPU. Often the phone quietly ran the work on the CPU anyway, or this processor isn't built for this kind of model. It is shown so the result isn't mistaken for a working accelerator.</p>
