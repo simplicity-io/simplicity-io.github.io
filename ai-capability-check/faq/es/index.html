@@ -41,7 +41,7 @@
     <nav class="lang" aria-label="Idioma"><a href="../" lang="en" hreflang="en">English</a><span aria-current="page" lang="es">Español</span><a href="../fr/" lang="fr" hreflang="fr">Français</a><a href="../pt-BR/" lang="pt-BR" hreflang="pt-BR">Português (Brasil)</a><a href="../zh-CN/" lang="zh-CN" hreflang="zh-CN">中文（简体）</a><a href="../zh-TW/" lang="zh-TW" hreflang="zh-TW">中文（繁體）</a></nav>
 <h1>OnDevice AI Meter: Preguntas y respuestas</h1>
 <p>Respuestas a preguntas que puede tener antes de instalar la app, mientras se ejecuta una prueba y al leer sus resultados. Las etiquetas de la app enlazan a la sección correspondiente de esta página.</p>
-<p>Última actualización: 2026-11-12 (app 0.3.13). La metodología completa solo está disponible en inglés.</p>
+<p>Última actualización: 2026-11-13 (app 0.3.18). La metodología completa solo está disponible en inglés.</p>
 <ul><li><a href="#before-you-install">Antes de instalar</a></li><li><a href="#while-the-test-runs">Mientras se ejecuta la prueba</a></li><li><a href="#your-score">Su puntuación</a></li><li><a href="#what-the-labels-mean">Qué significan las etiquetas</a></li><li><a href="#ai-processor-npu-status">Estado del procesador de IA (NPU)</a></li><li><a href="#problems-and-reports">Problemas e informes</a></li></ul>
 <hr>
 <a id="before-you-install"></a>
@@ -103,17 +103,17 @@
 <h2>Su puntuación</h2>
 <a id="score"></a>
 <h3>¿Qué significa la puntuación?</h3>
-<p>Resume la velocidad con la que su teléfono ejecuta las pruebas de IA, con respuestas correctas. Un teléfono de referencia, un gama alta reciente, puntúa 1000 con batería; un teléfono que puntúa 500 es aproximadamente la mitad de rápido en estas tareas.</p>
+<p>Resume la velocidad con la que su teléfono ejecuta las pruebas de IA, con respuestas correctas. Un teléfono de referencia, un gama alta reciente, puntúa 1000 en cada una de las seis pruebas con batería, es decir, 6000 en total; un teléfono que puntúa 3000 es aproximadamente la mitad de rápido en estas tareas.</p>
 <a id="groups"></a>
 <h3>¿Qué son la IA de reconocimiento y la IA generativa?</h3>
 <p>Las pruebas se dividen en dos grupos. La <strong>IA de reconocimiento</strong> consiste en entender lo que hay en los datos de entrada: reconocimiento de fotos, detección de objetos y reconocimiento de sonidos. La <strong>IA generativa</strong> consiste en crear contenido nuevo: estilo de imagen, voz a texto y chat. La prueba de calor es un extra y no se puntúa.</p>
-<p>Cada grupo tiene su propia puntuación (el promedio de sus pruebas mediante la media geométrica, que evita que una prueba muy rápida oculte una muy lenta). La puntuación AI Capability Score es la media geométrica de las dos, de modo que cada grupo cuenta un 50%. Las versiones anteriores de la app ponderaban las pruebas de otra forma, así que sus puntuaciones no son comparables.</p>
+<p>La puntuación de cada grupo es la suma de las puntuaciones de sus tres pruebas, y la AI Capability Score es la suma de los dos grupos (desde la app 0.3.18). Antes, la app usaba promedios (medias geométricas) y el teléfono de referencia puntuaba 1000; sus resultados anteriores se muestran recalculados como sumas, así que puede seguir comparándolos. Las versiones de la app anteriores a la 0.1.66 ponderaban las pruebas de otra forma, así que sus puntuaciones no son comparables.</p>
 <a id="trial"></a>
 <h3>¿Por qué una prueba está marcada como «piloto»?</h3>
 <p>Una prueba nueva se ejecuta primero como piloto: se mide y se muestra, pero no cuenta en su puntuación ni en su nivel hasta que haya terminado con respuestas correctas en todos nuestros teléfonos de referencia. Ahora mismo ninguna prueba es piloto. Reconocimiento de sonidos, voz a texto y estilo de imagen fueron pilotos antes y ahora se puntúan (estilo de imagen desde la app 0.3.9).</p>
 <a id="level"></a>
 <h3>¿Qué es el nivel?</h3>
-<p>Cinco niveles agrupan las puntuaciones en Básico, Capaz, Avanzado, Insignia y De vanguardia. Si una prueba no pudo ejecutarse en su teléfono, el nivel queda limitado, porque el teléfono no puede hacer todo lo que el nivel implica. Cada nivel empieza en el doble de la puntuación del anterior: Básico es menos de 200, Capaz de 200 a 399, Avanzado de 400 a 799, Insignia de 800 a 1599 y De vanguardia 1600 o más. Un nivel necesita todas las pruebas puntuadas, así que un resultado parcial no recibe ninguno.</p>
+<p>Cinco niveles agrupan las puntuaciones en Básico, Capaz, Avanzado, Insignia y De vanguardia. Si una prueba no pudo ejecutarse en su teléfono, el nivel queda limitado, porque el teléfono no puede hacer todo lo que el nivel implica. Cada nivel empieza en el doble de la puntuación del anterior: Básico es menos de 1200, Capaz de 1200 a 2399, Avanzado de 2400 a 4799, Insignia de 4800 a 9599 y De vanguardia 9600 o más. Un nivel necesita todas las pruebas puntuadas, así que un resultado parcial no recibe ninguno.</p>
 <a id="no-level"></a>
 <h3>¿Por qué mi resultado no tiene nivel?</h3>
 <p>Omitió el modelo de chat o la voz a texto (no lo descargó), así que el resultado es «parcial». La puntuación se calcula entonces con las pruebas que sí se ejecutaron (cuando cada grupo tiene al menos una), pero un nivel necesita todas las pruebas puntuadas. Descargue los modelos que faltan en la pantalla de inicio y vuelva a ejecutar para obtener un nivel.</p>

@@ -41,7 +41,7 @@
     <nav class="lang" aria-label="Idioma"><a href="../" lang="en" hreflang="en">English</a><a href="../es/" lang="es" hreflang="es">Español</a><a href="../fr/" lang="fr" hreflang="fr">Français</a><span aria-current="page" lang="pt-BR">Português (Brasil)</span><a href="../zh-CN/" lang="zh-CN" hreflang="zh-CN">中文（简体）</a><a href="../zh-TW/" lang="zh-TW" hreflang="zh-TW">中文（繁體）</a></nav>
 <h1>OnDevice AI Meter: Perguntas e respostas</h1>
 <p>Respostas para perguntas que você pode ter antes de instalar, enquanto um teste roda e ao ler seus resultados. Os rótulos do app levam à seção correspondente desta página.</p>
-<p>Última atualização: 2026-11-12 (app 0.3.13). A metodologia completa está disponível só em inglês.</p>
+<p>Última atualização: 2026-11-13 (app 0.3.18). A metodologia completa está disponível só em inglês.</p>
 <ul><li><a href="#before-you-install">Antes de instalar</a></li><li><a href="#while-the-test-runs">Enquanto o teste roda</a></li><li><a href="#your-score">Sua pontuação</a></li><li><a href="#what-the-labels-mean">O que significam os rótulos</a></li><li><a href="#ai-processor-npu-status">Status do processador de IA (NPU)</a></li><li><a href="#problems-and-reports">Problemas e relatórios</a></li></ul>
 <hr>
 <a id="before-you-install"></a>
@@ -103,17 +103,17 @@
 <h2>Sua pontuação</h2>
 <a id="score"></a>
 <h3>O que significa a pontuação?</h3>
-<p>Ela resume a velocidade com que seu celular roda os testes de IA, com respostas corretas. Um celular de referência, um topo de linha recente, faz 1000 na bateria; um celular com 500 tem cerca de metade da velocidade nessas tarefas.</p>
+<p>Ela resume a velocidade com que seu celular roda os testes de IA, com respostas corretas. Um celular de referência, um topo de linha recente, faz 1000 em cada um dos seis testes na bateria, ou seja, 6000 no total; um celular com 3000 tem cerca de metade da velocidade nessas tarefas.</p>
 <a id="groups"></a>
 <h3>O que são IA de reconhecimento e IA generativa?</h3>
 <p>Os testes se dividem em dois grupos. A <strong>IA de reconhecimento</strong> trata de entender o que há na entrada: reconhecimento de fotos, detecção de objetos e reconhecimento de sons. A <strong>IA generativa</strong> trata de criar conteúdo novo: estilo de imagem, fala para texto e chat. O teste de calor é um extra e não entra na pontuação.</p>
-<p>Cada grupo tem a sua própria pontuação (a média dos seus testes, usando a média geométrica, que impede que um teste muito rápido esconda um muito lento). A AI Capability Score é a média geométrica das duas, então cada grupo conta 50%. Versões antigas do app pesavam os testes de outra forma, por isso as pontuações delas não são comparáveis.</p>
+<p>A pontuação de cada grupo é a soma das pontuações dos seus três testes, e a AI Capability Score é a soma dos dois grupos (desde o app 0.3.18). Antes, o app usava médias (geométricas) e o celular de referência fazia 1000; seus resultados anteriores aparecem recalculados como somas, então você ainda pode compará-los. Versões do app anteriores à 0.1.66 pesavam os testes de outra forma, por isso as pontuações delas não são comparáveis.</p>
 <a id="trial"></a>
 <h3>Por que um teste está marcado como “piloto”?</h3>
 <p>Um teste novo roda primeiro como piloto: ele é medido e mostrado, mas não conta na sua pontuação nem no seu nível até terminar com respostas corretas em todos os nossos celulares de referência. No momento, nenhum teste é piloto. Reconhecimento de sons, fala para texto e estilo de imagem já foram pilotos e agora são pontuados (estilo de imagem desde o app 0.3.9).</p>
 <a id="level"></a>
 <h3>O que é o nível?</h3>
-<p>Cinco níveis agrupam as pontuações: Básico, Capaz, Avançado, Topo de linha e Ponta. Se um teste não conseguiu rodar no seu celular, o nível fica limitado, porque o celular não consegue fazer tudo o que o nível representa. Cada nível começa no dobro da pontuação do anterior: Básico fica abaixo de 200, Capaz de 200 a 399, Avançado de 400 a 799, Topo de linha de 800 a 1599 e Ponta a partir de 1600. Um nível exige todos os testes pontuados, então um resultado parcial não recebe nenhum.</p>
+<p>Cinco níveis agrupam as pontuações: Básico, Capaz, Avançado, Topo de linha e Ponta. Se um teste não conseguiu rodar no seu celular, o nível fica limitado, porque o celular não consegue fazer tudo o que o nível representa. Cada nível começa no dobro da pontuação do anterior: Básico fica abaixo de 1200, Capaz de 1200 a 2399, Avançado de 2400 a 4799, Topo de linha de 4800 a 9599 e Ponta a partir de 9600. Um nível exige todos os testes pontuados, então um resultado parcial não recebe nenhum.</p>
 <a id="no-level"></a>
 <h3>Por que meu resultado não tem nível?</h3>
 <p>Você deixou de fora o modelo de chat ou a fala para texto (não baixou), então o resultado é “parcial”. A pontuação é feita então com os testes que rodaram (quando os dois grupos têm pelo menos um), mas um nível exige todos os testes pontuados. Baixe os modelos que faltam na tela inicial e rode de novo para obter um nível.</p>

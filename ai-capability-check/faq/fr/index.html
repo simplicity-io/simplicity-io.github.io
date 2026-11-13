@@ -41,7 +41,7 @@
     <nav class="lang" aria-label="Langue"><a href="../" lang="en" hreflang="en">English</a><a href="../es/" lang="es" hreflang="es">Español</a><span aria-current="page" lang="fr">Français</span><a href="../pt-BR/" lang="pt-BR" hreflang="pt-BR">Português (Brasil)</a><a href="../zh-CN/" lang="zh-CN" hreflang="zh-CN">中文（简体）</a><a href="../zh-TW/" lang="zh-TW" hreflang="zh-TW">中文（繁體）</a></nav>
 <h1>OnDevice AI Meter : Questions et réponses</h1>
 <p>Réponses aux questions que vous pouvez vous poser avant d’installer l’application, pendant un test et à la lecture de vos résultats. Les libellés de l’application renvoient à la section correspondante de cette page.</p>
-<p>Dernière mise à jour : 2026-11-12 (application 0.3.13). La méthodologie complète n’est disponible qu’en anglais.</p>
+<p>Dernière mise à jour : 2026-11-13 (application 0.3.18). La méthodologie complète n’est disponible qu’en anglais.</p>
 <ul><li><a href="#before-you-install">Avant l’installation</a></li><li><a href="#while-the-test-runs">Pendant le test</a></li><li><a href="#your-score">Votre score</a></li><li><a href="#what-the-labels-mean">Signification des libellés</a></li><li><a href="#ai-processor-npu-status">État du processeur d’IA (NPU)</a></li><li><a href="#problems-and-reports">Problèmes et signalements</a></li></ul>
 <hr>
 <a id="before-you-install"></a>
@@ -103,17 +103,17 @@
 <h2>Votre score</h2>
 <a id="score"></a>
 <h3>Que signifie le score ?</h3>
-<p>Il résume la vitesse à laquelle votre téléphone exécute les tests d’IA, avec des réponses correctes. Un téléphone de référence, un haut de gamme récent, obtient 1000 sur batterie ; un téléphone à 500 est environ deux fois moins rapide sur ces tâches.</p>
+<p>Il résume la vitesse à laquelle votre téléphone exécute les tests d’IA, avec des réponses correctes. Un téléphone de référence, un haut de gamme récent, obtient 1000 à chacun des six tests sur batterie, soit 6000 au total ; un téléphone à 3000 est environ deux fois moins rapide sur ces tâches.</p>
 <a id="groups"></a>
 <h3>Que sont l’IA de reconnaissance et l’IA générative ?</h3>
 <p>Les tests sont répartis en deux groupes. L’<strong>IA de reconnaissance</strong> consiste à comprendre ce que contient l’entrée : reconnaissance de photos, détection d’objets et reconnaissance de sons. L’<strong>IA générative</strong> consiste à créer du contenu nouveau : style d’image, reconnaissance vocale et conversation. Le test de chaleur est un complément et n’est pas noté.</p>
-<p>Chaque groupe a son propre score (la moyenne de ses tests, calculée avec la moyenne géométrique, qui empêche un test très rapide de masquer un test très lent). Le score AI Capability Score est la moyenne géométrique des deux, de sorte que chaque groupe compte pour 50 %. Les anciennes versions de l’application pondéraient les tests différemment ; leurs scores ne sont donc pas comparables.</p>
+<p>Le score de chaque groupe est la somme des scores de ses trois tests, et l’AI Capability Score est la somme des deux groupes (depuis l’application 0.3.18). Auparavant, l’application utilisait des moyennes (géométriques) et le téléphone de référence obtenait 1000 ; vos résultats précédents sont affichés recalculés en sommes, vous pouvez donc toujours les comparer. Les versions de l’application antérieures à 0.1.66 pondéraient les tests différemment ; leurs scores ne sont donc pas comparables.</p>
 <a id="trial"></a>
 <h3>Pourquoi un test est-il marqué « essai » ?</h3>
 <p>Un nouveau test s’exécute d’abord en essai : il est mesuré et affiché, mais n’entre pas dans votre score ni dans votre niveau tant qu’il ne s’est pas terminé avec des réponses correctes sur tous nos téléphones de référence. Aucun test n’est en essai pour le moment. La reconnaissance de sons, la reconnaissance vocale et le style d’image étaient des essais auparavant et sont désormais notés (le style d’image depuis l’application 0.3.9).</p>
 <a id="level"></a>
 <h3>Qu’est-ce que le niveau ?</h3>
-<p>Cinq niveaux regroupent les scores : Basique, Capable, Avancé, Haut de gamme et Ultra-avancé. Si un test n’a pas pu s’exécuter sur votre téléphone, le niveau est plafonné, car le téléphone ne peut pas tout faire de ce que le niveau suppose. Chaque niveau commence au double du score du précédent : Basique en dessous de 200, Capable de 200 à 399, Avancé de 400 à 799, Haut de gamme de 800 à 1599 et Ultra-avancé à partir de 1600. Un niveau exige tous les tests notés ; un résultat partiel n’en a donc pas.</p>
+<p>Cinq niveaux regroupent les scores : Basique, Capable, Avancé, Haut de gamme et Ultra-avancé. Si un test n’a pas pu s’exécuter sur votre téléphone, le niveau est plafonné, car le téléphone ne peut pas tout faire de ce que le niveau suppose. Chaque niveau commence au double du score du précédent : Basique en dessous de 1200, Capable de 1200 à 2399, Avancé de 2400 à 4799, Haut de gamme de 4800 à 9599 et Ultra-avancé à partir de 9600. Un niveau exige tous les tests notés ; un résultat partiel n’en a donc pas.</p>
 <a id="no-level"></a>
 <h3>Pourquoi mon résultat n’a-t-il pas de niveau ?</h3>
 <p>Vous avez omis le modèle de conversation ou la reconnaissance vocale (vous ne l’avez pas téléchargé), le résultat est donc « partiel ». Le score est alors calculé avec les tests qui ont été exécutés (lorsque chaque groupe en compte au moins un), mais un niveau exige tous les tests notés. Téléchargez les modèles manquants sur l’écran d’accueil et relancez le test pour obtenir un niveau.</p>

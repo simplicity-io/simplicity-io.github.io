@@ -6,7 +6,7 @@
 
 - [Mainline Module Info](https://simplicity-io.github.io/mainline-module-info/) ([Google Play](https://play.google.com/store/apps/details?id=io.simplicity.trainspotting)): shows which Google Play system (Mainline) modules a device runs and tracks their updates. Android 10+ (API 29). Module history is stored on-device.
 - [Linux Terminal Helper](https://simplicity-io.github.io/linux-terminal-helper/) ([Google Play](https://play.google.com/store/apps/details?id=io.simplicity.toybox)): guides you through turning on Android's built-in Linux Terminal (Debian in a virtual machine, on Google Pixel and other supported devices with Android 15 QPR2 or later) and opens it with one tap. Android 15+ (API 35).
-- [OnDevice AI Meter](https://simplicity-io.github.io/ai-capability-check/) ([Google Play](https://play.google.com/store/apps/details?id=io.simplicity.benchpress)): measures how fast and how correctly a phone's CPU, graphics processor and AI processor run real AI models offline (photo recognition, object detection, sound recognition, speech to text, a chat model), with answer checks and one AI Capability Score (a reference phone on battery = 1000). Android 11+ (API 30), 4 GB RAM.
+- [OnDevice AI Meter](https://simplicity-io.github.io/ai-capability-check/) ([Google Play](https://play.google.com/store/apps/details?id=io.simplicity.benchpress)): measures how fast and how correctly a phone's CPU, graphics processor and AI processor run real AI models offline (photo recognition, object detection, sound recognition, speech to text, a chat model), with answer checks and one AI Capability Score (a reference phone on battery = 6000 in total, 1000 per test). Android 11+ (API 30), 4 GB RAM.
 
 ## Documentation
 
