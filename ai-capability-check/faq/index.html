@@ -69,13 +69,13 @@
 <p>Yes, the app is free and shows a few ads: one under your result after a test has finished, and a banner on the test history and downloads pages. Ads never load or show while a test runs, so they can't change a result. Where the law requires it, Google's consent form asks for your choices first; you can change them any time under "Privacy settings" in the menu. Details are in the <a href="../privacy/">privacy policy</a>.</p>
 <a id="battery-heat"></a>
 <h3>Is it hard on my battery or phone?</h3>
-<p>A full test keeps the processors busy for about 10 to 25 minutes, so the phone gets warm and uses some battery, much like a demanding game. The last part, the heat test, deliberately works the phone for 2 minutes; it is optional (a checkbox, off by default). It's safe: phones protect themselves by slowing down when they get hot, and the app stops the test by itself if the phone gets too hot (see <a href="#test-stops-hot">Why does the test stop when my phone is hot?</a>). The app checks the battery and temperature before starting and warns you if the battery is low or the phone is already hot.</p>
+<p>A full test keeps the processors busy for about 12 to 27 minutes, so the phone gets warm and uses some battery, much like a demanding game. The last part, the efficiency test, runs the same photo job at a steady rate for 2 minutes; it is on by default and can be unticked. It's safe: phones protect themselves by slowing down when they get hot, and the app stops the test by itself if the phone gets too hot (see <a href="#test-stops-hot">Why does the test stop when my phone is hot?</a>). The app checks the battery and temperature before starting and warns you if the battery is low or the phone is already hot.</p>
 <hr>
 <a id="while-the-test-runs"></a>
 <h2>While the test runs</h2>
 <a id="how-long"></a>
 <h3>How long does a test take?</h3>
-<p>About 10 to 25 minutes, depending on the phone. Most of the time goes to the chat model, which loads a 1 GB model and answers questions on each processor. Leaving out the chat model or the heat test makes it shorter. Faster phones finish sooner.</p>
+<p>About 12 to 27 minutes, depending on the phone. Most of the time goes to the chat model, which loads a 1 GB model and answers questions on each processor. Leaving out the chat model or the efficiency test makes it shorter. Faster phones finish sooner.</p>
 <a id="keep-screen-on"></a>
 <h3>Should I use the phone during the test?</h3>
 <p>Please don't. Leave the app open and the phone on a table. Other apps, notifications, video calls or games take processor time and make the results slower and less steady. The app keeps the screen on by itself.</p>
@@ -89,8 +89,8 @@
 <h3>Why does the test stop when my phone is hot?</h3>
 <p>To protect your phone. Before a run the app shows a heat warning (until you tick "Don't show this again"). Between measurements it checks the phone, and it stops the run by itself if Android reports a severe heat state or the battery is above 45 °C. The results so far are kept, and such a run counts neither for nor against your phone's support. Phones already protect themselves by slowing down when hot, which also makes results slower; and heat wears batteries faster. If the test stopped, let the phone cool down, take it out of any case and out of the sun, and run it again.</p>
 <a id="heat-test"></a>
-<h3>What is the heat test?</h3>
-<p>It is optional (a checkbox on the start screen, off by default). After the main tests, the phone recognises photos non-stop for 2 minutes on its fastest processor that answers correctly. Phones get warm under steady load and slow themselves down to protect the battery and chip. We compare the speed at the end with the phone's best speed during those 2 minutes: "Stays fast when warm: 94%" means the phone kept 94% of its best speed. It is shown beside the score, not in it, because it measures cooling, not AI ability. The test can stop early if the phone gets too hot.</p>
+<h3>What is the efficiency test?</h3>
+<p>It is on by default (a checkbox on the start screen; you can untick it). It runs last. The phone recognises photos at a steady 30 per second, like a camera, for 1 minute on the CPU and then 1 minute on its fastest accelerator that answers correctly: the AI processor (NPU) or the graphics processor (GPU). The work is the same in both halves. We measure how much CPU time the app needs per photo in each half, using Android's standard CPU time counter. Work done on an accelerator is not CPU time, which is the point. "Efficiency: the AI processor needs 92% less CPU work than the CPU for the same photos" means the CPU spent 92% less time per photo. If no accelerator answers correctly, the app says that nothing takes work off the CPU. We also check that the speed holds under the steady load ("slowed down" if the time per photo grows by more than 10%) and record the phone's heat state and battery temperature. It is shown beside the score, not in it. It measures CPU load, not AI ability or power use. The test can stop early if the phone gets too hot.</p>
 <a id="chat-test"></a>
 <h3>What is the chat test?</h3>
 <p>A small AI chat model (Qwen3 1.7B) runs on your phone without the internet. We measure how fast it reads a question and writes an answer, in tokens per second (a token is roughly a short word or part of a word). It also answers three simple questions, so we can check that each processor runs it correctly. It runs only if you downloaded the model.</p>
@@ -106,7 +106,7 @@
 <p>It sums up how fast your phone runs the AI tests, with correct answers. A reference phone, a recent flagship, scores 1000 in each of the six tests on battery, so 6000 in total; a phone that scores 3000 is about half as fast at these tasks.</p>
 <a id="groups"></a>
 <h3>What are Recognition AI and Generative AI?</h3>
-<p>The tests come in two groups. <strong>Recognition AI</strong> is about understanding what is in the input: photo recognition, object detection and sound recognition. <strong>Generative AI</strong> is about making new content: image style, speech to text and chat. The heat test is an extra and is not scored.</p>
+<p>The tests come in two groups. <strong>Recognition AI</strong> is about understanding what is in the input: photo recognition, object detection and sound recognition. <strong>Generative AI</strong> is about making new content: image style, speech to text and chat. The efficiency test is an extra and is not scored.</p>
 <p>Each group's score is the sum of its three test scores, and the AI Capability Score is the sum of the two groups (since app 0.3.18). Before, the app used averages (geometric means) and the reference phone scored 1000; your earlier results are shown recomputed as sums, so you can still compare them. App versions before 0.1.66 weighed the tests differently, so their scores are not comparable.</p>
 <a id="trial"></a>
 <h3>Why is a test marked "trial"?</h3>
@@ -122,7 +122,7 @@
 <p>Small differences (a few percent) are normal: temperature, charging, background apps and system updates all play a part. For the steadiest result, test on battery, with the phone cool, nothing else running, and the screen on.</p>
 <a id="test-not-run"></a>
 <h3>A test shows "—" or "couldn't run". Is my phone broken?</h3>
-<p>No. Some phones can't run every test: for example, the chat model needs about 1.2 GB of free memory. A test that tried and failed counts as the lowest result in the score and caps the level, and the details screen tells you why. A test you left out (not downloaded, heat test unticked) is simply not run: see <a href="#no-level">Why does my result have no level?</a>.</p>
+<p>No. Some phones can't run every test: for example, the chat model needs about 1.2 GB of free memory. A test that tried and failed counts as the lowest result in the score and caps the level, and the details screen tells you why. A test you left out (not downloaded, efficiency test unticked) is simply not run: see <a href="#no-level">Why does my result have no level?</a>.</p>
 <hr>
 <a id="what-the-labels-mean"></a>
 <h2>What the labels mean</h2>
@@ -158,7 +158,7 @@
 <p>The processor is there but refused the model or didn't finish in time (for example, preparing the model took longer than Android's 60-second limit). Your score uses the processors that did run.</p>
 <a id="completion"></a>
 <h3>Tests finished</h3>
-<p>How many of the test items that were run finished with correct answers: the photo, object, sound and image-style models, the speech and chat models and the heat test. Tests you left out (not downloaded, heat test unticked) are not counted. A phone that finishes more than 60% counts as supported. A run stopped because the phone got too hot counts neither way.</p>
+<p>How many of the test items that were run finished with correct answers: the photo, object, sound and image-style models, the speech and chat models and the efficiency test. Tests you left out (not downloaded, efficiency test unticked) are not counted. A phone that finishes more than 60% counts as supported. A run stopped because the phone got too hot counts neither way.</p>
 <hr>
 <a id="ai-processor-npu-status"></a>
 <h2>AI processor (NPU) status</h2>
