@@ -162,6 +162,11 @@
 <hr>
 <a id="ai-processor-npu-status"></a>
 <h2>Procesador de IA (NPU): estado</h2>
+<a id="npu-access"></a>
+<h3>Por qué los procesadores de IA difieren entre teléfonos</h3>
+<p>Cada fabricante de chips decide cómo pueden usar las apps su procesador de IA (NPU), así que para una app puede ser fácil, difícil o imposible. La app mide solo lo que una app normal puede usar, igual en todos los teléfonos, y nunca estima un procesador que no puede usar:</p>
+<ul><li><strong>Qualcomm Snapdragon:</strong> la app usa la NPU con las bibliotecas de Qualcomm, que vienen con la app. Funciona en la mayoría de los chips Snapdragon recientes.</li><li><strong>Google Pixel (Tensor):</strong> Google solo permite su vía directa a la TPU a las apps que aprueba, así que la app usa la TPU a través de NNAPI de Android.</li><li><strong>Samsung Exynos:</strong> a través de NNAPI, si el teléfono tiene un controlador. En los chips de gama alta (por ejemplo, el Exynos 2400) es unas dos veces más rápido que la CPU; en muchos chips de gama media no aporta mejora.</li><li><strong>MediaTek (Dimensity, Helio):</strong> los controladores NNAPI que probamos no aportaron mejora y la vía propia de MediaTek aún no está abierta a esta app, así que estos teléfonos se miden en la CPU y el procesador gráfico.</li><li><strong>Chips de gama de entrada:</strong> normalmente no tienen un procesador de IA que una app pueda usar; la IA se ejecuta en la CPU y el procesador gráfico.</li></ul>
+<p>Google está retirando NNAPI, así que los teléfonos que dependen de ella pueden perder el acceso al procesador de IA en una actualización. Por eso también las diferencias en la <a href="../../rankings/">clasificación de teléfonos</a> pueden ser grandes: reflejan el chip y lo abierto que está su procesador de IA a las apps.</p>
 <a id="npu-working"></a>
 <h3>Funciona bien</h3>
 <p>El procesador de IA de su teléfono ejecutó la prueba con respuestas correctas y fue más rápido que la CPU.</p>

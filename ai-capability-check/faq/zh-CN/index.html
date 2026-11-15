@@ -162,6 +162,11 @@
 <hr>
 <a id="ai-processor-npu-status"></a>
 <h2>AI 处理器（NPU）状态</h2>
+<a id="npu-access"></a>
+<h3>为什么不同手机的 AI 处理器差别这么大</h3>
+<p>每家芯片厂商自行决定应用如何使用其 AI 处理器（NPU），因此对应用来说可能容易、困难，甚至无法使用。本应用只测量普通应用能用到的部分，在每部手机上方法相同，也绝不估算无法使用的处理器：</p>
+<ul><li><strong>高通骁龙：</strong> 应用通过随附的高通库使用 NPU，适用于大多数较新的骁龙芯片。</li><li><strong>Google Pixel（Tensor）：</strong> Google 只向其批准的应用开放直通 TPU 的方式，因此本应用通过 Android 的 NNAPI 使用 TPU。</li><li><strong>三星 Exynos：</strong> 在手机有驱动时通过 NNAPI 使用。在旗舰芯片（例如 Exynos 2400）上约比 CPU 快一倍；在许多中端芯片上没有提升。</li><li><strong>联发科（天玑、Helio）：</strong> 我们试过的 NNAPI 驱动没有提升，联发科自己的方式也尚未向本应用开放，因此这些手机以 CPU 和图形处理器测量。</li><li><strong>入门级芯片：</strong> 通常没有应用能用到的 AI 处理器；AI 在 CPU 和图形处理器上运行。</li></ul>
+<p>Google 正在淘汰 NNAPI，依赖它的手机可能在今后的更新中失去 AI 处理器的使用。这也是<a href="../../rankings/">手机排行</a>中差距可能很大的原因：它既反映芯片本身，也反映其 AI 处理器对应用的开放程度。</p>
 <a id="npu-working"></a>
 <h3>运行良好</h3>
 <p>您手机的 AI 处理器给出了正确答案，并且比 CPU 更快。</p>
