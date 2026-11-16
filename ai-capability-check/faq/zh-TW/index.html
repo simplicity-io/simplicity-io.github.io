@@ -166,6 +166,7 @@
 <h3>為什麼不同手機的 AI 處理器差別這麼大</h3>
 <p>每家晶片廠商自行決定應用程式如何使用其 AI 處理器（NPU），因此對應用程式來說可能容易、困難，甚至無法使用。本應用程式只測量一般應用程式能用到的部分，在每支手機上方法相同，也絕不估算無法使用的處理器：</p>
 <ul><li><strong>高通 Snapdragon：</strong> 應用程式透過隨附的高通程式庫使用 NPU，適用於大多數較新的 Snapdragon 晶片。</li><li><strong>Google Pixel（Tensor）：</strong> Google 只向其核准的應用程式開放直通 TPU 的方式，因此本應用程式透過 Android 的 NNAPI 使用 TPU。</li><li><strong>三星 Exynos：</strong> 在手機有驅動程式時透過 NNAPI 使用。在旗艦晶片（例如 Exynos 2400）上約比 CPU 快一倍；在許多中階晶片上沒有提升。</li><li><strong>聯發科（天璣、Helio）：</strong> 我們試過的 NNAPI 驅動程式沒有提升，聯發科自己的方式也尚未向本應用程式開放，因此這些手機以 CPU 和圖形處理器測量。</li><li><strong>入門級晶片：</strong> 通常沒有應用程式能用到的 AI 處理器；AI 在 CPU 和圖形處理器上執行。</li></ul>
+<p>Google 直通 Pixel TPU 的方式（Tensor SDK）附帶的授權不允許發布效能測試結果，因此我們不使用它。Pixel 手機改為透過 Android 的標準 NNAPI 測量，可能無法發揮 TPU 的全部速度。因此，Pixel 的 AI 處理器結果可能低於晶片的實際能力。</p>
 <p>Google 正在淘汰 NNAPI，依賴它的手機可能在日後的更新中失去 AI 處理器的使用。這也是<a href="../../rankings/">手機排行</a>中差距可能很大的原因：它既反映晶片本身，也反映其 AI 處理器對應用程式的開放程度。</p>
 <a id="npu-working"></a>
 <h3>運作良好</h3>
