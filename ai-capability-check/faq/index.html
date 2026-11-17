@@ -129,6 +129,12 @@
 <a id="correct-answers"></a>
 <h3>Correct answers</h3>
 <p>This processor gave the same answers as the CPU (the reference). Only processors with correct answers count in the score.</p>
+<a id="cpu-reference"></a>
+<h3>Why is the CPU the reference?</h3>
+<p>The CPU is the one processor every phone has, and it runs the same model file with fixed, full-precision math, without a phone maker's driver. So each graphics or AI processor is compared with it. The CPU is checked too: its answers are compared with reference answers we computed on a PC, and the chat model answers a quiz with known answers. Matching the CPU is a consistency check within set limits (for example the same top answer on at least 9 in 10 photos), not proof that an answer is right: a mistake shared by the CPU and another processor would only be caught where the PC reference or the quiz covers it. Details: <a href="../methodology/">Methodology</a>.</p>
+<a id="limitations"></a>
+<h3>What the score doesn't show</h3>
+<p>The tests use small, fixed models and small, fixed test sets, chosen so they finish on as many phones as possible. The chat test is one small offline language model (1.7B class): it shows how fast your phone runs such a model, not how smart AI on your phone is. Scores reflect both the chip and how open its AI processor is to apps, which depends on the chip maker. Heat, room temperature and charging affect results; the app records them but can't remove them. The efficiency test shows CPU work saved, not power use. The full list is in the methodology under "Known limitations and design choices".</p>
 <a id="wrong-answers"></a>
 <h3>Wrong answers</h3>
 <p>This processor gave different answers from the CPU on more than one in ten test photos. It comes either from the phone's driver (the software the phone maker ships for that processor) or from how the AI engine inside the app, Google's LiteRT, handles that processor; our test alone can't tell which. When phones report it, we check with Google's own tools before deciding. We don't add workarounds for individual phones, because that would make results unfair. The processor's time is shown but not counted, and your score uses the processors that answered correctly.</p>

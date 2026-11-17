@@ -129,6 +129,12 @@
 <a id="correct-answers"></a>
 <h3>Respostas corretas</h3>
 <p>Este processador deu as mesmas respostas que a CPU (a referência). Só processadores com respostas corretas contam na pontuação.</p>
+<a id="cpu-reference"></a>
+<h3>Por que a CPU é a referência?</h3>
+<p>A CPU é o único processador que todo celular tem, e ela executa o mesmo arquivo de modelo com cálculos fixos de precisão total, sem o driver do fabricante. Por isso cada processador gráfico ou de IA é comparado com ela. A CPU também é verificada: suas respostas são comparadas com respostas de referência que calculamos em um PC, e o modelo de chat responde a um quiz com respostas conhecidas. Coincidir com a CPU é uma verificação de consistência dentro de limites definidos (por exemplo, a mesma resposta principal em pelo menos 9 de cada 10 fotos), não uma prova de que a resposta está certa: um erro compartilhado pela CPU e por outro processador só seria detectado onde a referência do PC ou o quiz o cobrem. Detalhes: <a href="../../methodology/">Metodologia</a>.</p>
+<a id="limitations"></a>
+<h3>O que a pontuação não mostra</h3>
+<p>Os testes usam modelos pequenos e fixos e conjuntos de teste pequenos e fixos, escolhidos para terminar no maior número possível de celulares. O teste de chat é um único modelo de linguagem pequeno e offline (classe 1.7B): ele mostra a velocidade com que seu celular executa um modelo assim, não o quanto a IA do seu celular é inteligente. As pontuações refletem tanto o chip quanto o quanto seu processador de IA é aberto aos apps, o que depende do fabricante do chip. Calor, temperatura ambiente e carregamento afetam os resultados; o app os registra, mas não consegue eliminá-los. O teste de eficiência mostra o trabalho de CPU economizado, não o consumo de energia. A lista completa está na metodologia, em "Known limitations and design choices".</p>
 <a id="wrong-answers"></a>
 <h3>Respostas erradas</h3>
 <p>Este processador deu respostas diferentes das da CPU em mais de uma a cada dez fotos de teste. Isso vem do driver do celular (o software que o fabricante inclui para aquele processador) ou de como o mecanismo de IA do app, o LiteRT do Google, lida com esse processador; nosso teste sozinho não consegue dizer qual. Quando celulares relatam isso, verificamos com as ferramentas do Google antes de decidir. Não adicionamos correções para aparelhos específicos, porque isso tornaria os resultados injustos. O tempo desse processador é mostrado, mas não contado, e sua pontuação usa os processadores que responderam corretamente.</p>

@@ -102,12 +102,23 @@
     <h2>What it does</h2>
     <ul class="features">
       <li>Recognition AI: recognises photos, finds objects and identifies sounds.</li>
-      <li>Generative AI: restyles a photo, writes down speech and chats with an offline language model (Qwen3 1.7B).</li>
-      <li>A processor race on every test: CPU, graphics processor and AI processor side by side, and only answers that match the CPU count.</li>
+      <li>Generative AI: restyles a photo, writes down speech and chats with a 1.7B-class offline language model (Qwen3 1.7B).</li>
+      <li>A processor race on every test: CPU, graphics processor and AI processor side by side, and a processor's speed counts only when its answers match the CPU's, the one processor every phone has, itself checked against reference answers from a PC.</li>
       <li>One AI Capability Score (a reference phone on battery = 6000), a level, and the result of every test and processor.</li>
-      <li>Efficiency test (on by default, not scored): how much CPU work the AI processor or graphics processor saves at a steady photo rate.</li>
+      <li>Efficiency test (on by default, not in the score): how much CPU work the AI or graphics processor saves. The app pauses or stops by itself if the phone gets too hot.</li>
       <li>Your test history stays on your phone. Ads never load or show while a test runs.</li>
     </ul>
+
+    <h2>Known limitations and design choices</h2>
+    <ul class="features">
+      <li>"Correct" means consistent with the CPU within per-test limits (for example the same top answer on at least 9 in 10 photos), with the CPU checked against a PC reference. A mistake shared by the CPU and another processor is caught only where that reference or the chat quiz covers it.</li>
+      <li>Small, fixed models and test sets (14 photos, 9 detection photos, 7 sound clips, 4 recordings, 8 style pictures, 3 quiz questions), the same on every phone and changed only with a new suite version. They favour finishing on many phones over showing differences between high-end phones.</li>
+      <li>The chat test is one 1.7B-class offline language model: it shows how fast a phone runs it, not larger models, long contexts or general AI intelligence. It needs a lot of memory, so phones with little memory can end "partial".</li>
+      <li>Scores reflect the chip and how open its AI processor is to apps, which depends on the chip maker (Snapdragon is open to the app; Pixel and some Exynos only through Android's NNAPI; MediaTek not yet).</li>
+      <li>Heat, room temperature and charging affect results. They are recorded and shown, not removed.</li>
+      <li>The efficiency test shows CPU work saved, not power use, and is never part of the score.</li>
+    </ul>
+    <p class="lead">Details: <a href="methodology/">methodology</a>, "Known limitations and design choices".</p>
 
     <h2>Screenshots</h2>
     <div class="shots">
