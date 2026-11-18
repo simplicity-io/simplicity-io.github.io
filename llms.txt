@@ -13,4 +13,5 @@
 - [OnDevice AI Meter: questions and answers](https://simplicity-io.github.io/ai-capability-check/faq/) (also in Spanish, French, Brazilian Portuguese, Simplified and Traditional Chinese): how the benchmark works, supported phones, why the CPU is the reference, what the score doesn't show, privacy, scores and result labels.
 - [OnDevice AI Meter: test methodology](https://simplicity-io.github.io/ai-capability-check/methodology/) (English): tests, models, processors, timing, answer checks, scoring, the efficiency test and known limitations.
 - [OnDevice AI Meter: phone rankings](https://simplicity-io.github.io/ai-capability-check/rankings/) (English): comparable scores for the phones measured so far, on one scale.
+- [OnDevice AI Meter: what changed](https://simplicity-io.github.io/ai-capability-check/news/) (English): changes to how phones are tested and scored, newest first.
 - [OnDevice AI Meter: privacy policy](https://simplicity-io.github.io/ai-capability-check/privacy/) (English).
