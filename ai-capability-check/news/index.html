@@ -32,23 +32,19 @@
   <main class="wrap doc">
     <a class="back" href="../../">&larr; Simplicity.IO</a>
 <h1>OnDevice AI Meter: what changed</h1>
-<p>Changes to how phones are tested and scored, newest first. Scores are compared only within the same suite version (see the methodology, "Fairness rules and versioning"). App fixes that don't change the measurement are not listed.</p>
-<h2>2026-11-18 (app 1.0.11)</h2>
-<ul><li>The efficiency test now says what it is for: how much of a steady AI job the phone can take off its CPU, leaving the CPU free for everything else. It is still not part of the score.</li></ul>
+<p>Changes to how phones are tested and scored, and to which phones are supported, newest first. Scores are compared only within the same suite version (see the methodology, "Fairness rules and versioning").</p>
 <h2>2026-11-17</h2>
-<ul><li>Methodology: why the CPU is the yardstick, and a new "Known limitations and design choices" section.</li><li>Chat and photo test scores are described as what they are: geometric means.</li></ul>
-<h2>2026-11-16</h2>
-<ul><li>Explained why Pixel AI processors are measured through Android's NNAPI and not Google's Tensor SDK: the SDK's licence forbids publishing benchmark results.</li></ul>
-<h2>2026-11-15 (app 1.0.5 to 1.0.8)</h2>
-<ul><li>The heat test became the efficiency test (1.0.7): the same photo job at a fixed rate, 1 minute on the CPU and 1 minute on the AI or graphics processor, showing how much CPU work is saved. On by default, never part of the score.</li><li>Heat safety (1.0.5): the app pauses to cool down when the phone gets very hot and stops only at a critical temperature.</li><li>The chat quiz asks about the days of the week instead of the planets (1.0.8): the small model didn't know the planets well enough for a fair test.</li><li>The app and rankings explain which AI processors apps can reach on each platform (1.0.6).</li></ul>
-<h2>2026-11-14: suite 4 (app 1.0.4)</h2>
-<ul><li>The CPU test uses one thread per fast core (4 to 8) instead of 4 on every phone, so phones with more fast cores are not held back.</li></ul>
+<ul><li>The methodology explains why the CPU is the reference and what the score doesn't show.</li></ul>
+<h2>2026-11-15</h2>
+<ul><li>An efficiency test replaces the heat test: it shows how much CPU work the AI or graphics processor saves. It is not part of the score.</li><li>The chat quiz asks about the days of the week instead of the planets, which the small model didn't know well enough for a fair test.</li></ul>
+<h2>2026-11-14: suite 4</h2>
+<ul><li>The CPU test uses all fast cores (4 to 8) instead of 4 on every phone.</li></ul>
 <h2>2026-11-13</h2>
-<ul><li>The score is the sum of the test scores. Earlier reports were recalculated from their stored test scores, so the suite stayed the same.</li></ul>
+<ul><li>The score is the sum of the test scores. Earlier results were recalculated.</li></ul>
 <h2>2026-11-12: suite 3</h2>
-<ul><li>Image style counts in the Generative AI half of the score.</li><li>Results measured while charging are marked "Charging".</li><li>Unsteady processor results are timed again and marked approximate.</li><li>Every report records a fingerprint of all models and test inputs, so results can be tied to the exact suite.</li></ul>
+<ul><li>Image style counts in the score.</li><li>Results measured while charging are marked "Charging".</li></ul>
 <h2>2026-11-05: suite 2</h2>
-<ul><li>The score has two halves: Recognition AI and Generative AI.</li><li>Sound recognition is scored.</li><li>Image style is a trial test.</li><li>Heat safety checks were added.</li></ul>
+<ul><li>The score has two halves, Recognition AI and Generative AI.</li><li>Sound recognition is scored.</li></ul>
     <footer>
       <div class="foot-links">
         <a href="../../ai-capability-check/privacy/">Privacy</a>
