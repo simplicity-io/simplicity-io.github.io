@@ -1,0 +1,63 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>OnDevice AI Meter: what changed</title>
+  <meta name="description" content="Dated changes to how OnDevice AI Meter tests and scores phones, newest first.">
+  <meta name="theme-color" content="#00696E">
+  <link rel="canonical" href="https://simplicity-io.github.io/ai-capability-check/news/">
+  <link rel="icon" type="image/png" sizes="192x192" href="../../icon-192.png?v=20261030">
+  <link rel="stylesheet" href="../../style.css?v=20261030">
+  <meta property="og:type" content="article">
+  <meta property="og:site_name" content="Simplicity.IO">
+  <meta property="og:locale" content="en">
+  <meta property="og:title" content="OnDevice AI Meter: what changed">
+  <meta property="og:description" content="Dated changes to how OnDevice AI Meter tests and scores phones, newest first.">
+  <meta property="og:url" content="https://simplicity-io.github.io/ai-capability-check/news/">
+  <style>
+    .doc h2 { margin-top: 2.2rem; }
+    .doc h3 { margin-top: 1.6rem; }
+    .doc .table { overflow-x: auto; }
+    .doc table { border-collapse: collapse; width: 100%; font-size: .95em; }
+    .doc th, .doc td { border: 1px solid rgba(127,127,127,.35); padding: .45em .6em; text-align: left; vertical-align: top; }
+    .doc .formula { font-size: 1.15em; text-align: center; }
+    .doc a[id] { scroll-margin-top: 1rem; }
+    .lang { display: flex; flex-wrap: wrap; gap: .35rem .75rem; font-size: .85em; margin: .25rem 0 0; }
+    .lang > * { display: inline-block; white-space: nowrap; }
+    .lang [aria-current="page"] { font-weight: 700; color: inherit; text-decoration: none; }
+  </style>
+</head>
+<body>
+  <main class="wrap doc">
+    <a class="back" href="../../">&larr; Simplicity.IO</a>
+<h1>OnDevice AI Meter: what changed</h1>
+<p>Changes to how phones are tested and scored, newest first. Scores are compared only within the same suite version (see the methodology, "Fairness rules and versioning"). App fixes that don't change the measurement are not listed.</p>
+<h2>2026-11-18 (app 1.0.11)</h2>
+<ul><li>The efficiency test now says what it is for: how much of a steady AI job the phone can take off its CPU, leaving the CPU free for everything else. It is still not part of the score.</li></ul>
+<h2>2026-11-17</h2>
+<ul><li>Methodology: why the CPU is the yardstick, and a new "Known limitations and design choices" section.</li><li>Chat and photo test scores are described as what they are: geometric means.</li></ul>
+<h2>2026-11-16</h2>
+<ul><li>Explained why Pixel AI processors are measured through Android's NNAPI and not Google's Tensor SDK: the SDK's licence forbids publishing benchmark results.</li></ul>
+<h2>2026-11-15 (app 1.0.5 to 1.0.8)</h2>
+<ul><li>The heat test became the efficiency test (1.0.7): the same photo job at a fixed rate, 1 minute on the CPU and 1 minute on the AI or graphics processor, showing how much CPU work is saved. On by default, never part of the score.</li><li>Heat safety (1.0.5): the app pauses to cool down when the phone gets very hot and stops only at a critical temperature.</li><li>The chat quiz asks about the days of the week instead of the planets (1.0.8): the small model didn't know the planets well enough for a fair test.</li><li>The app and rankings explain which AI processors apps can reach on each platform (1.0.6).</li></ul>
+<h2>2026-11-14: suite 4 (app 1.0.4)</h2>
+<ul><li>The CPU test uses one thread per fast core (4 to 8) instead of 4 on every phone, so phones with more fast cores are not held back.</li></ul>
+<h2>2026-11-13</h2>
+<ul><li>The score is the sum of the test scores. Earlier reports were recalculated from their stored test scores, so the suite stayed the same.</li></ul>
+<h2>2026-11-12: suite 3</h2>
+<ul><li>Image style counts in the Generative AI half of the score.</li><li>Results measured while charging are marked "Charging".</li><li>Unsteady processor results are timed again and marked approximate.</li><li>Every report records a fingerprint of all models and test inputs, so results can be tied to the exact suite.</li></ul>
+<h2>2026-11-05: suite 2</h2>
+<ul><li>The score has two halves: Recognition AI and Generative AI.</li><li>Sound recognition is scored.</li><li>Image style is a trial test.</li><li>Heat safety checks were added.</li></ul>
+    <footer>
+      <div class="foot-links">
+        <a href="../../ai-capability-check/privacy/">Privacy</a>
+        <a href="mailto:simplicity.io.dev@outlook.com">Contact</a>
+        <span>&copy; Simplicity.IO</span>
+        <span>Not affiliated with Google. Android is a trademark of Google LLC.</span>
+      </div>
+      <img class="foot-logo" src="../../logo-360.jpg" width="360" height="203" alt="Simplicity.IO logo">
+    </footer>
+  </main>
+</body>
+</html>
