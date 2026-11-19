@@ -50,7 +50,7 @@
           {
             "@type": "Question",
             "name": "What does it test?",
-            "acceptedAnswer": { "@type": "Answer", "text": "Six tests in two groups. Recognition AI: photo recognition, object detection and sound recognition. Generative AI: image style, speech to text and a chat model (Qwen3 1.7B). Each runs on the CPU, the graphics processor and, where the phone allows it, the AI processor, and every processor must give the same answers as the CPU before its speed counts." }
+            "acceptedAnswer": { "@type": "Answer", "text": "Six tests in two groups. Recognition AI: photo recognition, object detection and sound recognition. Generative AI: image style, speech to text and a chat model (Gemma 3 1B). Each runs on the CPU, the graphics processor and, where the phone allows it, the AI processor, and every processor must give the same answers as the CPU before its speed counts." }
           },
           {
             "@type": "Question",
@@ -65,7 +65,7 @@
           {
             "@type": "Question",
             "name": "How long does it take?",
-            "acceptedAnswer": { "@type": "Answer", "text": "About 12 to 27 minutes for everything, depending on the phone and which tests you include. The efficiency test (on by default) adds 2 minutes; the app pauses or stops by itself if the phone gets too hot." }
+            "acceptedAnswer": { "@type": "Answer", "text": "About 12 to 27 minutes for everything, depending on the phone and which tests you include. The AI multitasking test (on by default) adds about 3 minutes; the app pauses or stops by itself if the phone gets too hot." }
           },
           {
             "@type": "Question",
@@ -102,10 +102,10 @@
     <h2>What it does</h2>
     <ul class="features">
       <li>Recognition AI: recognises photos, finds objects and identifies sounds.</li>
-      <li>Generative AI: restyles a photo, writes down speech and chats with a 1.7B-class offline language model (Qwen3 1.7B).</li>
+      <li>Generative AI: restyles a photo, writes down speech and chats with a 1B-class offline language model (Gemma 3 1B).</li>
       <li>A processor race on every test: CPU, graphics processor and AI processor side by side, and a processor's speed counts only when its answers match the CPU's, the one processor every phone has, itself checked against reference answers from a PC.</li>
       <li>One AI Capability Score (a reference phone on battery = 6000), a level, and the result of every test and processor.</li>
-      <li>Efficiency test (on by default, not in the score): how much CPU work the AI or graphics processor saves, leaving the CPU free for everything else (more room for always-on AI). The app pauses or stops by itself if the phone gets too hot.</li>
+      <li>AI multitasking test (on by default, not in the score, results are qualitative): two parts. First, how much CPU work the AI or graphics processor saves. Second, how many camera-like AI jobs the phone runs beside an ordinary job without either slowing down (more room for always-on AI). The app pauses or stops by itself if the phone gets too hot.</li>
       <li>Your test history stays on your phone. Ads never load or show while a test runs.</li>
     </ul>
 
@@ -113,10 +113,10 @@
     <ul class="features">
       <li>"Correct" means consistent with the CPU within per-test limits (for example the same top answer on at least 9 in 10 photos), with the CPU checked against a PC reference. A mistake shared by the CPU and another processor is caught only where that reference or the chat quiz covers it.</li>
       <li>Small, fixed models and test sets (14 photos, 9 detection photos, 7 sound clips, 4 recordings, 8 style pictures, 3 quiz questions), the same on every phone and changed only with a new suite version. They favour finishing on many phones over showing differences between high-end phones.</li>
-      <li>The chat test is one 1.7B-class offline language model: it shows how fast a phone runs it, not larger models, long contexts or general AI intelligence. It needs a lot of memory, so phones with little memory can end "partial".</li>
+      <li>The chat test is one 1B-class offline language model: it shows how fast a phone runs it, not larger models, long contexts or general AI intelligence. It needs a lot of memory, so phones with little memory can end "partial".</li>
       <li>Scores reflect the chip and how open its AI processor is to apps, which depends on the chip maker (Snapdragon is open to the app; Pixel and some Exynos only through Android's NNAPI; MediaTek not yet).</li>
       <li>Heat, room temperature and charging affect results. They are recorded and shown, not removed.</li>
-      <li>The efficiency test shows CPU work saved, not power use, and is never part of the score.</li>
+      <li>The AI multitasking test is qualitative, does not measure power use and is never part of the score.</li>
     </ul>
     <p class="lead">Details: <a href="methodology/">methodology</a>, "Known limitations and design choices".</p>
 
@@ -134,7 +134,7 @@
     <section class="faq">
       <details>
         <summary>What does it test?</summary>
-        <p>Six tests in two groups. Recognition AI: photo recognition, object detection and sound recognition. Generative AI: image style, speech to text and a chat model (Qwen3 1.7B). Each runs on the CPU, the graphics processor and, where the phone allows it, the AI processor, and every processor must give the same answers as the CPU before its speed counts.</p>
+        <p>Six tests in two groups. Recognition AI: photo recognition, object detection and sound recognition. Generative AI: image style, speech to text and a chat model (Gemma 3 1B). Each runs on the CPU, the graphics processor and, where the phone allows it, the AI processor, and every processor must give the same answers as the CPU before its speed counts.</p>
       </details>
       <details>
         <summary>Is anything uploaded?</summary>
@@ -146,7 +146,7 @@
       </details>
       <details>
         <summary>How long does it take?</summary>
-        <p>About 12 to 27 minutes for everything, depending on the phone and which tests you include. The efficiency test (on by default) adds 2 minutes; the app pauses or stops by itself if the phone gets too hot.</p>
+        <p>About 12 to 27 minutes for everything, depending on the phone and which tests you include. The AI multitasking test (on by default) adds about 3 minutes; the app pauses or stops by itself if the phone gets too hot.</p>
       </details>
       <details>
         <summary>Which phones are supported?</summary>
@@ -154,6 +154,9 @@
       </details>
     </section>
     <p class="lead">More: <a href="faq/">all questions and answers</a> (also in Spanish, French, Portuguese and Chinese), <a href="methodology/">how we test</a>, <a href="rankings/">phone rankings</a>, <a href="news/">what changed</a> and the <a href="privacy/">privacy policy</a>.</p>
+
+    <h2>Download size</h2>
+    <p class="lead">Google Play may show a large size, about 0.7 to 1.5 GB. Most of it is the AI models the tests run on, not the app itself: a chat model and a speech model, so every test can run offline. They are downloaded once, only when you choose to run those tests. Phones with a supported AI processor get a model built for that processor, so the size differs from phone to phone. Wi-Fi is recommended.</p>
 
     <h2>Get it</h2>
     <p class="lead">Free on Google Play. Android 11 or later.</p>
