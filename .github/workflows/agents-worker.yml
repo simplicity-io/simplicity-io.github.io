@@ -1,0 +1,144 @@
+# COPY of simplicity-io/studio-handbook-github .github/workflows/agents-worker.yml, kept in sync by the handbook's site-sync.yml.
+# This repo is public, so it can't call the private handbook's reusable workflows (owner, 2026-11-27). Don't edit here.
+# Worker roles, reusable: the Writer (low tier, Markdown only) and the App engineer (high tier, code).
+# Runs on issues labelled agent:<role> when state becomes ready-to-work or changes-requested, and delivers
+# a Draft PR from branch agent/issue-<n>. The workflow, not Claude, commits, bumps and pushes.
+name: agents-worker
+on:
+  workflow_call:
+    inputs:
+      role: { type: string, required: true, description: "writer or engineer" }
+      model: { type: string, default: "" }
+      max-turns: { type: number, default: 0 }
+      protected: { type: string, default: '^(\.github|\.agents|scripts|templates)/' }
+      verify: { type: string, default: "", description: "Build/test command; the engineer may run any command starting with its first word" }
+      kvm: { type: boolean, default: false, description: "Enable KVM before the verify command (it runs an emulator, e.g. MMI smoke test)" }
+      bump-file: { type: string, default: "", description: "Gradle file whose versionCode/versionName the workflow bumps (engineer)" }
+      bump-title: { type: string, default: "Bump version to {name} ({code})" }
+env:
+  CLAUDE_VERSION: 2.1.332
+  H: .handbook
+jobs:
+  work:
+    if: >-
+      vars.AGENTS_ENABLED != 'false' && github.event_name == 'issues' &&
+      contains(github.event.issue.labels.*.name, format('agent:{0}', inputs.role)) &&
+      (github.event.label.name == 'state:ready-to-work' || github.event.label.name == 'state:changes-requested') &&
+      (github.event.sender.login == github.repository_owner || github.event.sender.type == 'Bot')
+    runs-on: ubuntu-latest
+    timeout-minutes: ${{ inputs.role == 'engineer' && 75 || 20 }}
+    concurrency: issue-${{ github.event.issue.number }}
+    steps:
+      - uses: actions/create-github-app-token@v1
+        id: app
+        with:
+          app-id: ${{ vars.AGENTS_APP_ID }}
+          private-key: ${{ secrets.AGENTS_APP_PRIVATE_KEY }}
+          owner: ${{ github.repository_owner }}
+          repositories: ${{ github.event.repository.name == 'studio-handbook-github' && 'studio-handbook-github' || format('{0},studio-handbook-github', github.event.repository.name) }}
+      - uses: actions/checkout@v4
+        with:
+          token: ${{ steps.app.outputs.token }}
+          fetch-depth: 0
+      - uses: actions/checkout@v4
+        with: { repository: simplicity-io/studio-handbook-github, ref: main, path: .handbook, token: "${{ steps.app.outputs.token }}" }
+      - if: inputs.role == 'engineer'
+        uses: actions/setup-java@v4
+        with: { distribution: temurin, java-version: '21', cache: gradle }
+      - if: inputs.kvm
+        name: Enable KVM for the verify command
+        run: |
+          echo 'KERNEL=="kvm", GROUP="kvm", MODE="0666", OPTIONS+="static_node=kvm"' | sudo tee /etc/udev/rules.d/99-kvm4all.rules
+          sudo udevadm control --reload-rules
+          sudo udevadm trigger --name-match=kvm
+      - run: npm install -g "@anthropic-ai/claude-code@$CLAUDE_VERSION"
+      - name: Prepare
+        env:
+          GH_TOKEN: ${{ github.token }}
+          N: ${{ github.event.issue.number }}
+        run: |
+          echo "/.handbook/" >> .git/info/exclude
+          source "$H/.agents/lib.sh"
+          set_state "$N" in-progress
+          B="agent/issue-$N"; echo "B=$B" >> "$GITHUB_ENV"
+          if git ls-remote --exit-code --heads origin "$B" >/dev/null; then git checkout -q -b "$B" "origin/$B"; else git checkout -q -b "$B"; fi
+          mkdir -p /tmp/agent
+          { echo "Repository: $GITHUB_REPOSITORY"; echo; } > /tmp/agent/issue.md
+          gh issue view "$N" --json title,body --jq '"# " + .title + "\n\n" + .body' >> /tmp/agent/issue.md
+          gh issue view "$N" --json comments \
+            --jq '.comments[] | select(.author.login|test("simplicity")) | "\n---\n" + .body' >> /tmp/agent/issue.md
+          PR=$(gh pr list --head "$B" --state open --json number --jq '.[0].number // empty')
+          echo "PR=$PR" >> "$GITHUB_ENV"
+          if [ -n "$PR" ]; then
+            echo -e "\n---\n# Latest Supervisor review (fix these)" >> /tmp/agent/issue.md
+            gh pr view "$PR" --json comments --jq '[.comments[] | select(.body|contains("<!-- supervisor:fix"))] | last | .body' >> /tmp/agent/issue.md
+          fi
+      - name: Work
+        env:
+          CLAUDE_CODE_OAUTH_TOKEN: ${{ secrets.CLAUDE_CODE_OAUTH_TOKEN }}
+          ROLE: ${{ inputs.role }}
+          MODEL_IN: ${{ inputs.model }}
+          TURNS_IN: ${{ inputs.max-turns }}
+          VERIFY: ${{ inputs.verify }}
+        run: |
+          source "$H/.agents/lib.sh"
+          if [ "$ROLE" = engineer ]; then
+            model=${MODEL_IN:-claude-opus-5-5}; turns=60
+            tools="Read,Grep,Glob,Edit,Write,Bash(git diff:*),Bash(git status:*),Bash(git log:*),Bash(git rm:*),Bash(git mv:*)"
+            [ -z "$VERIFY" ] || tools="$tools,Bash(${VERIFY%% *}:*)"   # e.g. Bash(./gradlew:*)
+            echo "Verify command you may run: ${VERIFY:-none}" >> /tmp/agent/issue.md
+          else
+            model=${MODEL_IN:-claude-haiku-5-5}; turns=30; tools="Read,Grep,Glob,Edit,Write"
+          fi
+          [ "$TURNS_IN" = 0 ] || turns=$TURNS_IN
+          run_claude "$H/.agents/prompts/$ROLE.md" /tmp/agent/out.json --model "$model" --max-turns "$turns" --allowedTools "$tools" \
+            --disallowedTools "Bash(git push:*),Bash(git commit:*),Bash(curl:*),Bash(gh:*)"
+          json_from_result /tmp/agent/out.json > /tmp/agent/result.json
+          cat /tmp/agent/result.json
+      - name: Deliver
+        env:
+          GH_TOKEN: ${{ steps.app.outputs.token }}
+          N: ${{ github.event.issue.number }}
+          ROLE: ${{ inputs.role }}
+          ICON: ${{ inputs.role == 'writer' && '✍️' || '🛸' }}
+          PROTECTED: ${{ inputs.protected }}
+          BUMP_FILE: ${{ inputs.bump-file }}
+          BUMP_TITLE: ${{ inputs.bump-title }}
+        run: |
+          source "$H/.agents/lib.sh"
+          changed=$(git status --porcelain -uall | cut -c4-)
+          if grep -qE "$PROTECTED" <<<"$changed"; then
+            gh issue comment "$N" --body "${ICON} **${ROLE^}:** stopped, a protected path was changed."; set_state "$N" blocked; exit 1; fi
+          if [ -z "$changed" ]; then
+            gh issue comment "$N" --body "${ICON} **${ROLE^}:** no change made; owner decision needed. $(jq -r '.summary // [] | join(" ")' /tmp/agent/result.json)"
+            gh issue edit "$N" --add-label owner:decision; set_state "$N" blocked; exit 0; fi
+          if [ "$ROLE" = writer ] && grep -qvE '\.md$' <<<"$changed"; then
+            gh issue comment "$N" --body "✍️ **Writer:** stopped, a non-Markdown file was changed."; set_state "$N" blocked; exit 1; fi
+          git config user.name "simplicity-agents[bot]"
+          git config user.email "simplicity-agents[bot]@users.noreply.github.com"
+          title=$(jq -r .title /tmp/agent/result.json)
+          git add -A && git commit -q -m "$title" -m "Refs #$N" -m "— ${ICON} ${ROLE^}"
+          # Version bump in its own commit (studio rule), once per PR, only when the engineer says the app changed.
+          if [ -n "$BUMP_FILE" ] && [ "$(jq -r '.bump // false' /tmp/agent/result.json)" = true ] && \
+             ! git log --format=%s "origin/main..HEAD" | grep -q '^Bump version to '; then
+            code=$(grep -oE 'versionCode[ =]+[0-9]+' "$BUMP_FILE" | grep -oE '[0-9]+$')
+            name=$(grep -oE "versionName[ =]+['\"][0-9]+\.[0-9]+\.[0-9]+" "$BUMP_FILE" | grep -oE '[0-9]+\.[0-9]+\.[0-9]+$')
+            new_code=$((code+1)); new_name="${name%.*}.$(( ${name##*.} + 1 ))"
+            sed -i -E "s/(versionCode[ =]+)$code\b/\1$new_code/; s/(versionName[ =]+['\"])$name/\1$new_name/" "$BUMP_FILE"
+            git add "$BUMP_FILE"
+            git commit -q -m "$(sed "s/{name}/$new_name/; s/{code}/$new_code/" <<<"$BUMP_TITLE")" -m "Refs #$N" -m "— ${ICON} ${ROLE^}"
+          fi
+          # PR body, rewritten each round; the review fills in the part after <!-- verification -->.
+          r=/tmp/agent/result.json
+          { echo "${ICON} **${ROLE^}**"; echo; jq -r '.summary[] | "- " + .' $r
+            if [ "$ROLE" = engineer ]; then
+              echo; echo "**Checks the ${ROLE} reports** (GitHub Actions, ubuntu-latest; self-reported)"
+              jq -r 'if (.checks // []) == [] then "- none reported" else .checks[] | "- " + . end' $r
+            fi
+            echo; echo "Fixes #$N"; echo
+            echo "<!-- screens: $(jq -c '[(.screens // [])[] | {name,args,night,locale,tablet}]' $r) -->"
+            echo "<!-- verification -->"; } > /tmp/agent/body.md
+          [ -z "$PR" ] || gh pr edit "$PR" --body-file /tmp/agent/body.md   # before the push starts the review
+          git push -q -u origin "$B"            # App token: a push to an open PR starts the Supervisor review
+          [ -n "$PR" ] || gh pr create --draft --head "$B" --base main --title "$title" -F /tmp/agent/body.md
+          set_state "$N" in-review

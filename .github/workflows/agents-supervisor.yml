@@ -1,0 +1,828 @@
+# COPY of simplicity-io/studio-handbook-github .github/workflows/agents-supervisor.yml, kept in sync by the handbook's site-sync.yml.
+# This repo is public, so it can't call the private handbook's reusable workflows (owner, 2026-11-27). Don't edit here.
+# Supervisor (mid tier), reusable: triage new issues, review agent Draft PRs, close the loop on merge.
+# Called by each repo's thin caller (this repo: supervisor.yml; app repos: agents.yml).
+# The caller's checkout is the work; the handbook (prompts, lib.sh) is checked out to .handbook/.
+name: agents-supervisor
+on:
+  workflow_call:
+    inputs:
+      roles: { type: string, default: "writer", description: "Roles triage may assign: writer or writer,engineer" }
+      verify: { type: string, default: "", description: "Build/test command the review runs (app repos)" }
+      link-check: { type: boolean, default: false, description: "Run scripts/check-links.py of the caller repo" }
+      protected: { type: string, default: '^(\.github|\.agents|scripts|templates)/' }
+      sensitive: { type: string, default: '^(CLAUDE\.md|plan/(DECISIONS|OPEN-DECISIONS)\.md|policy/(PERMISSIONS|SECURITY|COSTS)\.md)$' }
+      merge-method: { type: string, default: "squash" }
+      model: { type: string, default: "claude-sonnet-5-5" }
+      kvm: { type: boolean, default: false, description: "Enable KVM before the verify command (it runs an emulator, e.g. MMI smoke test)" }
+      screens-api: { type: string, default: "", description: "Unused since 2026-11-26 (screenshots by the DELL local agent); kept so callers need no change" }
+      app-package: { type: string, default: "" }
+      debug-apk: { type: string, default: "app/build/outputs/apk/debug/app-debug.apk" }
+env:
+  CLAUDE_VERSION: 2.1.332
+  MODEL: ${{ inputs.model }}
+  H: .handbook
+jobs:
+  # Triage also runs when the owner ticks a box in the Supervisor's "Owner decision needed" comment
+  # (owner, 2026-11-26): the tick is the go, no re-label needed.
+  triage:
+    if: >-
+      vars.AGENTS_ENABLED != 'false' && ((
+      github.event_name == 'issues' &&
+      (!contains(github.event.issue.labels.*.name, 'kind:policy') ||
+       (github.event.action == 'labeled' && github.event.label.name == 'state:triage' &&
+        (github.event.sender.login == github.repository_owner || (github.event.sender.login == 'simplicity-agents[bot]' &&
+        contains(github.event.issue.labels.*.name, 'agents:retry'))))) &&
+      !contains(github.event.issue.labels.*.name, 'needs:local') &&
+      !contains(github.event.issue.labels.*.name, 'needs:console') &&
+      (github.event.issue.user.login == github.repository_owner ||
+       github.event.issue.user.login == 'simplicity-agents[bot]') &&
+      (github.event.action != 'labeled' ||
+       (github.event.label.name == 'state:triage' && (github.event.sender.login == github.repository_owner || (github.event.sender.login == 'simplicity-agents[bot]' &&
+        contains(github.event.issue.labels.*.name, 'agents:retry')))))) || (
+      github.event_name == 'issue_comment' && github.event.action == 'created' && !github.event.issue.pull_request &&
+      github.event.sender.login == github.repository_owner && !contains(github.event.comment.body, '<!-- agent:') &&
+      contains(github.event.issue.labels.*.name, 'state:awaiting-owner')) || (
+      github.event_name == 'issue_comment' && github.event.action == 'edited' && !github.event.issue.pull_request &&
+      github.event.sender.login == github.repository_owner && github.event.comment.user.login == 'simplicity-agents[bot]' &&
+      contains(github.event.comment.body, '**Owner decision needed**') && contains(github.event.comment.body, '- [x]') &&
+      contains(github.event.issue.labels.*.name, 'owner:decision')))
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    concurrency: issue-${{ github.event.issue.number }}
+    steps:
+      - uses: actions/create-github-app-token@v1
+        id: app
+        with:
+          app-id: ${{ vars.AGENTS_APP_ID }}
+          private-key: ${{ secrets.AGENTS_APP_PRIVATE_KEY }}
+          owner: ${{ github.repository_owner }}
+          repositories: ${{ github.event.repository.name == 'studio-handbook-github' && 'studio-handbook-github' || format('{0},studio-handbook-github', github.event.repository.name) }}
+      - uses: actions/checkout@v4
+      - uses: actions/checkout@v4
+        with: { repository: simplicity-io/studio-handbook-github, ref: main, path: .handbook, token: "${{ steps.app.outputs.token }}" }
+      - run: npm install -g "@anthropic-ai/claude-code@$CLAUDE_VERSION"
+      - name: Plan
+        env:
+          CLAUDE_CODE_OAUTH_TOKEN: ${{ secrets.CLAUDE_CODE_OAUTH_TOKEN }}
+          GH_TOKEN: ${{ github.token }}
+          N: ${{ github.event.issue.number }}
+          ACTION: ${{ (github.event.action == 'edited' || github.event_name == 'issue_comment') && 'labeled' || github.event.action }}   # a ticked decision or a typed answer = owner go
+          ROLES: ${{ inputs.roles }}
+        run: |
+          mkdir -p /tmp/agent
+          AUTHOR=$(gh issue view "$N" --json author --jq .author.login)
+          { echo "Opened by: $AUTHOR"; echo "Repository: $GITHUB_REPOSITORY"; echo "Roles available: $ROLES"; echo; } > /tmp/agent/issue.md
+          gh issue view "$N" --json title,body --jq '"# " + .title + "\n\n" + .body' >> /tmp/agent/issue.md
+          gh issue view "$N" --json comments \
+            --jq '.comments[] | select(.author.login|test("simplicity")) | "\n---\n" + .body' >> /tmp/agent/issue.md
+          # Agent-filed issues (owner, 2026-11-25): at most 6 a day, then the owner decides.
+          over=0
+          if [ "$AUTHOR" != "$GITHUB_REPOSITORY_OWNER" ] && [ "$ACTION" != labeled ]; then   # owner re-label = go
+            today=$(gh issue list --state all --author "app/simplicity-agents" \
+              --search "created:>=$(date -u -d '-1 day' +%Y-%m-%dT%H:%M:%SZ) -label:source:schedule" --json number --jq length)
+            [ "$today" -le 6 ] || over=1
+          fi
+          if [ "$over" = 1 ]; then
+            echo '{"action":"ask","question":"Agents filed more than 6 issues in 24 h. Plan this one?","options":["A Plan it now","B Leave it for later"],"plan":[],"reason":"daily budget"}' > /tmp/agent/decision.json
+            exit 0
+          fi
+          source "$H/.agents/lib.sh"
+          run_claude "$H/.agents/prompts/supervisor-triage.md" /tmp/agent/out.json --model "$MODEL" --max-turns 15 --allowedTools "Read,Grep,Glob"
+          json_from_result /tmp/agent/out.json > /tmp/agent/decision.json
+          cat /tmp/agent/decision.json
+      - name: Apply
+        env:
+          GH_TOKEN: ${{ steps.app.outputs.token }}
+          N: ${{ github.event.issue.number }}
+          ACTION: ${{ (github.event.action == 'edited' || github.event_name == 'issue_comment') && 'labeled' || github.event.action }}   # a ticked decision or a typed answer = owner go
+          ROLES: ${{ inputs.roles }}
+          OPENER: ${{ github.event.issue.user.login }}
+        run: |
+          source "$H/.agents/lib.sh"
+          # The owner re-labelled state:triage after answering: the decision is made.
+          if [ "$ACTION" = labeled ]; then gh issue edit "$N" --remove-label owner:decision >/dev/null 2>&1 || true; fi
+          gh issue edit "$N" --remove-label agents:retry >/dev/null 2>&1 || true
+          d=/tmp/agent/decision.json
+          action=$(jq -r .action $d); role=$(jq -r '.role // "writer"' $d); kind=$(jq -r '.kind // "docs"' $d)
+          if [ "$action" = assign ] && ! tr ',' '\n' <<<"$ROLES" | grep -qx "$role"; then
+            action=ask; jq --arg r "$role" '.question = "The plan needs the \($r) role, which this repo does not have yet. How to go on?" | .options = ["A Change the task","B Close it"]' $d > /tmp/agent/d2.json && d=/tmp/agent/d2.json
+          fi
+          # "local" (DELL work: device, signing, upload, Play track, console) only on the owner's own request
+          # (owner, 2026-11-26, androidlinuxterminal#52); anything else asks first.
+          if [ "$action" = local ] && [ "$OPENER" != "$GITHUB_REPOSITORY_OWNER" ]; then
+            action=ask; jq '.question = "This needs the DELL local agent (device, signing, upload or console). Hand it over?" | .options = ["A Hand to the DELL agent","B Close it"]' $d > /tmp/agent/d2.json && d=/tmp/agent/d2.json
+          fi
+          case "$kind" in bug|feature|docs) ;; release) [ "$action" = local ] || kind=docs ;; *) kind=docs ;; esac
+          # "promote" (owner, 2026-11-26): the owner asks to promote a build already on Play: the Supervisor writes
+          # the release notes (notes job) and the owner's tick promotes it; the DELL is not needed.
+          if [ "$action" = promote ] && [ "$OPENER" != "$GITHUB_REPOSITORY_OWNER" ]; then action=ask
+            jq '.question = "Promote a build that is already on Play?" | .options = ["A Yes, write the release notes","B Close it"]' $d > /tmp/agent/d2.json && d=/tmp/agent/d2.json; fi
+          case "$action" in
+            promote)
+              from=$(jq -r '.from // ""' $d); to=$(jq -r '.to // "alpha,beta"' $d)
+              { echo "<!-- agents:notes-request from=$from to=$to final=1 -->"
+                echo "👔 **Supervisor:** promotion request ($to). I'll read the tracks on Play and post the release notes here; your tick then promotes it."; } > /tmp/agent/c.md
+              gh issue comment "$N" -F /tmp/agent/c.md
+              gh label create play:notes --color FBCA04 --description "Supervisor writes release notes" >/dev/null 2>&1 || true
+              gh issue edit "$N" --add-label kind:release
+              gh issue edit "$N" --add-label play:notes   # App token: this label starts the notes job
+              set_state "$N" ready-to-work ;;
+            local)
+              { echo "👔 **Supervisor plan**"; jq -r '.plan[] | "- " + .' $d; echo
+                echo "Handed to the DELL local agent (needs:local). Release notes and production checks still come to you first."; } > /tmp/agent/c.md
+              gh issue comment "$N" -F /tmp/agent/c.md
+              gh issue edit "$N" --add-label "needs:local,kind:$kind"
+              set_state "$N" ready-to-work ;;
+            assign)
+              { echo "👔 **Supervisor plan**"; jq -r '.plan[] | "- " + .' $d; echo; echo "Assigned to the $role."; } > /tmp/agent/c.md
+              gh issue comment "$N" -F /tmp/agent/c.md
+              gh issue edit "$N" --add-label "agent:$role,kind:$kind"
+              set_state "$N" ready-to-work ;;   # App token: this label starts the role's workflow
+            ask)
+              { echo "👔 **Supervisor** · **Owner decision needed**"; jq -r .question $d; echo; jq -r '.options[] | "- [ ] " + .' $d
+                echo; echo "Tick a box to decide (or reply \`/choose <letter>\` and re-label \`state:triage\`)."; } > /tmp/agent/c.md
+              gh issue comment "$N" -F /tmp/agent/c.md
+              gh issue edit "$N" --add-label owner:decision
+              set_state "$N" awaiting-owner ;;
+            *)
+              { echo "👔 **Supervisor** · **Not an agent task:** $(jq -r .reason $d)"; } > /tmp/agent/c.md
+              gh issue comment "$N" -F /tmp/agent/c.md
+              set_state "$N" blocked ;;
+          esac
+
+  review:
+    if: >-
+      github.event_name == 'pull_request' && github.event.action != 'closed' &&
+      vars.AGENTS_ENABLED != 'false' && (startsWith(github.head_ref, 'agent/issue-') ||
+       (github.event.repository.name == 'studio-handbook-github' && startsWith(github.head_ref, 'policy/') &&
+        github.event.pull_request.user.login == github.repository_owner))
+    runs-on: ubuntu-latest
+    timeout-minutes: 60
+    concurrency: review-${{ github.head_ref }}
+    steps:
+      - uses: actions/create-github-app-token@v1
+        id: app
+        with:
+          app-id: ${{ vars.AGENTS_APP_ID }}
+          private-key: ${{ secrets.AGENTS_APP_PRIVATE_KEY }}
+          owner: ${{ github.repository_owner }}
+          repositories: ${{ github.event.repository.name == 'studio-handbook-github' && 'studio-handbook-github' || format('{0},studio-handbook-github', github.event.repository.name) }}
+      - uses: actions/checkout@v4
+        with:
+          ref: ${{ github.event.pull_request.head.sha }}
+      - uses: actions/checkout@v4
+        with: { repository: simplicity-io/studio-handbook-github, ref: main, path: .handbook, token: "${{ steps.app.outputs.token }}" }
+      - if: inputs.verify != '' && hashFiles('gradlew') != ''   # a new app repo has no build files yet
+        uses: actions/setup-java@v4
+        with: { distribution: temurin, java-version: '21', cache: gradle }
+      - if: inputs.kvm
+        name: Enable KVM for the verify command
+        run: |
+          echo 'KERNEL=="kvm", GROUP="kvm", MODE="0666", OPTIONS+="static_node=kvm"' | sudo tee /etc/udev/rules.d/99-kvm4all.rules
+          sudo udevadm control --reload-rules
+          sudo udevadm trigger --name-match=kvm
+      - name: Checks
+        env:
+          GH_TOKEN: ${{ github.token }}
+          PR: ${{ github.event.pull_request.number }}
+          HEAD: ${{ github.head_ref }}
+          VERIFY: ${{ inputs.verify }}
+          LINKS: ${{ inputs.link-check }}
+          PROTECTED: ${{ inputs.protected }}
+          SCREENS_API: ${{ inputs.screens-api }}
+        run: |
+          mkdir -p /tmp/agent
+          { echo "Repository: $GITHUB_REPOSITORY"; echo; } > /tmp/agent/issue.md
+          if [[ "$HEAD" == policy/* ]]; then
+            # The Policy manager's handbook PR (owner, 2026-11-26): no issue; the PR text is the task. Nothing is
+            # blocked; .github changes (the agents' own permissions and tokens) go to the owner (SENSITIVE below).
+            N=""; echo "POLICY=1" >> "$GITHUB_ENV"; PROTECTED='a^'
+            gh pr view "$PR" --json title,body --jq '"# " + .title + "\n\n" + .body' >> /tmp/agent/issue.md
+          else
+            N=${HEAD#agent/issue-}
+            gh issue view "$N" --json title,body --jq '"# " + .title + "\n\n" + .body' >> /tmp/agent/issue.md
+            gh issue view "$N" --json comments \
+              --jq '.comments[] | select(.author.login|test("simplicity")) | "\n---\n" + .body' >> /tmp/agent/issue.md
+          fi
+          echo "N=$N" >> "$GITHUB_ENV"
+          gh pr diff "$PR" > /tmp/agent/diff.patch
+          ok=1; : > /tmp/agent/checks.txt
+          # Verification table (owner, 2026-11-25): filled by the workflow from what really ran, not by a model.
+          where="GitHub Actions, ubuntu-latest (cloud VM)"
+          echo "| Check | Where | Result |" > /tmp/agent/table.md; echo "|---|---|---|" >> /tmp/agent/table.md
+          if [ "$LINKS" = true ]; then
+            if python3 scripts/check-links.py >> /tmp/agent/checks.txt 2>&1; then r=passed; else r=FAILED; ok=0; fi
+            echo "| Link check | $where | $r |" >> /tmp/agent/table.md
+          fi
+          if [ -n "$VERIFY" ] && [ "${VERIFY#./gradlew}" != "$VERIFY" ] && [ ! -f gradlew ]; then
+            echo "verify: skipped (no gradlew yet)" >> /tmp/agent/checks.txt
+            echo "| \`$VERIFY\` | $where | skipped: no build files yet |" >> /tmp/agent/table.md
+          elif [ -n "$VERIFY" ]; then
+            echo "verify: $VERIFY" >> /tmp/agent/checks.txt
+            if bash -c "$VERIFY" > /tmp/agent/verify.log 2>&1; then r=passed; echo "verify: passed" >> /tmp/agent/checks.txt
+            else r=FAILED; ok=0; echo "verify: FAILED (last 40 lines)" >> /tmp/agent/checks.txt; tail -40 /tmp/agent/verify.log >> /tmp/agent/checks.txt; fi
+            echo "| \`$VERIFY\` | $where | $r |" >> /tmp/agent/table.md
+          fi
+          if gh pr diff "$PR" --name-only | grep -qE "$PROTECTED"; then
+            echo "protected path changed" >> /tmp/agent/checks.txt; ok=0; r="changed (blocked)"; else r="untouched"; fi
+          echo "| Protected paths | $where | $r |" >> /tmp/agent/table.md
+          echo "CHECKS_OK=$ok" >> "$GITHUB_ENV"
+          gh pr view "$PR" --json body --jq .body | sed -n 's/^<!-- screens: \(.*\) -->$/\1/p' | tail -1 > /tmp/agent/screens.json
+          jq -e 'type == "array"' /tmp/agent/screens.json >/dev/null 2>&1 || echo '[]' > /tmp/agent/screens.json
+          if [ "$(jq length /tmp/agent/screens.json)" = 0 ]; then echo "SCREENS_NOTE=none asked (no screen changed)" >> "$GITHUB_ENV"
+          else echo "SCREENS_LOCAL=1" >> "$GITHUB_ENV"; fi
+          # Emulator screenshots are off: the DELL local agent takes them (owner, 2026-11-26).
+      - run: npm install -g "@anthropic-ai/claude-code@$CLAUDE_VERSION"
+      - name: Review
+        env:
+          CLAUDE_CODE_OAUTH_TOKEN: ${{ secrets.CLAUDE_CODE_OAUTH_TOKEN }}
+        run: |
+          [ -n "${SCREENS_NOTE:-}" ] && echo "| Screenshots | - | $SCREENS_NOTE |" >> /tmp/agent/table.md
+          source "$H/.agents/lib.sh"
+          run_claude "$H/.agents/prompts/supervisor-review.md" /tmp/agent/out.json --model "$MODEL" --max-turns 20 --allowedTools "Read,Grep,Glob"
+          json_from_result /tmp/agent/out.json > /tmp/agent/verdict.json
+          cat /tmp/agent/verdict.json /tmp/agent/checks.txt
+      - name: Apply
+        env:
+          GH_TOKEN: ${{ steps.app.outputs.token }}
+          PR: ${{ github.event.pull_request.number }}
+          OWNER: ${{ github.repository_owner }}
+          AUTO_MERGE: ${{ vars.AUTO_MERGE }}
+          SENSITIVE: ${{ inputs.sensitive }}
+          METHOD: ${{ inputs.merge-method }}
+        run: |
+          source "$H/.agents/lib.sh"
+          v=/tmp/agent/verdict.json
+          verdict=$(jq -r .verdict $v); [ "$CHECKS_OK" = 1 ] || verdict=fix
+          [ "${POLICY:-}" != 1 ] || SENSITIVE='^\.github/'   # Policy manager PRs: only workflows need the owner
+          if [ "${SCREENS_LOCAL:-}" = 1 ] && [ "$verdict" = pass ]; then
+            # Changed screens: the DELL local agent photographs them on lab devices before the owner merges.
+            title=$(gh pr view "$PR" --json title --jq .title)
+            kind=$(gh issue view "$N" --json labels --jq '[.labels[].name | select(startswith("kind:"))][0] // "kind:feature"')
+            { echo "Screenshots for #$PR ($title), before merge, at $(git rev-parse --short HEAD). Issue #$N."; echo
+              jq -r '.[] | "- [ ] " + .name + " (" + ([(if .night then "dark" else "light" end), (.locale // "en-US"), (if .tablet then "tablet" else "phone" end)] | join(", ")) + ")" + (if (.how // "") != "" then ": " + .how else "" end)' /tmp/agent/screens.json
+              echo; echo "For the DELL local agent (.handbook .agents/prompts/local-agent.md): build the PR branch \`${{ github.head_ref }}\` (debug),"
+              echo "take each screenshot on lab AVDs or phones, look at it before posting (right screen, loaded, asked state),"
+              echo "put the PNGs on agent-screens \`pr-$PR/local/\` and post them as one comment on #$PR with one line each."
+              echo "Do not commit to the PR branch. Close this issue when done."; } > /tmp/agent/l.md
+            url=$(gh issue list --state open --label needs:local --search "in:title \"screenshots for $title\"" --json url --jq '.[0].url // empty')
+            [ -n "$url" ] || url=$(GH_TOKEN=${{ github.token }} gh issue create --title "Local checks (before merge): screenshots for $title" --label "needs:local,$kind,source:supervisor,state:ready-to-work" -F /tmp/agent/l.md)
+            echo "| Screenshots | DELL lab (local agent), before merge | requested: $url |" >> /tmp/agent/table.md
+          fi
+          # Verification section of the PR body (owner, 2026-11-25).
+          body=$(gh pr view "$PR" --json body --jq .body)
+          { printf '%s\n' "${body%%<!-- verification -->*}"; echo "<!-- verification -->"
+            echo "## Verification (filled by the workflow)"; cat /tmp/agent/table.md
+            local_items=$(grep -c '^- needs:local:' <<<"$body" || true)
+            echo "| Lab phones, AVDs, Test Lab, release install | DELL lab (local agent) | $([ "$local_items" -gt 0 ] && echo "$local_items item(s) handed over after merge" || echo "not needed") |"
+            if [ -s /tmp/agent/screens.txt ]; then echo; echo "Screenshots:"; sed 's/^/- /' /tmp/agent/screens.txt; fi
+            if [ -s /tmp/agent/gallery.md ]; then echo; cat /tmp/agent/gallery.md; fi; } > /tmp/agent/body.md
+          gh pr edit "$PR" --body-file /tmp/agent/body.md || true
+          rounds=$(gh pr view "$PR" --json comments --jq '[.comments[] | select(.body|contains("<!-- supervisor:fix -->"))] | length')
+          # Auto-merge (owner, 2026-11-25): only high confidence, no owner decision, nothing sensitive.
+          auto=1; why=$(jq -r '.confidence_reason // ""' $v)
+          [ "$(jq -r '.confidence // "low"' $v)" = high ] || { auto=0; why="low confidence: $why"; }
+          [ "$AUTO_MERGE" != false ] || { auto=0; why="auto-merge switched off"; }
+          labels=""; [ -z "$N" ] || labels=$(gh issue view "$N" --json labels --jq '.labels[].name'); files=$(gh pr diff "$PR" --name-only)
+          grep -qx 'owner:decision' <<<"$labels" && { auto=0; why="owner decision on the issue"; }
+          grep -qE "$SENSITIVE" <<<"$files" && { auto=0; why="touches rules, decisions or build settings"; }
+          size=$(gh pr view "$PR" --json additions,deletions --jq '.additions + .deletions')
+          [ "$size" -le 300 ] || { auto=0; why="large diff ($size lines)"; }
+          [ "$rounds" -lt 2 ] || { auto=0; why="needed $rounds fix rounds"; }
+          [ "${SCREENS_LOCAL:-}" != 1 ] || { auto=0; why="screenshots by the DELL local agent first"; }
+          if [ "$verdict" = pass ]; then
+            { echo "<!-- supervisor:pass -->"; echo "👔 **Supervisor review: pass**"; jq -r '.summary[] | "- " + .' $v
+              jq -e '(.notes // []) | length > 0' $v >/dev/null && { echo; echo "Notes (non-blocking):"; jq -r '.notes[] | "- " + .' $v; }; } > /tmp/agent/c.md
+            gh pr ready "$PR"
+            if [ "$auto" = 1 ]; then
+              { echo; echo "<!-- supervisor:merged -->Merged by the Supervisor (high confidence)."; } >> /tmp/agent/c.md
+              gh pr comment "$PR" -F /tmp/agent/c.md
+              gh pr merge "$PR" "--$METHOD" --delete-branch && exit 0   # closed event -> done job -> state:done
+              gh pr comment "$PR" --body "👔 **Supervisor:** merge failed; handing to the owner."
+            else
+              { echo; echo "Owner merge needed: $why"; } >> /tmp/agent/c.md
+              gh pr comment "$PR" -F /tmp/agent/c.md
+            fi
+            gh pr edit "$PR" --add-reviewer "$OWNER" || true
+            [ -z "$N" ] || set_state "$N" awaiting-owner
+          elif [ "$rounds" -ge 3 ]; then
+            gh pr comment "$PR" --body "👔 **Supervisor:** 3 fix rounds used; stopping. Owner decision needed."
+            [ -z "$N" ] || { gh issue edit "$N" --add-label owner:decision; set_state "$N" blocked; }
+          else
+            { echo "<!-- supervisor:fix -->"; echo "👔 **Supervisor review: changes requested** (round $((rounds+1)) of 3)"
+              jq -r '.fixes[] | "- " + .' $v; echo; echo '```'; cat /tmp/agent/checks.txt; echo '```'; } > /tmp/agent/c.md
+            gh pr comment "$PR" -F /tmp/agent/c.md
+            [ -z "$N" ] || set_state "$N" changes-requested   # App token: starts the role's workflow again
+            # Policy PRs: the Policy manager is subscribed to its PR and pushes the fixes itself.
+          fi
+
+  # The owner's comment on an open agent PR (owner, 2026-11-26): the Supervisor answers it through the
+  # roles, never a person: a fix round for the engineer, or a local check or screenshots by the
+  # DELL local agent. Its own and the bot's comments start nothing (owner author only); nor do comments
+  # agents post under the owner's account (the DELL local agent, sessions): they carry <!-- agent:... -->.
+  comment:
+    if: >-
+      github.event_name == 'issue_comment' &&
+      (github.event.action == 'created' || (github.event.action == 'edited' && github.event.changes.body.from != null &&
+       github.event.sender.login == github.repository_owner)) &&
+      github.event.issue.pull_request && github.event.issue.state == 'open' &&
+      vars.AGENTS_ENABLED != 'false' && github.event.comment.user.login == github.repository_owner &&
+      !contains(github.event.comment.body, '<!-- agent:') && !startsWith(github.event.comment.body, '**Local')
+    runs-on: ubuntu-latest
+    timeout-minutes: 45
+    concurrency: comment-${{ github.event.issue.number }}
+    steps:
+      - uses: actions/create-github-app-token@v1
+        id: app
+        with:
+          app-id: ${{ vars.AGENTS_APP_ID }}
+          private-key: ${{ secrets.AGENTS_APP_PRIVATE_KEY }}
+          owner: ${{ github.repository_owner }}
+          repositories: ${{ github.event.repository.name == 'studio-handbook-github' && 'studio-handbook-github' || format('{0},studio-handbook-github', github.event.repository.name) }}
+      - name: Agent PR?
+        env:
+          GH_TOKEN: ${{ steps.app.outputs.token }}
+          PR: ${{ github.event.issue.number }}
+          CID: ${{ github.event.comment.id }}
+        run: |
+          head=$(gh pr view "$PR" -R "$GITHUB_REPOSITORY" --json headRefName --jq .headRefName)
+          case "$head" in agent/issue-*) echo "HEAD_REF=$head" >> "$GITHUB_ENV"; echo "N=${head#agent/issue-}" >> "$GITHUB_ENV"
+              # Seen at once (owner, 2026-11-26): an eyes reaction on the owner's comment.
+              gh api -X POST "repos/$GITHUB_REPOSITORY/issues/comments/$CID/reactions" -f content=eyes > /dev/null || true ;;
+            *) echo "Not an agent PR ($head): nothing to do." ;; esac
+      - if: env.HEAD_REF != ''
+        uses: actions/checkout@v4
+        with: { ref: "${{ env.HEAD_REF }}" }
+      - if: env.HEAD_REF != ''
+        uses: actions/checkout@v4
+        with: { repository: simplicity-io/studio-handbook-github, ref: main, path: .handbook, token: "${{ steps.app.outputs.token }}" }
+      - if: env.HEAD_REF != ''
+        run: npm install -g "@anthropic-ai/claude-code@$CLAUDE_VERSION"
+      - if: env.HEAD_REF != ''
+        name: Decide
+        env:
+          GH_TOKEN: ${{ steps.app.outputs.token }}
+          CLAUDE_CODE_OAUTH_TOKEN: ${{ secrets.CLAUDE_CODE_OAUTH_TOKEN }}
+          PR: ${{ github.event.issue.number }}
+          COMMENT: ${{ github.event.comment.body }}
+          ACTION: ${{ github.event.action }}
+          BEFORE: ${{ github.event.changes.body.from }}
+          SCREENS_API: ${{ inputs.screens-api }}
+          PKG: ${{ inputs.app-package }}
+        run: |
+          source "$H/.agents/lib.sh"
+          mkdir -p /tmp/agent
+          { echo "Repository: $GITHUB_REPOSITORY, PR #$PR, issue #$N, app package: ${PKG:-none}"
+            echo "Emulator screenshots: $([ -n "$SCREENS_API" ] && echo "available (API $SCREENS_API)" || echo "not set up for this repo")"
+            if [ "$ACTION" = edited ]; then
+              echo; echo "# The owner EDITED an earlier comment (owner, 2026-11-27: edits count as new requests)."
+              echo "Answer what changed. Before:"; printf '%s\n' "$BEFORE" | sed 's/^/> /'
+            fi
+            echo; echo "# The owner's comment"; printf '%s\n' "$COMMENT"
+            echo; echo "# PR"; gh pr view "$PR" --json title,body --jq '"## " + .title + "\n\n" + .body'
+            echo; echo "# Files changed"; gh pr diff "$PR" --name-only
+            echo; echo "# Earlier PR comments (newest last)"
+            gh pr view "$PR" --json comments --jq '.comments[-6:][] | "\n---\n" + .author.login + ":\n" + .body'
+          } > /tmp/agent/request.md
+          run_claude "$H/.agents/prompts/supervisor-comment.md" /tmp/agent/out.json --model "$MODEL" --max-turns 20 --allowedTools "Read,Grep,Glob"
+          json_from_result /tmp/agent/out.json > /tmp/agent/d.json
+          cat /tmp/agent/d.json
+          jq '.screens // []' /tmp/agent/d.json > /tmp/agent/screens.json
+          # Screenshots are taken by the DELL local agent on lab devices, not the Actions emulator (owner, 2026-11-26).
+      - if: env.HEAD_REF != ''
+        name: Apply
+        env:
+          GH_TOKEN: ${{ steps.app.outputs.token }}
+          GH_TOKEN_QUIET: ${{ github.token }}
+          PR: ${{ github.event.issue.number }}
+          CID: ${{ github.event.comment.id }}
+          COMMENT: ${{ github.event.comment.body }}
+          ACTION: ${{ github.event.action }}
+        run: |
+          source "$H/.agents/lib.sh"
+          d=/tmp/agent/d.json; title=$(gh pr view "$PR" --json title --jq .title)
+          { echo "<!-- supervisor:owner-comment $CID -->"; echo "👔 **Supervisor** (on your $([ "$ACTION" = edited ] && echo 'edited ')comment): $(jq -r '.reply // ""' $d)"; } > /tmp/agent/c.md
+          if [ "$(jq '.screens // [] | length' $d)" -gt 0 ]; then
+            { echo; echo "Screenshots are taken by the DELL local agent on lab devices; it posts them here."; } >> /tmp/agent/c.md
+            jq -r '.screens[] | "- needs:local: screenshot " + .name + " (" + ([(if .night then "dark" else "light" end), (.locale // "en-US"), (if .tablet then "tablet" else "phone" end)] | join(", ")) + ")" + (if (.how // "") != "" then ": " + .how else "" end)' $d >> /tmp/agent/local.txt
+          fi
+          jq -r '(.local // [])[] | "- needs:local: " + .' $d >> /tmp/agent/local.txt 2>/dev/null || true
+          if [ -s /tmp/agent/local.txt ]; then
+            kind=$(gh issue view "$N" --json labels --jq '[.labels[].name | select(startswith("kind:"))][0] // "kind:feature"')
+            { echo "Asked by the owner on #$PR ($title), before merge, at $(git rev-parse --short HEAD). Issue #$N."; echo
+              echo "The owner's words:"; printf '%s\n' "$COMMENT" | sed 's/^/> /'; echo
+              sed 's/^- needs:local: */- [ ] /' /tmp/agent/local.txt; echo
+              echo "For the DELL local agent (.handbook .agents/prompts/local-agent.md): build the PR branch \`$HEAD_REF\`"
+              echo "(debug), do each item on lab AVDs or phones, put screenshots on agent-screens \`pr-$PR/local/\`, and"
+              echo "post the results as one comment on #$PR (one line per item: what, where, device, Android version,"
+              echo "result). Do not commit to the PR branch. Close this issue when done."; } > /tmp/agent/l.md
+            # GITHUB_TOKEN: the issue starts no triage or worker.
+            url=$(GH_TOKEN=$GH_TOKEN_QUIET gh issue create --title "Local checks (before merge): $title" --label "needs:local,$kind,source:supervisor,state:ready-to-work" -F /tmp/agent/l.md)
+            { echo; echo "Handed to the DELL local agent: $url"; } >> /tmp/agent/c.md
+          fi
+          if [ "$(jq '.fix // [] | length' $d)" -gt 0 ]; then
+            { echo; echo "<!-- supervisor:fix-owner -->"; echo "Changes for the engineer (from your comment; not counted as a review round):"
+              jq -r '.fix[] | "- " + .' $d; } >> /tmp/agent/c.md
+            gh pr comment "$PR" -F /tmp/agent/c.md
+            set_state "$N" changes-requested   # App token: starts the engineer again
+          else
+            gh pr comment "$PR" -F /tmp/agent/c.md
+          fi
+
+  # On merge: state:done, hand needs:local items to the DELL local agent, offer a release (owner, 2026-11-25).
+  # GITHUB_TOKEN on purpose: the issues it opens start no workflow (no triage, no worker).
+  done:
+    if: github.event_name == 'pull_request' && github.event.action == 'closed' && startsWith(github.head_ref, 'agent/issue-')
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/create-github-app-token@v1
+        id: app
+        with:
+          app-id: ${{ vars.AGENTS_APP_ID }}
+          private-key: ${{ secrets.AGENTS_APP_PRIVATE_KEY }}
+          owner: ${{ github.repository_owner }}
+          repositories: ${{ github.event.repository.name == 'studio-handbook-github' && 'studio-handbook-github' || format('{0},studio-handbook-github', github.event.repository.name) }}
+      - uses: actions/checkout@v4
+        with: { repository: simplicity-io/studio-handbook-github, ref: main, path: .handbook, token: "${{ steps.app.outputs.token }}" }
+      - env:
+          GH_TOKEN: ${{ github.token }}
+          GH_REPO: ${{ github.repository }}
+          HEAD: ${{ github.head_ref }}
+          MERGED: ${{ github.event.pull_request.merged }}
+          PR: ${{ github.event.pull_request.number }}
+          TITLE: ${{ github.event.pull_request.title }}
+          SHA: ${{ github.event.pull_request.merge_commit_sha }}
+        run: |
+          source "$H/.agents/lib.sh"
+          N=${HEAD#agent/issue-}
+          if [ "$MERGED" != true ]; then set_state "$N" blocked; exit 0; fi
+          set_state "$N" done
+          mkdir -p /tmp/agent
+          kind=$(gh issue view "$N" --json labels --jq '[.labels[].name | select(startswith("kind:"))][0] // "kind:feature"')
+          gh pr view "$PR" --json body --jq .body | sed -n 's/^- needs:local: */- [ ] /p' > /tmp/agent/local.md
+          # Already checked before the merge (a "Local checks (before merge)" issue for this PR): no second hand-off.
+          before=$(gh issue list --state all --label needs:local --search "\"Local checks (before merge)\" in:title \"#$PR\" in:body" --json number --jq '[.[].number] | map("#" + tostring) | join(", ")')
+          if [ -n "$before" ]; then
+            gh pr comment "$PR" --body "👔 **Supervisor:** the local checks were done before the merge ($before); no new hand-off."
+            : > /tmp/agent/local.md
+          fi
+          LOCAL=""
+          if [ -s /tmp/agent/local.md ]; then
+            { echo "Local checks for #$PR ($TITLE), merged as ${SHA:0:7}. Issue #$N."; echo
+              cat /tmp/agent/local.md; echo
+              echo "For the DELL local agent (.handbook .agents/prompts/local-agent.md): pull main, run each check,"
+              echo "and reply here with one line per check: what, where (lab phone, AVD or Test Lab), device and"
+              echo "Android version, result. Open a new issue for any bug found; close this one when done."; } > /tmp/agent/l.md
+            url=$(gh issue create --title "Local checks: $TITLE" --label "needs:local,$kind,source:supervisor,state:ready-to-work" -F /tmp/agent/l.md)
+            LOCAL=${url##*/}
+            gh pr comment "$PR" --body "👔 **Supervisor:** local checks handed to the DELL local agent: #$LOCAL"
+          fi
+          bump=$(gh pr view "$PR" --json commits --jq '[.commits[].messageHeadline | select(test("^Bump version to |^versionName "))] | last // ""')
+          if [ -n "$bump" ]; then
+            { echo "<!-- agents:release pr=$PR sha=$SHA local=$LOCAL -->"
+              echo "👔 **Supervisor** · **Release?** This PR shipped \`$bump\`. Tick a box to hand the release to the DELL local agent:"
+              echo "- [ ] Upload to the Play internal track"
+              echo "- [ ] Then promote to alpha and beta (release notes come to you first)"
+              echo "- [ ] Then promote to production (blocking-issue check and release notes come to you first)"
+              [ -z "$LOCAL" ] || echo; [ -z "$LOCAL" ] || echo "The local checks in #$LOCAL run first."; } > /tmp/agent/r.md
+            gh pr comment "$PR" -F /tmp/agent/r.md
+          fi
+
+  # The owner ticked a box in the release comment above: open one needs:local release issue per PR, and
+  # update it (not a second issue) when a later tick changes the track (owner, 2026-11-26: two quick ticks opened two).
+  release:
+    if: >-
+      github.event_name == 'issue_comment' && github.event.action == 'edited' &&
+      github.event.issue.pull_request && github.event.sender.login == github.repository_owner &&
+      github.event.comment.user.login == 'github-actions[bot]' &&
+      contains(github.event.comment.body, '<!-- agents:release ')
+    concurrency:
+      group: release-${{ github.repository }}-${{ github.event.comment.id }}
+      cancel-in-progress: false
+    runs-on: ubuntu-latest
+    steps:
+      - env:
+          GH_TOKEN: ${{ github.token }}
+          GH_REPO: ${{ github.repository }}
+          CID: ${{ github.event.comment.id }}
+        run: |
+          mkdir -p /tmp/agent
+          # Re-read the comment: a queued run must see the ticks and hand-off line as they are now.
+          BODY=$(gh api "repos/$GH_REPO/issues/comments/$CID" --jq .body)
+          grep -q '^- \[[xX]\] Upload to the Play internal track' <<<"$BODY" || { echo "internal box not ticked"; exit 0; }
+          meta=$(grep -o '<!-- agents:release [^>]*-->' <<<"$BODY")
+          pr=$(sed -E 's/.*pr=([0-9]+).*/\1/' <<<"$meta"); sha=$(sed -E 's/.*sha=([0-9a-f]+).*/\1/' <<<"$meta")
+          loc=$(sed -nE 's/.*local=([0-9]+).*/\1/p' <<<"$meta")
+          version=$(grep -o '`[^`]*`' <<<"$BODY" | head -1 | tr -d '`'); version=${version#Bump version to }; track=internal
+          # Tracks in order (owner, 2026-11-26: alpha and beta too): internal, then alpha and beta, then production.
+          grep -q '^- \[[xX]\] Then promote to alpha and beta' <<<"$BODY" && track="$track, then alpha and beta"
+          grep -q '^- \[[xX]\] Then promote to production' <<<"$BODY" && track="$track, then production"
+          { echo "Release request from the owner (ticked in #$pr): \`$version\`, merge commit ${sha:0:7}."; echo
+            echo "- [ ] Track: $track"
+            [ -z "$loc" ] || echo "- [ ] First finish the local checks in #$loc"
+            echo; echo "For the DELL local agent (.handbook .agents/prompts/local-agent.md): build main at ${sha:0:7} or later,"
+            echo "follow the studio rules \"Play releases\" (sign late, install and launch the release build, \`fastlane internal\`)."
+            echo "Alpha and beta: release notes go to the owner first. Production: blocking-issue check and release notes"
+            echo "go to the owner first. Promote only after the owner's OK."
+            echo "Reply here with what was uploaded (versionCode, track), where it was tested, and close the issue."; } > /tmp/agent/rel.md
+          title="Release $version ($track)"
+          n=$(sed -nE 's/.*<!-- handed #?([0-9]+) -->.*/\1/p; s/.*<!-- handed -->Handed to the DELL local agent: #([0-9]+).*/\1/p' <<<"$BODY" | head -1)
+          if [ -n "$n" ]; then
+            [ "$(gh issue view "$n" --json title --jq .title)" = "$title" ] && { echo "no change for #$n"; exit 0; }
+            gh issue edit "$n" --title "$title" --body-file /tmp/agent/rel.md
+            gh issue comment "$n" --body "👔 **Supervisor:** the owner changed the request in #$pr: track is now **$track**."
+          else
+            url=$(gh issue create --title "$title" --label "needs:local,kind:release,source:supervisor,state:ready-to-work" -F /tmp/agent/rel.md)
+            n=${url##*/}
+          fi
+          # Visible status at the top of the release comment, plus a rocket on it (owner, 2026-11-26: "I could use some visual clue").
+          clean=$(sed -E '/^> 🚀 \*\*Handed to the DELL local agent/d; /<!-- handed/d' <<<"$BODY")
+          { echo "> 🚀 **Handed to the DELL local agent: #$n** ($track). It picks up its queue within 2 h while the Claude app is open on the DELL; progress is posted on #$n. <!-- handed #$n -->"
+            echo; printf '%s\n' "$clean"; } > /tmp/agent/new.md
+          gh api -X PATCH "repos/$GH_REPO/issues/comments/$CID" -F body=@/tmp/agent/new.md >/dev/null
+          gh api -X POST "repos/$GH_REPO/issues/comments/$CID/reactions" -f content=rocket >/dev/null || true
+
+  # Track promotions from GitHub (owner, 2026-11-26: "Promote from GitHub"). An agent posts an `agents:promote`
+  # comment on a kind:release issue (versionCode, tracks, release notes in ```<language> blocks, one OK box);
+  # the owner's tick is the go. A fixed script, never the model, moves the existing build with a release-only
+  # Play key (GitHub environment `play-release`, entered by the owner). No build, signing or upload here.
+  promote:
+    if: >-
+      github.event_name == 'issue_comment' && github.event.action == 'edited' &&
+      !github.event.issue.pull_request && github.event.sender.login == github.repository_owner &&
+      contains(github.event.issue.labels.*.name, 'kind:release') &&
+      (github.event.comment.user.login == github.repository_owner ||
+       github.event.comment.user.login == 'simplicity-agents[bot]') &&
+      contains(github.event.comment.body, '<!-- agents:promote ')
+    concurrency:
+      group: promote-${{ github.repository }}-${{ github.event.comment.id }}
+      cancel-in-progress: false
+    runs-on: ubuntu-latest
+    environment: play-release
+    timeout-minutes: 10
+    steps:
+      - uses: actions/create-github-app-token@v1
+        id: app
+        with:
+          app-id: ${{ vars.AGENTS_APP_ID }}
+          private-key: ${{ secrets.AGENTS_APP_PRIVATE_KEY }}
+          owner: ${{ github.repository_owner }}
+          repositories: studio-handbook-github
+      - uses: actions/checkout@v4
+        with: { sparse-checkout: app, sparse-checkout-cone-mode: true }
+      - uses: actions/checkout@v4   # the handbook is private: the App token reads it (first run failed, LTH #52)
+        with: { repository: simplicity-io/studio-handbook-github, ref: main, path: .handbook, sparse-checkout: scripts, token: "${{ steps.app.outputs.token }}" }
+      - env:
+          GH_TOKEN: ${{ github.token }}
+          GH_REPO: ${{ github.repository }}
+          CID: ${{ github.event.comment.id }}
+          N: ${{ github.event.issue.number }}
+          PKG: ${{ inputs.app-package }}
+          PLAY_RELEASE_SA_JSON: ${{ secrets.PLAY_RELEASE_SA_JSON }}
+        run: |
+          mkdir -p /tmp/agent
+          # Re-read the comment: act only on its text as it is now, once.
+          BODY=$(gh api "repos/$GH_REPO/issues/comments/$CID" --jq .body | tr -d '\r')
+          grep -q '^- \[[xX]\] OK: ' <<<"$BODY" || { echo "OK box not ticked"; exit 0; }
+          grep -q '<!-- agents:promoted' <<<"$BODY" && { echo "already promoted"; exit 0; }
+          meta=$(grep -o '<!-- agents:promote [^>]*-->' <<<"$BODY" | head -1)
+          code=$(sed -nE 's/.* code=([0-9]+).*/\1/p' <<<"$meta"); from=$(sed -nE 's/.* from=([a-z]+).*/\1/p' <<<"$meta")
+          to=$(sed -nE 's/.* to=([a-z,]+).*/\1/p' <<<"$meta"); final=$(sed -nE 's/.* final=([01]).*/\1/p' <<<"$meta")
+          [ -n "$code" ] && [ -n "$from" ] && [ -n "$to" ] || { gh issue comment "$N" --body "👔 **Supervisor:** the promote comment has no code/from/to; nothing promoted."; exit 1; }
+          # Production needs the blocking-issue check: its OK box must say so (studio rules "Play releases").
+          if grep -q production <<<"$to" && ! grep -q '^- \[[xX]\] OK: no blocking issue' <<<"$BODY"; then
+            gh issue comment "$N" --body "👔 **Supervisor:** production needs the box \"OK: no blocking issue; ...\"; nothing promoted."; exit 1
+          fi
+          [ -n "$PKG" ] || PKG=$(grep -hoE "applicationId[ =]+['\"][a-z0-9_.]+['\"]" app/build.gradle* 2>/dev/null | head -1 | grep -oE "[a-z0-9_.]{3,}" | tail -1)
+          [ -n "$PKG" ] || { gh issue comment "$N" --body "👔 **Supervisor:** no app package found; nothing promoted."; exit 1; }
+          python3 - "$BODY" > /tmp/agent/notes.json <<'PY' || { gh issue comment "$N" --body "👔 **Supervisor:** no \`\`\`<language> release-notes block in the promote comment; nothing promoted."; exit 1; }
+          import json, re, sys
+          blocks = re.findall(r"^```([a-z]{2,3}(?:-[A-Za-z0-9]+)?)\n(.*?)\n```", sys.argv[1], re.M | re.S)
+          if not blocks:
+              sys.exit("no release notes block")
+          print(json.dumps([{"language": l, "text": t.strip()} for l, t in blocks]))
+          PY
+          if [ -z "$PLAY_RELEASE_SA_JSON" ]; then
+            gh issue comment "$N" --body "👔 **Supervisor:** the \`play-release\` key is not set up in this repo yet, so the DELL local agent promotes $code to $to as before."
+            exit 0
+          fi
+          pip install -q google-auth requests
+          if out=$(python3 .handbook/scripts/play-promote.py "$PKG" "$code" "$from" "$to" /tmp/agent/notes.json 2>&1); then
+            { printf '%s\n\n' "$BODY"; echo "> ✅ Promoted by the Supervisor: $out <!-- agents:promoted -->"; } > /tmp/agent/new.md
+            gh api -X PATCH "repos/$GH_REPO/issues/comments/$CID" -F body=@/tmp/agent/new.md >/dev/null
+            gh issue comment "$N" --body "👔 **Supervisor:** $out (owner's OK in the comment above)."
+            [ "$final" = 1 ] && gh issue close "$N" --comment "All requested tracks are done." || true
+          else
+            printf '%s\n' "$out" | tail -3
+            gh issue comment "$N" --body "👔 **Supervisor:** promotion failed, nothing changed on Play: \`$(printf '%s' "$out" | tail -1 | cut -c1-200)\`"
+            exit 1
+          fi
+
+  # Release notes by a cloud agent (owner, 2026-11-26). The label play:notes on a kind:release issue (added by
+  # triage for the owner's promotion request, or by the DELL after an internal upload) starts it. The request is
+  # the newest `<!-- agents:notes-request from=<track> to=<tracks> final=<0|1> -->` comment. A fixed script reads
+  # the tracks with the play-release key; the model writes the notes without the key; the job posts the
+  # tick-to-promote comment that the `promote` job above acts on.
+  notes:
+    if: >-
+      github.event_name == 'issues' && github.event.action == 'labeled' && github.event.label.name == 'play:notes' &&
+      contains(github.event.issue.labels.*.name, 'kind:release') &&
+      (github.event.sender.login == github.repository_owner || github.event.sender.login == 'simplicity-agents[bot]')
+    concurrency:
+      group: notes-${{ github.repository }}-${{ github.event.issue.number }}
+      cancel-in-progress: false
+    runs-on: ubuntu-latest
+    environment: play-release
+    timeout-minutes: 20
+    steps:
+      - uses: actions/create-github-app-token@v1
+        id: app
+        with:
+          app-id: ${{ vars.AGENTS_APP_ID }}
+          private-key: ${{ secrets.AGENTS_APP_PRIVATE_KEY }}
+          owner: ${{ github.repository_owner }}
+          repositories: ${{ format('{0},studio-handbook-github', github.event.repository.name) }}
+      - uses: actions/checkout@v4
+        with: { fetch-depth: 0 }
+      - uses: actions/checkout@v4
+        with: { repository: simplicity-io/studio-handbook-github, ref: main, path: .handbook, token: "${{ steps.app.outputs.token }}" }
+      - name: Read Play tracks (fixed script; the only step with the key)
+        env:
+          PKG: ${{ inputs.app-package }}
+          PLAY_RELEASE_SA_JSON: ${{ secrets.PLAY_RELEASE_SA_JSON }}
+          GH_TOKEN: ${{ steps.app.outputs.token }}
+          N: ${{ github.event.issue.number }}
+        run: |
+          mkdir -p /tmp/agent
+          [ -n "$PKG" ] || PKG=$(grep -hoE "applicationId[ =]+['\"][a-z0-9_.]+['\"]" app/build.gradle* 2>/dev/null | head -1 | grep -oE "[a-z0-9_.]{3,}" | tail -1)
+          echo "$PKG" > /tmp/agent/pkg
+          if [ -z "$PLAY_RELEASE_SA_JSON" ] || [ -z "$PKG" ]; then
+            gh issue comment "$N" --body "👔 **Supervisor:** no \`play-release\` key or app package here, so the DELL local agent writes the release notes."
+            gh issue edit "$N" --remove-label play:notes --add-label needs:local; exit 1
+          fi
+          pip install -q google-auth requests
+          python3 .handbook/scripts/play-tracks.py "$PKG" > /tmp/agent/play.json
+      - name: Prepare
+        env:
+          GH_TOKEN: ${{ steps.app.outputs.token }}
+          N: ${{ github.event.issue.number }}
+        run: |
+          req=$(gh issue view "$N" --json comments --jq '[.comments[] | select(.author.login|test("simplicity")) | .body | capture("<!-- agents:notes-request (?<m>[^>]*)-->") | .m] | last // ""')
+          from=$(sed -nE 's/.*from=([a-z]+).*/\1/p' <<<"$req"); to=$(sed -nE 's/.*to=([a-z,]+).*/\1/p' <<<"$req")
+          final=$(sed -nE 's/.*final=([01]).*/\1/p' <<<"$req")
+          to=${to:-alpha,beta}; [ -n "$from" ] || { grep -q production <<<"$to" && from=beta || from=internal; }; final=${final:-1}
+          first=${to%%,*}
+          pick() { jq -r --arg t "$1" '[.tracks[$t][]? | select(.status == "completed") | .codes[] | tonumber] | max // 0' /tmp/agent/play.json; }
+          code=$(pick "$from"); base=$(pick "$first"); [ "$base" != 0 ] || base=$(pick production)
+          name=$(jq -r --arg t "$from" --arg c "$code" '[.tracks[$t][]? | select(.codes | index($c)) | .name] | first // ""' /tmp/agent/play.json)
+          if [ "$code" = 0 ] || [ "$code" -le "$base" ]; then
+            gh issue comment "$N" --body "👔 **Supervisor:** nothing newer on $from (versionCode $code) than on $first ($base); no release notes needed."
+            gh issue edit "$N" --remove-label play:notes; exit 1
+          fi
+          printf 'code=%s\nfrom=%s\nto=%s\nfinal=%s\n' "$code" "$from" "$to" "$final" > /tmp/agent/req
+          { echo "Promote versionCode $code ($name) from $from to $to."
+            echo "On $first now: versionCode $base."
+            echo "Listing languages: $(jq -r '.languages | join(", ")' /tmp/agent/play.json)"
+            grep -q production <<<"$to" && echo "This includes production: do step 4."
+            echo; echo "Open bug issues:"
+            gh issue list --state open --label kind:bug --json number,title --jq '.[] | "- #\(.number) \(.title)"'
+            echo; echo "The owner's comments on this issue, newest last (if they wrote or changed notes, use their wording):"
+            gh issue view "$N" --json comments --jq '[.comments[] | select(.author.login == env.GITHUB_REPOSITORY_OWNER and (.body | startswith("<!--") | not))] | .[-5:][] | "---\n" + .body'; } > /tmp/agent/notes-in.md
+          cat /tmp/agent/notes-in.md
+      - run: npm install -g "@anthropic-ai/claude-code@$CLAUDE_VERSION"
+      - name: Write notes (model, no Play key)
+        env:
+          CLAUDE_CODE_OAUTH_TOKEN: ${{ secrets.CLAUDE_CODE_OAUTH_TOKEN }}
+        run: |
+          source "$H/.agents/lib.sh"
+          run_claude "$H/.agents/prompts/supervisor-notes.md" /tmp/agent/out.json --model "$MODEL" --max-turns 25 \
+            --allowedTools "Read,Grep,Glob,Bash(git log:*),Bash(git show:*),Bash(git diff:*)"
+          json_from_result /tmp/agent/out.json > /tmp/agent/notes.json
+          cat /tmp/agent/notes.json
+      - name: Post the tick-to-promote comment
+        env:
+          GH_TOKEN: ${{ steps.app.outputs.token }}
+          N: ${{ github.event.issue.number }}
+        run: |
+          source "$H/.agents/lib.sh"; source /tmp/agent/req
+          langs=$(jq -r '.languages[]' /tmp/agent/play.json)
+          tracks=$(sed 's/,/ and /g' <<<"$to")
+          { echo "<!-- agents:promote code=$code from=$from to=$to final=$final -->"
+            echo "👔 **Supervisor** · **Release notes for $tracks** (versionCode $code), written by the Supervisor from: $(jq -r '.basis // ""' /tmp/agent/notes.json)"
+            echo
+            if grep -q production <<<"$to"; then
+              echo "**Blocking-issue check:**"; jq -r 'if (.blocking // []) == [] then "- none found" else .blocking[] | "- " + . end' /tmp/agent/notes.json; echo
+            fi
+            for l in $langs; do
+              t=$(jq -r --arg l "$l" '.notes[$l] // empty' /tmp/agent/notes.json); [ -n "$t" ] || continue
+              printf '```%s\n%s\n```\n' "$l" "$t"
+            done
+            echo
+            if grep -q production <<<"$to"; then echo "- [ ] OK: no blocking issue; promote $code to production with these notes"
+            else echo "- [ ] OK: promote $code to $tracks with these notes"; fi
+            echo; echo "Tick to promote from GitHub. To change the notes, reply with your text and re-add \`play:notes\`, or edit this comment before ticking."; } > /tmp/agent/c.md
+          gh issue comment "$N" -F /tmp/agent/c.md
+          gh issue edit "$N" --remove-label play:notes >/dev/null || true
+          set_state "$N" awaiting-owner
+
+  # Listing and tester changes in one tick (owner, 2026-11-26, card "Listing & testers too"). An agent posts an
+  # `agents:play-change` comment: what and why, one ```json block, one "OK: apply this Play change" box. The
+  # owner's tick is the OK (studio rules: listings and testers need it); a fixed script applies only listing
+  # text and tester groups, never prices, in-app products or anything else.
+  play-change:
+    if: >-
+      github.event_name == 'issue_comment' && github.event.action == 'edited' &&
+      !github.event.issue.pull_request && github.event.sender.login == github.repository_owner &&
+      (github.event.comment.user.login == github.repository_owner ||
+       github.event.comment.user.login == 'simplicity-agents[bot]') &&
+      contains(github.event.comment.body, '<!-- agents:play-change')
+    concurrency:
+      group: play-change-${{ github.repository }}-${{ github.event.comment.id }}
+      cancel-in-progress: false
+    runs-on: ubuntu-latest
+    environment: play-release
+    timeout-minutes: 10
+    steps:
+      - uses: actions/create-github-app-token@v1
+        id: app
+        with:
+          app-id: ${{ vars.AGENTS_APP_ID }}
+          private-key: ${{ secrets.AGENTS_APP_PRIVATE_KEY }}
+          owner: ${{ github.repository_owner }}
+          repositories: studio-handbook-github
+      - uses: actions/checkout@v4
+        with: { sparse-checkout: app, sparse-checkout-cone-mode: true }
+      - uses: actions/checkout@v4
+        with: { repository: simplicity-io/studio-handbook-github, ref: main, path: .handbook, sparse-checkout: scripts, token: "${{ steps.app.outputs.token }}" }
+      - env:
+          GH_TOKEN: ${{ github.token }}
+          GH_REPO: ${{ github.repository }}
+          CID: ${{ github.event.comment.id }}
+          N: ${{ github.event.issue.number }}
+          PKG: ${{ inputs.app-package }}
+          PLAY_RELEASE_SA_JSON: ${{ secrets.PLAY_RELEASE_SA_JSON }}
+        run: |
+          mkdir -p /tmp/agent
+          BODY=$(gh api "repos/$GH_REPO/issues/comments/$CID" --jq .body | tr -d '\r')
+          grep -q '^- \[[xX]\] OK: apply this Play change' <<<"$BODY" || { echo "OK box not ticked"; exit 0; }
+          grep -q '<!-- agents:play-applied' <<<"$BODY" && { echo "already applied"; exit 0; }
+          python3 - "$BODY" > /tmp/agent/change.json <<'PY' || { gh issue comment "$N" --body "👔 **Supervisor:** the Play change has no single \`\`\`json block; nothing changed."; exit 1; }
+          import json, re, sys
+          blocks = re.findall(r"^```json\n(.*?)\n```", sys.argv[1], re.M | re.S)
+          if len(blocks) != 1:
+              sys.exit("need exactly one json block")
+          print(json.dumps(json.loads(blocks[0])))
+          PY
+          [ -n "$PKG" ] || PKG=$(grep -hoE "applicationId[ =]+['\"][a-z0-9_.]+['\"]" app/build.gradle* 2>/dev/null | head -1 | grep -oE "[a-z0-9_.]{3,}" | tail -1)
+          [ -n "$PKG" ] && [ -n "$PLAY_RELEASE_SA_JSON" ] || { gh issue comment "$N" --body "👔 **Supervisor:** no \`play-release\` key or app package here; nothing changed."; exit 1; }
+          pip install -q google-auth requests
+          if out=$(python3 .handbook/scripts/play-apply.py "$PKG" /tmp/agent/change.json 2>&1); then
+            { printf '%s\n\n' "$BODY"; echo "> ✅ Applied by the Supervisor: $out <!-- agents:play-applied -->"; } > /tmp/agent/new.md
+            gh api -X PATCH "repos/$GH_REPO/issues/comments/$CID" -F body=@/tmp/agent/new.md >/dev/null
+            gh issue comment "$N" --body "👔 **Supervisor:** $out (owner's OK in the comment above). Listing changes may go through Play review."
+          else
+            gh issue comment "$N" --body "👔 **Supervisor:** Play change refused or failed, nothing changed: \`$(printf '%s' "$out" | tail -1 | cut -c1-200)\`"
+            exit 1
+          fi
+
+  # Owner's pasted screenshots show at 50% width (owner, 2026-11-27): GitHub pastes them at full size. Rewrites the
+  # owner's new or edited comment, or new issue / PR body, with GITHUB_TOKEN (its edits start no workflows, so no loop).
+  shrink-images:
+    if: >-
+      github.event.sender.login == github.repository_owner && (
+      (github.event_name == 'issue_comment' && github.event.action != 'deleted' &&
+       contains(github.event.comment.body, 'user-attachments')) ||
+      (github.event_name == 'issues' && github.event.action == 'opened' && contains(github.event.issue.body, 'user-attachments')) ||
+      (github.event_name == 'pull_request' && github.event.action == 'opened' &&
+       contains(github.event.pull_request.body, 'user-attachments')))
+    runs-on: ubuntu-latest
+    timeout-minutes: 3
+    permissions: { issues: write, pull-requests: write }
+    steps:
+      - env:
+          GH_TOKEN: ${{ github.token }}
+          REPO: ${{ github.repository }}
+        run: |
+          python3 - <<'PY' > /tmp/new.md || exit 0
+          import json, os, re, sys
+          e = json.load(open(os.environ["GITHUB_EVENT_PATH"]))
+          obj = e.get("comment") or e.get("issue") or e.get("pull_request")
+          body = obj.get("body") or ""
+          host = r'https://(?:github\.com/user-attachments/assets/|private-user-images\.githubusercontent\.com/|user-images\.githubusercontent\.com/)'
+          def tag(m):
+              t = m.group(0)
+              if not re.search(r'src="' + host, t): return t
+              t = re.sub(r'\s(?:width|height)="[^"]*"', '', t)
+              return t.replace('<img', '<img width="50%"', 1)
+          new = re.sub(r'<img\b[^>]*>', tag, body)
+          new = re.sub(r'!\[([^\]]*)\]\((' + host + r'[^)\s]+)\)',
+                       lambda m: '<img width="50%" alt="' + m.group(1).replace('"', "'") + '" src="' + m.group(2) + '">', new)
+          if new == body: sys.exit(1)
+          path = (f"issues/comments/{obj['id']}" if e.get("comment") else
+                  f"pulls/{obj['number']}" if e.get("pull_request") else f"issues/{obj['number']}")
+          open("/tmp/path", "w").write(path)
+          sys.stdout.write(new)
+          PY
+          [ -s /tmp/path ] || { echo "nothing to resize"; exit 0; }
+          jq -Rs '{body: .}' /tmp/new.md | gh api -X PATCH "repos/$REPO/$(cat /tmp/path)" --input - --jq .html_url
