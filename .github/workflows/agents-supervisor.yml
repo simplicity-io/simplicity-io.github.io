@@ -459,11 +459,12 @@ jobs:
           app-id: ${{ vars.AGENTS_APP_ID }}
           private-key: ${{ secrets.AGENTS_APP_PRIVATE_KEY }}
           owner: ${{ github.repository_owner }}
-          repositories: ${{ github.event.repository.name == 'studio-handbook-github' && 'studio-handbook-github' || format('{0},studio-handbook-github', github.event.repository.name) }}
+          repositories: ${{ github.event.repository.name == 'studio-handbook-github' && 'studio-handbook-github,simplicity-io.github.io' || (github.event.repository.name == 'simplicity-io.github.io' && 'simplicity-io.github.io,studio-handbook-github' || format('{0},studio-handbook-github,simplicity-io.github.io', github.event.repository.name)) }}
       - uses: actions/checkout@v4
         with: { repository: simplicity-io/studio-handbook-github, ref: main, path: .handbook, token: "${{ steps.app.outputs.token }}" }
       - env:
           GH_TOKEN: ${{ github.token }}
+          APP_TOKEN: ${{ steps.app.outputs.token }}
           GH_REPO: ${{ github.repository }}
           HEAD: ${{ github.head_ref }}
           MERGED: ${{ github.event.pull_request.merged }}
@@ -504,6 +505,22 @@ jobs:
               echo "- [ ] Then promote to production (blocking-issue check and release notes come to you first)"
               [ -z "$LOCAL" ] || echo; [ -z "$LOCAL" ] || echo "The local checks in #$LOCAL run first."; } > /tmp/agent/r.md
             gh pr comment "$PR" -F /tmp/agent/r.md
+          fi
+          # Site hand-off (owner, 2026-11-28; phase 2b): a merged app PR whose description lists "Site changes needed"
+          # (for example the weekly ACC docs and site sync) opens one issue in the site repo as the App bot, so the
+          # site's Supervisor and writer take it. Nothing is opened when the section is missing, empty or says none.
+          gh pr view "$PR" --json body --jq .body | tr -d '\r' | awk '
+            /^#+ *Site changes needed/ {on=1; next}
+            on && /^#+ / {exit}
+            on {print}' | sed '/^[[:space:]]*$/d' > /tmp/agent/site.md
+          if [ -s /tmp/agent/site.md ] && ! grep -qiE '^[-* ]*(none|nothing|all in sync)\.?$' /tmp/agent/site.md && \
+             [ "$GH_REPO" != simplicity-io/simplicity-io.github.io ]; then
+            { echo "From $GH_REPO#$PR ($TITLE), merged as ${SHA:0:7}: the site pages below no longer match the app's sources."
+              echo "Source files are in $GH_REPO at ${SHA:0:7}. Change only these pages; \`scripts/check-site.py\` must pass."; echo
+              cat /tmp/agent/site.md; } > /tmp/agent/s.md
+            url=$(GH_TOKEN=$APP_TOKEN gh issue create -R simplicity-io/simplicity-io.github.io \
+              --title "Site: sync from ${GH_REPO#*/} #$PR" -F /tmp/agent/s.md)
+            gh pr comment "$PR" --body "👔 **Supervisor:** site changes handed to the site writer: $url"
           fi
 
   # The owner ticked a box in the release comment above: open one needs:local release issue per PR, and
