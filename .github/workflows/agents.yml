@@ -1,0 +1,25 @@
+# Agents (phase 2b, owner 2026-11-27): site issues and writer PRs handled by the shared workflows, replacing the
+# "Web page writer CLOUD" session once 3 writer PRs pass the site check (studio-handbook-github plan/ROADMAP.md).
+# Thin caller of simplicity-io/studio-handbook-github (policy/ORGANIZATION.md "Repos").
+name: agents
+on:
+  issues:
+    types: [opened, reopened, labeled]
+  pull_request:
+    types: [opened, synchronize, closed]
+  issue_comment:
+    types: [created, edited]
+  workflow_dispatch:
+permissions:
+  contents: read
+  issues: write
+  pull-requests: write
+jobs:
+  supervisor:
+    uses: simplicity-io/studio-handbook-github/.github/workflows/agents-supervisor.yml@main
+    secrets: inherit
+    with:
+      roles: writer
+      verify: python3 scripts/check-site.py
+      # Ads file, workflows and the site's own checks stay with the owner.
+      protected: '^(\.github|scripts)/|^app-ads\.txt$|^CNAME$'
