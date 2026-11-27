@@ -784,7 +784,9 @@ jobs:
           else
             # A failure is never a dead end (owner, 2026-11-27): say what to do, hand the issue to the owner (assigned,
             # so GitHub notifies them) and keep the box re-tickable: untick and tick it again to retry.
-            err=$(printf '%s' "$out" | tail -1 | cut -c1-300)
+            printf '%s\n' "$out"   # full error in the job log
+            err=$(printf '%s' "$out" | grep -m1 '^Play API ' || printf '%s' "$out" | tail -1)
+            err=$(printf '%s' "$err" | cut -c1-300)
             proj=$(grep -oE 'project [0-9]{6,}' <<<"$out" | grep -oE '[0-9]+' | head -1)
             if grep -qiE 'has not been used in project|is disabled|SERVICE_DISABLED' <<<"$out"; then
               fix="Enable the Google Play Android Developer API in the key's Google Cloud project (one click, then wait about 5 minutes): https://console.cloud.google.com/apis/library/androidpublisher.googleapis.com${proj:+?project=$proj}"
