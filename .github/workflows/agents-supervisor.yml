@@ -322,16 +322,22 @@ jobs:
   # DELL local agent. Its own and the bot's comments start nothing (owner author only); nor do comments
   # agents post under the owner's account (the DELL local agent, sessions): they carry <!-- agent:... -->.
   comment:
+    # Also the owner's PR reviews (owner, 2026-11-28: a "Request changes" review on site#5 went unseen): a submitted
+    # review with a body, inline comments or changes requested is handled like a comment; a bare approval is not.
     if: >-
+      vars.AGENTS_ENABLED != 'false' && ((
       github.event_name == 'issue_comment' &&
       (github.event.action == 'created' || (github.event.action == 'edited' && github.event.changes.body.from != null &&
        github.event.sender.login == github.repository_owner)) &&
       github.event.issue.pull_request && github.event.issue.state == 'open' &&
-      vars.AGENTS_ENABLED != 'false' && github.event.comment.user.login == github.repository_owner &&
-      !contains(github.event.comment.body, '<!-- agent:') && !startsWith(github.event.comment.body, '**Local')
+      github.event.comment.user.login == github.repository_owner &&
+      !contains(github.event.comment.body, '<!-- agent:') && !startsWith(github.event.comment.body, '**Local')) || (
+      github.event_name == 'pull_request_review' && github.event.action == 'submitted' &&
+      github.event.review.user.login == github.repository_owner && github.event.pull_request.state == 'open' &&
+      github.event.review.state != 'approved' && !contains(github.event.review.body || '', '<!-- agent:')))
     runs-on: ubuntu-latest
     timeout-minutes: 45
-    concurrency: comment-${{ github.event.issue.number }}
+    concurrency: comment-${{ github.event.issue.number || github.event.pull_request.number }}
     steps:
       - uses: actions/create-github-app-token@v1
         id: app
@@ -343,13 +349,14 @@ jobs:
       - name: Agent PR?
         env:
           GH_TOKEN: ${{ steps.app.outputs.token }}
-          PR: ${{ github.event.issue.number }}
-          CID: ${{ github.event.comment.id }}
+          PR: ${{ github.event.issue.number || github.event.pull_request.number }}
+          CID: ${{ github.event.comment.id || github.event.review.id }}
+          REVIEW: ${{ github.event_name == 'pull_request_review' }}
         run: |
           head=$(gh pr view "$PR" -R "$GITHUB_REPOSITORY" --json headRefName --jq .headRefName)
           case "$head" in agent/issue-*) echo "HEAD_REF=$head" >> "$GITHUB_ENV"; echo "N=${head#agent/issue-}" >> "$GITHUB_ENV"
               # Seen at once (owner, 2026-11-26): an eyes reaction on the owner's comment.
-              gh api -X POST "repos/$GITHUB_REPOSITORY/issues/comments/$CID/reactions" -f content=eyes > /dev/null || true ;;
+              [ "$REVIEW" = true ] || gh api -X POST "repos/$GITHUB_REPOSITORY/issues/comments/$CID/reactions" -f content=eyes > /dev/null || true ;;
             *) echo "Not an agent PR ($head): nothing to do." ;; esac
       - if: env.HEAD_REF != ''
         uses: actions/checkout@v4
@@ -364,10 +371,13 @@ jobs:
         env:
           GH_TOKEN: ${{ steps.app.outputs.token }}
           CLAUDE_CODE_OAUTH_TOKEN: ${{ secrets.CLAUDE_CODE_OAUTH_TOKEN }}
-          PR: ${{ github.event.issue.number }}
-          COMMENT: ${{ github.event.comment.body }}
+          PR: ${{ github.event.issue.number || github.event.pull_request.number }}
+          COMMENT: ${{ github.event.comment.body || github.event.review.body }}
           ACTION: ${{ github.event.action }}
           BEFORE: ${{ github.event.changes.body.from }}
+          CID: ${{ github.event.comment.id || github.event.review.id }}
+          REVIEW: ${{ github.event_name == 'pull_request_review' }}
+          REVIEW_STATE: ${{ github.event.review.state }}
           SCREENS_API: ${{ inputs.screens-api }}
           PKG: ${{ inputs.app-package }}
         run: |
@@ -379,7 +389,13 @@ jobs:
               echo; echo "# The owner EDITED an earlier comment (owner, 2026-11-27: edits count as new requests)."
               echo "Answer what changed. Before:"; printf '%s\n' "$BEFORE" | sed 's/^/> /'
             fi
-            echo; echo "# The owner's comment"; printf '%s\n' "$COMMENT"
+            if [ "$REVIEW" = true ]; then
+              echo; echo "# The owner's review ($REVIEW_STATE)"; printf '%s\n' "$COMMENT"
+              gh api "repos/$GITHUB_REPOSITORY/pulls/$PR/reviews/$CID/comments" \
+                --jq '.[] | "\n- On `" + .path + "` line " + ((.line // .original_line) | tostring) + ":\n" + .body'
+            else
+              echo; echo "# The owner's comment"; printf '%s\n' "$COMMENT"
+            fi
             echo; echo "# PR"; gh pr view "$PR" --json title,body --jq '"## " + .title + "\n\n" + .body'
             echo; echo "# Files changed"; gh pr diff "$PR" --name-only
             echo; echo "# Earlier PR comments (newest last)"
@@ -395,14 +411,15 @@ jobs:
         env:
           GH_TOKEN: ${{ steps.app.outputs.token }}
           GH_TOKEN_QUIET: ${{ github.token }}
-          PR: ${{ github.event.issue.number }}
-          CID: ${{ github.event.comment.id }}
-          COMMENT: ${{ github.event.comment.body }}
+          PR: ${{ github.event.issue.number || github.event.pull_request.number }}
+          CID: ${{ github.event.comment.id || github.event.review.id }}
+          REVIEW: ${{ github.event_name == 'pull_request_review' }}
+          COMMENT: ${{ github.event.comment.body || github.event.review.body }}
           ACTION: ${{ github.event.action }}
         run: |
           source "$H/.agents/lib.sh"
           d=/tmp/agent/d.json; title=$(gh pr view "$PR" --json title --jq .title)
-          { echo "<!-- supervisor:owner-comment $CID -->"; echo "👔 **Supervisor** (on your $([ "$ACTION" = edited ] && echo 'edited ')comment): $(jq -r '.reply // ""' $d)"; } > /tmp/agent/c.md
+          { echo "<!-- supervisor:owner-comment $CID -->"; echo "👔 **Supervisor** (on your $([ "$REVIEW" = true ] && echo 'review' || { [ "$ACTION" = edited ] && echo 'edited comment' || echo comment; })): $(jq -r '.reply // ""' $d)"; } > /tmp/agent/c.md
           if [ "$(jq '.screens // [] | length' $d)" -gt 0 ]; then
             { echo; echo "Screenshots are taken by the DELL local agent on lab devices; it posts them here."; } >> /tmp/agent/c.md
             jq -r '.screens[] | "- needs:local: screenshot " + .name + " (" + ([(if .night then "dark" else "light" end), (.locale // "en-US"), (if .tablet then "tablet" else "phone" end)] | join(", ")) + ")" + (if (.how // "") != "" then ": " + .how else "" end)' $d >> /tmp/agent/local.txt
