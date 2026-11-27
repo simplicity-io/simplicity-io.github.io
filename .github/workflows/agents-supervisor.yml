@@ -754,7 +754,7 @@ jobs:
       - uses: actions/checkout@v4
         with: { sparse-checkout: app, sparse-checkout-cone-mode: true }
       - uses: actions/checkout@v4
-        with: { repository: simplicity-io/studio-handbook-github, ref: main, path: .handbook, sparse-checkout: scripts, token: "${{ steps.app.outputs.token }}" }
+        with: { repository: simplicity-io/studio-handbook-github, ref: main, path: .handbook, sparse-checkout: "scripts\n.agents", token: "${{ steps.app.outputs.token }}" }
       - env:
           GH_TOKEN: ${{ github.token }}
           GH_REPO: ${{ github.repository }}
@@ -782,7 +782,26 @@ jobs:
             gh api -X PATCH "repos/$GH_REPO/issues/comments/$CID" -F body=@/tmp/agent/new.md >/dev/null
             gh issue comment "$N" --body "👔 **Supervisor:** $out (owner's OK in the comment above). Listing changes may go through Play review."
           else
-            gh issue comment "$N" --body "👔 **Supervisor:** Play change refused or failed, nothing changed: \`$(printf '%s' "$out" | tail -1 | cut -c1-200)\`"
+            # A failure is never a dead end (owner, 2026-11-27): say what to do, hand the issue to the owner (assigned,
+            # so GitHub notifies them) and keep the box re-tickable: untick and tick it again to retry.
+            err=$(printf '%s' "$out" | tail -1 | cut -c1-300)
+            proj=$(grep -oE 'project [0-9]{6,}' <<<"$out" | grep -oE '[0-9]+' | head -1)
+            if grep -qiE 'has not been used in project|is disabled|SERVICE_DISABLED' <<<"$out"; then
+              fix="Enable the Google Play Android Developer API in the key's Google Cloud project (one click, then wait about 5 minutes): https://console.cloud.google.com/apis/library/androidpublisher.googleapis.com${proj:+?project=$proj}"
+            elif grep -qiE '(^|[^0-9])(401|403)([^0-9]|$)|permission|forbidden|unauthori' <<<"$out"; then
+              fix="In Play Console, Users and permissions: give the play-release service account access to this app with the rights this change needs."
+            elif grep -qiE '(^|[^0-9])404([^0-9]|$)|not found' <<<"$out"; then
+              fix="Check that the app exists in Play Console under package $PKG."
+            else
+              fix="The agent that posted the change reads this error and posts a corrected change."
+            fi
+            { echo "👔 **Supervisor:** the Play change failed; nothing changed."; echo
+              echo "- **To fix:** $fix"
+              echo "- **Then:** untick and tick the OK box again to retry."; echo
+              echo "Error: \`$err\`"; } > /tmp/agent/fail.md
+            gh issue comment "$N" -F /tmp/agent/fail.md
+            source .handbook/.agents/lib.sh
+            set_state "$N" awaiting-owner
             exit 1
           fi
 
