@@ -788,7 +788,9 @@ jobs:
             err=$(printf '%s' "$out" | grep -m1 '^Play API ' || printf '%s' "$out" | tail -1)
             err=$(printf '%s' "$err" | cut -c1-300)
             proj=$(grep -oE 'project [0-9]{6,}' <<<"$out" | grep -oE '[0-9]+' | head -1)
-            if grep -qiE 'has not been used in project|is disabled|SERVICE_DISABLED' <<<"$out"; then
+            if grep -qiE 'MalformedError|missing fields|JSONDecodeError|Expecting value|private_key' <<<"$out"; then
+              fix="The repo's \`play-release\` secret PLAY_RELEASE_SA_JSON is not a valid service-account key: paste the whole JSON key file of the studio's GitHub Play key (the one the other app repos use) into it."
+            elif grep -qiE 'has not been used in project|is disabled|SERVICE_DISABLED' <<<"$out"; then
               fix="Enable the Google Play Android Developer API in the key's Google Cloud project (one click, then wait about 5 minutes): https://console.cloud.google.com/apis/library/androidpublisher.googleapis.com${proj:+?project=$proj}"
             elif grep -qiE '(^|[^0-9])(401|403)([^0-9]|$)|permission|forbidden|unauthori' <<<"$out"; then
               fix="In Play Console, Users and permissions: give the play-release service account access to this app with the rights this change needs."
