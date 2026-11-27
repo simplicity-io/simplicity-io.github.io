@@ -29,4 +29,6 @@ jobs:
     secrets: inherit
     with:
       role: writer
+      writer-files: '\.(md|html|txt|xml)$'
+      verify: python3 scripts/check-site.py
       protected: '^(\.github|scripts)/|^app-ads\.txt$|^CNAME$'

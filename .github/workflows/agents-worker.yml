@@ -12,6 +12,7 @@ on:
       max-turns: { type: number, default: 0 }
       protected: { type: string, default: '^(\.github|\.agents|scripts|templates)/' }
       verify: { type: string, default: "", description: "Build/test command; the engineer may run any command starting with its first word" }
+      writer-files: { type: string, default: '\.md$', description: "Files the writer may change (regex); the site also allows its HTML pages" }
       kvm: { type: boolean, default: false, description: "Enable KVM before the verify command (it runs an emulator, e.g. MMI smoke test)" }
       bump-file: { type: string, default: "", description: "Gradle file whose versionCode/versionName the workflow bumps (engineer)" }
       bump-title: { type: string, default: "Bump version to {name} ({code})" }
@@ -100,6 +101,7 @@ jobs:
           GH_TOKEN: ${{ steps.app.outputs.token }}
           N: ${{ github.event.issue.number }}
           ROLE: ${{ inputs.role }}
+          WRITER_FILES: ${{ inputs.writer-files }}
           ICON: ${{ inputs.role == 'writer' && '✍️' || '🛸' }}
           PROTECTED: ${{ inputs.protected }}
           BUMP_FILE: ${{ inputs.bump-file }}
@@ -112,8 +114,8 @@ jobs:
           if [ -z "$changed" ]; then
             gh issue comment "$N" --body "${ICON} **${ROLE^}:** no change made; owner decision needed. $(jq -r '.summary // [] | join(" ")' /tmp/agent/result.json)"
             gh issue edit "$N" --add-label owner:decision; set_state "$N" blocked; exit 0; fi
-          if [ "$ROLE" = writer ] && grep -qvE '\.md$' <<<"$changed"; then
-            gh issue comment "$N" --body "✍️ **Writer:** stopped, a non-Markdown file was changed."; set_state "$N" blocked; exit 1; fi
+          if [ "$ROLE" = writer ] && grep -qvE "$WRITER_FILES" <<<"$changed"; then
+            gh issue comment "$N" --body "✍️ **Writer:** stopped, it changed a file type writers may not change (allowed: \`$WRITER_FILES\`)."; set_state "$N" blocked; exit 1; fi
           git config user.name "simplicity-agents[bot]"
           git config user.email "simplicity-agents[bot]@users.noreply.github.com"
           title=$(jq -r .title /tmp/agent/result.json)
