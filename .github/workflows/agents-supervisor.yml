@@ -63,6 +63,7 @@ jobs:
         with: { repository: simplicity-io/studio-handbook-github, ref: main, path: .handbook, token: "${{ steps.app.outputs.token }}" }
       - run: npm install -g "@anthropic-ai/claude-code@$CLAUDE_VERSION"
       - name: Plan
+        id: plan
         env:
           CLAUDE_CODE_OAUTH_TOKEN: ${{ secrets.CLAUDE_CODE_OAUTH_TOKEN }}
           GH_TOKEN: ${{ github.token }}
@@ -91,6 +92,15 @@ jobs:
           run_claude "$H/.agents/prompts/supervisor-triage.md" /tmp/agent/out.json --model "$MODEL" --max-turns 15 --allowedTools "Read,Grep,Glob"
           json_from_result /tmp/agent/out.json > /tmp/agent/decision.json
           cat /tmp/agent/decision.json
+          echo "action=$(jq -r .action /tmp/agent/decision.json)" >> "$GITHUB_OUTPUT"
+      # Cross-app split (owner, 2026-11-28): a token for every repo the App is installed on, only when needed.
+      - uses: actions/create-github-app-token@v1
+        id: wide
+        if: steps.plan.outputs.action == 'split'
+        with:
+          app-id: ${{ vars.AGENTS_APP_ID }}
+          private-key: ${{ secrets.AGENTS_APP_PRIVATE_KEY }}
+          owner: ${{ github.repository_owner }}
       - name: Apply
         env:
           GH_TOKEN: ${{ steps.app.outputs.token }}
@@ -98,6 +108,7 @@ jobs:
           ACTION: ${{ (github.event.action == 'edited' || github.event_name == 'issue_comment') && 'labeled' || github.event.action }}   # a ticked decision or a typed answer = owner go
           ROLES: ${{ inputs.roles }}
           OPENER: ${{ github.event.issue.user.login }}
+          WIDE_TOKEN: ${{ steps.wide.outputs.token }}
         run: |
           source "$H/.agents/lib.sh"
           # The owner re-labelled state:triage after answering: the decision is made.
@@ -118,7 +129,27 @@ jobs:
           # the release notes (notes job) and the owner's tick promotes it; the DELL is not needed.
           if [ "$action" = promote ] && [ "$OPENER" != "$GITHUB_REPOSITORY_OWNER" ]; then action=ask
             jq '.question = "Promote a build that is already on Play?" | .options = ["A Yes, write the release notes","B Close it"]' $d > /tmp/agent/d2.json && d=/tmp/agent/d2.json; fi
+          # "split" (owner, 2026-11-28): a cross-app request from the owner becomes one linked issue per app repo;
+          # each repo's own Supervisor then triages its part. Agent-filed issues are never split.
+          if [ "$action" = split ] && [ "$OPENER" != "$GITHUB_REPOSITORY_OWNER" ]; then action=ask
+            jq '.question = "This touches several repos. Split it into one issue per repo?" | .options = ["A Yes, split it","B Close it"]' $d > /tmp/agent/d2.json && d=/tmp/agent/d2.json; fi
           case "$action" in
+            split)
+              GH_TOKEN=$WIDE_TOKEN gh api /installation/repositories --paginate --jq '.repositories[].name' > /tmp/agent/repos.txt
+              { echo "👔 **Supervisor plan** (cross-app)"; jq -r '.plan[] | "- " + .' $d; echo; echo "Split into one issue per repo; each repo's Supervisor takes its part:"; } > /tmp/agent/c.md
+              opened=0
+              for i in $(jq -r '.parts | keys[]' $d); do
+                repo=$(jq -r ".parts[$i].repo" $d); title=$(jq -r ".parts[$i].title" $d)
+                if ! grep -qx "$repo" /tmp/agent/repos.txt || [ "$repo" = studio ]; then echo "- ⚠️ \`$repo\`: not a repo the agents work in; skipped" >> /tmp/agent/c.md; continue; fi
+                { echo "Part of $GITHUB_REPOSITORY#$N (owner's cross-app request), filed by the Supervisor (basis: sub-issue of its own plan)."; echo
+                  jq -r ".parts[$i].body" $d; } > /tmp/agent/p.md
+                if [ "simplicity-io/$repo" = "$GITHUB_REPOSITORY" ]; then tok=$GH_TOKEN; else tok=$WIDE_TOKEN; fi
+                url=$(GH_TOKEN=$tok gh issue create -R "simplicity-io/$repo" --title "$title" -F /tmp/agent/p.md) && opened=1 \
+                  && echo "- [ ] $url" >> /tmp/agent/c.md || echo "- ⚠️ \`$repo\`: issue could not be opened" >> /tmp/agent/c.md
+              done
+              { echo; echo "Close this issue when every part is done."; } >> /tmp/agent/c.md
+              gh issue comment "$N" -F /tmp/agent/c.md
+              if [ "$opened" = 1 ]; then set_state "$N" in-progress; else set_state "$N" blocked; fi ;;
             promote)
               from=$(jq -r '.from // ""' $d); to=$(jq -r '.to // "alpha,beta"' $d)
               { echo "<!-- agents:notes-request from=$from to=$to final=1 -->"
