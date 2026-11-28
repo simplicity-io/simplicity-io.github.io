@@ -147,9 +147,16 @@ jobs:
                 url=$(GH_TOKEN=$tok gh issue create -R "simplicity-io/$repo" --title "$title" -F /tmp/agent/p.md) && opened=1 \
                   && echo "- [ ] $url" >> /tmp/agent/c.md || echo "- ⚠️ \`$repo\`: issue could not be opened" >> /tmp/agent/c.md
               done
-              { echo; echo "Close this issue when every part is done."; } >> /tmp/agent/c.md
-              gh issue comment "$N" -F /tmp/agent/c.md
-              if [ "$opened" = 1 ]; then set_state "$N" in-progress; else set_state "$N" blocked; fi ;;
+              # One part = forwarded (owner, 2026-11-28): this issue is closed with the link; the work goes on there.
+              if [ "$opened" = 1 ] && [ "$(jq '.parts | length' $d)" = 1 ]; then
+                sed -i 's/^Split into one issue per repo; each repo.s Supervisor takes its part:$/Forwarded to the repo it belongs to; its Supervisor takes it from here:/' /tmp/agent/c.md
+                gh issue comment "$N" -F /tmp/agent/c.md
+                set_state "$N" done; gh issue close "$N" --reason completed
+              else
+                { echo; echo "Close this issue when every part is done."; } >> /tmp/agent/c.md
+                gh issue comment "$N" -F /tmp/agent/c.md
+                if [ "$opened" = 1 ]; then set_state "$N" in-progress; else set_state "$N" blocked; fi
+              fi ;;
             promote)
               from=$(jq -r '.from // ""' $d); to=$(jq -r '.to // "alpha,beta"' $d)
               { echo "<!-- agents:notes-request from=$from to=$to final=1 -->"
