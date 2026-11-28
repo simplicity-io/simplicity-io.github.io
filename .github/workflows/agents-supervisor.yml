@@ -42,7 +42,7 @@ jobs:
         contains(github.event.issue.labels.*.name, 'agents:retry')))))) || (
       github.event_name == 'issue_comment' && github.event.action == 'created' && !github.event.issue.pull_request &&
       github.event.sender.login == github.repository_owner && !contains(github.event.comment.body, '<!-- agent:') &&
-      contains(github.event.issue.labels.*.name, 'state:awaiting-owner')) || (
+      contains(github.event.issue.labels.*.name, 'state:awaiting-owner') && !contains(github.event.issue.labels.*.name, 'agent:policy')) || (
       github.event_name == 'issue_comment' && github.event.action == 'edited' && !github.event.issue.pull_request &&
       github.event.sender.login == github.repository_owner && github.event.comment.user.login == 'simplicity-agents[bot]' &&
       contains(github.event.comment.body, '**Owner decision needed**') && contains(github.event.comment.body, '- [x]') &&
@@ -133,7 +133,16 @@ jobs:
           # each repo's own Supervisor then triages its part. Agent-filed issues are never split.
           if [ "$action" = split ] && [ "$OPENER" != "$GITHUB_REPOSITORY_OWNER" ]; then action=ask
             jq '.question = "This touches several repos. Split it into one issue per repo?" | .options = ["A Yes, split it","B Close it"]' $d > /tmp/agent/d2.json && d=/tmp/agent/d2.json; fi
+          # "policy" (owner, 2026-11-28): the owner's rule change goes to the Policy manager (policy.yml), handbook only.
+          if [ "$action" = policy ] && { [ "$OPENER" != "$GITHUB_REPOSITORY_OWNER" ] || [ "${GITHUB_REPOSITORY#*/}" != studio-handbook-github ]; }; then action=ask
+            jq '.question = "This reads as a policy change. Post it in studio-handbook-github, where the Policy manager takes it?" | .options = ["A I will post it there","B Close it"]' $d > /tmp/agent/d2.json && d=/tmp/agent/d2.json; fi
           case "$action" in
+            policy)
+              { echo "👔 **Supervisor plan**"; jq -r '.plan[] | "- " + .' $d; echo; echo "Handed to the 📜 Policy manager."; } > /tmp/agent/c.md
+              gh issue comment "$N" -F /tmp/agent/c.md
+              gh label create agent:policy --color c5def5 --description "Policy manager role (GitHub)" >/dev/null 2>&1 || true
+              gh issue edit "$N" --add-label "agent:policy,kind:policy"
+              set_state "$N" ready-to-work ;;   # App token: this label starts policy.yml
             split)
               GH_TOKEN=$WIDE_TOKEN gh api /installation/repositories --paginate --jq '.repositories[].name' > /tmp/agent/repos.txt
               { echo "👔 **Supervisor plan** (cross-app)"; jq -r '.plan[] | "- " + .' $d; echo; echo "Split into one issue per repo; each repo's Supervisor takes its part:"; } > /tmp/agent/c.md
