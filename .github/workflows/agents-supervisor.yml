@@ -11,7 +11,7 @@ on:
       verify: { type: string, default: "", description: "Build/test command the review runs (app repos)" }
       link-check: { type: boolean, default: false, description: "Run scripts/check-links.py of the caller repo" }
       protected: { type: string, default: '^(\.github|\.agents|scripts|templates)/' }
-      sensitive: { type: string, default: '^(CLAUDE\.md|plan/(DECISIONS|OPEN-DECISIONS)\.md|policy/(PERMISSIONS|SECURITY|COSTS)\.md)$' }
+      sensitive: { type: string, default: '^(CLAUDE\.md|rules/.*|plan/(DECISIONS|OPEN-DECISIONS)\.md|policy/(PERMISSIONS|SECURITY|COSTS)\.md)$' }
       merge-method: { type: string, default: "squash" }
       model: { type: string, default: "claude-sonnet-5-5" }
       kvm: { type: boolean, default: false, description: "Enable KVM before the verify command (it runs an emulator, e.g. MMI smoke test)" }
@@ -253,7 +253,13 @@ jobs:
               --jq '.comments[] | select(.author.login|test("simplicity")) | "\n---\n" + .body' >> /tmp/agent/issue.md
           fi
           echo "N=$N" >> "$GITHUB_ENV"
-          gh pr diff "$PR" > /tmp/agent/diff.patch
+          # Big PRs (over 300 files, owner 2026-11-28: the studio move): GitHub refuses the diff, so list the files
+          # from the files API and give the reviewer the diff of the text files that fit.
+          gh api "repos/$GITHUB_REPOSITORY/pulls/$PR/files" --paginate --jq '.[].filename' > /tmp/agent/files.txt
+          if ! gh pr diff "$PR" > /tmp/agent/diff.patch 2>/dev/null; then
+            { echo "# Diff too large for GitHub ($(wc -l < /tmp/agent/files.txt) files); patches of the first 300 files:"
+              gh api "repos/$GITHUB_REPOSITORY/pulls/$PR/files" --paginate --jq '.[] | "--- " + .filename + " (" + .status + ")\n" + (.patch // "(binary or too large)")' | head -c 400000 || true; } > /tmp/agent/diff.patch
+          fi
           ok=1; : > /tmp/agent/checks.txt
           # Verification table (owner, 2026-11-25): filled by the workflow from what really ran, not by a model.
           where="GitHub Actions, ubuntu-latest (cloud VM)"
@@ -271,7 +277,7 @@ jobs:
             else r=FAILED; ok=0; echo "verify: FAILED (last 40 lines)" >> /tmp/agent/checks.txt; tail -40 /tmp/agent/verify.log >> /tmp/agent/checks.txt; fi
             echo "| \`$VERIFY\` | $where | $r |" >> /tmp/agent/table.md
           fi
-          if gh pr diff "$PR" --name-only | grep -qE "$PROTECTED"; then
+          if grep -qE "$PROTECTED" /tmp/agent/files.txt; then
             echo "protected path changed" >> /tmp/agent/checks.txt; ok=0; r="changed (blocked)"; else r="untouched"; fi
           echo "| Protected paths | $where | $r |" >> /tmp/agent/table.md
           echo "CHECKS_OK=$ok" >> "$GITHUB_ENV"
@@ -331,7 +337,7 @@ jobs:
           auto=1; why=$(jq -r '.confidence_reason // ""' $v)
           [ "$(jq -r '.confidence // "low"' $v)" = high ] || { auto=0; why="low confidence: $why"; }
           [ "$AUTO_MERGE" != false ] || { auto=0; why="auto-merge switched off"; }
-          labels=""; [ -z "$N" ] || labels=$(gh issue view "$N" --json labels --jq '.labels[].name'); files=$(gh pr diff "$PR" --name-only)
+          labels=""; [ -z "$N" ] || labels=$(gh issue view "$N" --json labels --jq '.labels[].name'); files=$(gh api "repos/$GITHUB_REPOSITORY/pulls/$PR/files" --paginate --jq '.[].filename')
           grep -qx 'owner:decision' <<<"$labels" && { auto=0; why="owner decision on the issue"; }
           grep -qE "$SENSITIVE" <<<"$files" && { auto=0; why="touches rules, decisions or build settings"; }
           size=$(gh pr view "$PR" --json additions,deletions --jq '.additions + .deletions')
@@ -444,7 +450,7 @@ jobs:
               echo; echo "# The owner's comment"; printf '%s\n' "$COMMENT"
             fi
             echo; echo "# PR"; gh pr view "$PR" --json title,body --jq '"## " + .title + "\n\n" + .body'
-            echo; echo "# Files changed"; gh pr diff "$PR" --name-only
+            echo; echo "# Files changed"; gh api "repos/$GITHUB_REPOSITORY/pulls/$PR/files" --paginate --jq '.[].filename' | head -200 || true
             echo; echo "# Earlier PR comments (newest last)"
             gh pr view "$PR" --json comments --jq '.comments[-6:][] | "\n---\n" + .author.login + ":\n" + .body'
           } > /tmp/agent/request.md
